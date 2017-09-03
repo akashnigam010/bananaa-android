@@ -99,7 +99,10 @@ public class Main2Activity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             String host = Uri.parse(url).getHost();
 
-            if( url.startsWith("http:") || url.startsWith("https:") ) {
+            if (url.startsWith("tel:")) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                startActivity(intent);
+            } else if (url.startsWith("http:") || url.startsWith("https:")) {
                 if(Uri.parse(url).getPath().equals("/")) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(homeUrl));
                     startActivity(browserIntent);
