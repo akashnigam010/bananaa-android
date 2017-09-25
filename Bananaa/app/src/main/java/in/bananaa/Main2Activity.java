@@ -31,9 +31,9 @@ public class Main2Activity extends AppCompatActivity {
     private FrameLayout mContainer;
     private Context mContext;
 
-    private String url = "https://www.bananaa.in";
-    private String homeUrl = "https://www.bananaa.in";
-    private String target_url_prefix = "www.bananaa.in";
+    private String url = "https://dev.bananaa.in";
+    private String homeUrl = "https://dev.bananaa.in";
+    private String target_url_prefix = "dev.bananaa.in";
 
     public ProgressBar progressBar;
 
