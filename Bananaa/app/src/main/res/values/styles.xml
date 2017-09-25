@@ -17,6 +17,10 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="BnaColor.Light.DarkActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorSecondary">@color/bnaColor</item>
+    </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
