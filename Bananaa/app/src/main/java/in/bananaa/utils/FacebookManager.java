@@ -39,91 +39,22 @@ public class FacebookManager {
         initFacebook();
     }
 
-    public void getHashKey() {
-
-        // Add code to print out the key hash
-        try {
-            PackageInfo info = activity.getPackageManager().getPackageInfo(
-                    "" + activity.getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-
-        }
-    }
-
     private void initFacebook() {
         FacebookSdk.sdkInitialize(activity.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
     }
 
     public void login(final FacebookCallback<LoginResult> onLoginListener) {
-
         LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));
-//        LoginManager.getInstance().logInWithPublishPermissions(activity, Arrays.asList("publish_actions"));
         LoginManager.getInstance().registerCallback(callbackManager, onLoginListener);
-
     }
 
     public void logout() {
         LoginManager.getInstance().logOut();
     }
 
-    public void shareDialog(String title, String description, String contentURL) {
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle(title)
-                    .setContentDescription(description)
-                    .setContentUrl(Uri.parse(contentURL))
-                    .build();
-            ShareDialog shareDialog = new ShareDialog(activity);
-            shareDialog.show(linkContent);
-
-        }
-
-    }
-
-
-    public void shareLinks(String url, FacebookCallback<Sharer.Result> onShareListener) {
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(url))
-                .build();
-        ShareApi.share(content, onShareListener);
-    }
-
-    public void sharePhoto(String title, Bitmap image, FacebookCallback<Sharer.Result> onShareListener) {
-
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(image).setCaption(title)
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
-        ShareApi.share(content, onShareListener);
-    }
-
-    public void shareVideo(String title, File videoFile, FacebookCallback<Sharer.Result> onShareListener) {
-        Uri videoFileUri = Uri.fromFile(videoFile);
-        ShareVideo video = new ShareVideo.Builder()
-                .setLocalUrl(videoFileUri)
-                .build();
-        ShareVideoContent content = new ShareVideoContent.Builder()
-                .setVideo(video).setContentTitle(title)
-                .build();
-        ShareApi.share(content, onShareListener);
-    }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
-
     }
 }

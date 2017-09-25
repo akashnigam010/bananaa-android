@@ -1,8 +1,8 @@
 package in.bananaa;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,9 +13,11 @@ import com.facebook.login.LoginResult;
 
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.FacebookManager;
+import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int RC_SIGN_IN = 9001;
 
     TextView tvSkip;
     Button fbLoginBtn;
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     AlertMessages messages;
 
     FacebookManager facebookManager;
+    GoogleManager googleManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         facebookManager = new FacebookManager(this);
-        facebookManager.getHashKey();
+        googleManager = new GoogleManager(this);
 
         messages = new AlertMessages(this);
         tvSkip = (TextView) findViewById(R.id.tvSkip);
@@ -45,7 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     View.OnClickListener onClickListenerSkip = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            startMainActivity();
+            //startMainActivity();
+            googleManager.signOut();
+            facebookManager.logout();
         }
     };
 
@@ -84,7 +89,8 @@ public class LoginActivity extends AppCompatActivity {
                 messages.showCustomMessage("No con");
                 return;
             } else {
-                messages.showCustomMessage("glogin");
+                //signIn();
+                googleManager.signIn();
                 return;
             }
         }
@@ -94,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         facebookManager.onActivityResult(requestCode, resultCode, data);
+        googleManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void startMainActivity() {
