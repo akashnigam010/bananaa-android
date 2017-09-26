@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import in.bananaa.utils.FacebookManager;
@@ -23,30 +24,58 @@ public class MainActivity extends AppCompatActivity
     FacebookManager facebookManager;
     GoogleManager googleManager;
     TextView title;
+    TextView homeBnaText;
+    TextView homeSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        facebookManager = new FacebookManager(this);
+        googleManager = new GoogleManager(this);
+
+        customizeMainContent();
+        Toolbar toolbar = customizeToolbar();
+        customizeNavigationDrawer(toolbar);
+        setFont();
+    }
+
+    private void customizeMainContent() {
+        homeBnaText = (TextView) findViewById(R.id.homeBnaText);
+        homeBnaText.setText("Bananaa");
+        homeSearch = (TextView) findViewById(R.id.homeSearch);
+        homeSearch.setText("");
+        homeSearch.setHint("Search for Restaurant, Cuisine or Dish");
+        homeSearch.setOnClickListener(onHomeSearchClickListener);
+    }
+
+    private Toolbar customizeToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("");
         title = (TextView) findViewById(R.id.home_toolbar_title);
+        return toolbar;
+    }
 
-        facebookManager = new FacebookManager(this);
-        googleManager = new GoogleManager(this);
-
+    private void customizeNavigationDrawer(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        setFont();
     }
+
+    View.OnClickListener onHomeSearchClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            redirectToSearch();
+        }
+    };
+
 
     @Override
     public void onBackPressed() {
@@ -121,7 +150,14 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void redirectToSearch() {
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     private void setFont() {
         title.setTypeface(Utils.getRegularFont(this));
+        homeBnaText.setTypeface(Utils.getSimpsonFont(this));
+        homeSearch.setTypeface(Utils.getRegularFont(this));
     }
 }

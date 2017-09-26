@@ -3,8 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="bnaColor">#8D4BE3</color>
-    <color name="lightColor">#E6E9F0</color>
+    <color name="bnaColor">#8d4be3</color>
+    <color name="lightColor">#F3F3F3</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="grey">#A9A9A9</color>
 </resources>

@@ -4,7 +4,7 @@
 
    <item
         android:id="@+id/action_location"
-        android:icon="@drawable/ic_near_me_24dp"
+        android:icon="@drawable/ic_near_me"
         android:title="Location"
         app:showAsAction="always">
     </item>

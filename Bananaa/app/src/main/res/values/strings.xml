@@ -5,6 +5,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <!--Across App-->
+    <string name="name">Bananaa</string>
+    <string name="default_location">Hyderabad</string>
+    <string name="search_rest_cuisine_dish">Search for Restaurant, Cuisine or Dish</string>
+
+    <!--Location Screen-->
+    <string name="select_location">Select your location</string>
+
+    <!--Search Screen-->
+    <string name="search">Search</string>
+
+    <!--Login Screen-->
+    <string name="login_fb">Continue with Facebook</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="skip_for_now">SKIP FOR NOW</string>
 </resources>

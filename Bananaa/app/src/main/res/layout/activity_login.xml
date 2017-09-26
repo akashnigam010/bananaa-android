@@ -21,11 +21,11 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="100dip"
-                android:layout_height="100dip"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="300px"
+                android:layout_marginTop="100dp"
                 android:src="@drawable/ic_logo" />
         </RelativeLayout>
 
@@ -43,10 +43,10 @@
                 <Button
                     android:layout_width="300dip"
                     android:layout_height="50dip"
-                    android:layout_centerInParent="true"
+
                     android:id="@+id/fbLogin"
-                    android:text="Continue with Facebook"
-                    android:drawableLeft="@drawable/ic_facebook"
+                    android:text="@string/login_fb"
+                    android:drawableStart="@drawable/ic_facebook"
                     android:background="@drawable/button_shadow"
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dip"/>
@@ -54,10 +54,9 @@
                 <Button
                     android:layout_width="300dip"
                     android:layout_height="50dip"
-                    android:layout_centerInParent="true"
                     android:id="@+id/googleLogin"
-                    android:text="Continue with Google"
-                    android:drawableLeft="@drawable/ic_google"
+                    android:text="@string/login_google"
+                    android:drawableStart="@drawable/ic_google"
                     android:background="@drawable/button_shadow"
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dip"/>
@@ -70,7 +69,7 @@
                     android:linksClickable="false"
                     android:padding="10dp"
                     android:selectAllOnFocus="false"
-                    android:text="SKIP FOR NOW"
+                    android:text="@string/skip_for_now"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:layout_gravity="center"
