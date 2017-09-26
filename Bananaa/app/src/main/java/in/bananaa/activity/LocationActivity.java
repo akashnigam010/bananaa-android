@@ -1,4 +1,4 @@
-package in.bananaa;
+package in.bananaa.activity;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import in.bananaa.R;
 import in.bananaa.utils.Utils;
 
 public class LocationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

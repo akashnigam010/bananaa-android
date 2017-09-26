@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="in.bananaa.MainActivity"
+    tools:context="in.bananaa.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <ImageView
@@ -45,9 +45,10 @@
         android:layout_marginTop="62dp"
         android:background="@drawable/search_bar_home"
         android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="10dp"
         android:ems="10"
-        android:gravity="center"
-        android:padding="5dip"
+        android:gravity="center_vertical"
+        android:padding="10dp"
         android:text="@string/search_rest_cuisine_dish"
         android:textColor="@color/grey"
         android:textSize="13sp"

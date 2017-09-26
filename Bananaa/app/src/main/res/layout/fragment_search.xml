@@ -1,0 +1,64 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="in.bananaa.fragment.SearchFragment">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="in.bananaa.activity.SearchActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/search_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                android:theme="@style/BnaColor.Light.DarkActionBar"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search"
+                    android:layout_gravity="center"
+                    android:id="@+id/search_toolbar_title"/>
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <EditText
+            android:id="@+id/etGlobalSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableStart="@drawable/ic_search"
+            android:drawableEnd="@drawable/ic_cancel"
+            android:elevation="3dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="@string/search_rest_cuisine_dish"
+            android:textSize="15sp"
+            android:padding="15dp"
+            android:drawablePadding="10dp"/>
+
+        <ListView
+            android:id="@+id/lvSearchResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="6dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="1dp">
+
+        </ListView>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,4 +1,4 @@
-package in.bananaa;
+package in.bananaa.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
+import in.bananaa.R;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;

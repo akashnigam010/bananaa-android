@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import in.bananaa.LoginActivity;
-
 public class Utils {
     public static Typeface getRegularFont(Context mContext) {
         return Typeface.createFromAsset(mContext.getAssets(), "bna-regular.ttf");

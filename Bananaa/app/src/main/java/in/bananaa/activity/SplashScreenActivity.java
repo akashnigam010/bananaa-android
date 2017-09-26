@@ -1,9 +1,11 @@
-package in.bananaa;
+package in.bananaa.activity;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import in.bananaa.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

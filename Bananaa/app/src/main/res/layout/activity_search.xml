@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="in.bananaa.SearchActivity">
+    tools:context="in.bananaa.activity.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -44,6 +44,18 @@
         android:maxLines="1"
         android:hint="@string/search_rest_cuisine_dish"
         android:textSize="15sp"
-        android:padding="15dp" />
+        android:padding="15dp"
+        android:drawablePadding="10dp"/>
+
+    <ListView
+        android:id="@+id/lvSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="6dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp">
+
+    </ListView>
 
 </LinearLayout>

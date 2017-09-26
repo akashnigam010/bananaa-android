@@ -1,4 +1,4 @@
-package in.bananaa;
+package in.bananaa.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import in.bananaa.R;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
