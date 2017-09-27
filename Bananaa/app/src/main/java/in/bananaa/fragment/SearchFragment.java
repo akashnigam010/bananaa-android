@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.activity.TestActivity;
+import in.bananaa.activity.MerchantDetailsActivity;
 import in.bananaa.adapter.GlobalSearchAdapter;
 import in.bananaa.object.GlobalSearchResponse;
 import in.bananaa.utils.AlertMessages;
@@ -159,7 +159,7 @@ public class SearchFragment extends Fragment {
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(activity, TestActivity.class);
+                Intent i = new Intent(activity, MerchantDetailsActivity.class);
                 startActivity(i);
             }
         });

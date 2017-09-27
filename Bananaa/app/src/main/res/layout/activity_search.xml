@@ -32,20 +32,56 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <EditText
-        android:id="@+id/etGlobalSearch"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:drawableStart="@drawable/ic_search"
-        android:drawableEnd="@drawable/ic_cancel"
-        android:elevation="3dp"
-        android:inputType="text"
-        android:maxLines="1"
-        android:hint="@string/search_rest_cuisine_dish"
-        android:textSize="15sp"
-        android:padding="15dp"
-        android:drawablePadding="10dp"/>
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:background="@color/white">
+
+        <EditText
+            android:id="@+id/etGlobalSearch"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableLeft="@drawable/ic_search"
+            android:elevation="3dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="@string/search_rest_cuisine_dish"
+            android:textSize="15sp"
+            android:padding="15dp"
+            android:drawablePadding="10dp"/>
+
+        <ProgressBar
+            android:id="@+id/globalSearchLoader"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_alignTop="@id/etGlobalSearch"
+            android:layout_alignBottom="@id/etGlobalSearch"
+            android:layout_alignRight="@id/etGlobalSearch"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/bnaColor"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/globalCancelButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:src="@drawable/ic_cancel"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"/>
+
+    </LinearLayout>
+
+
 
     <ListView
         android:id="@+id/lvSearchResults"

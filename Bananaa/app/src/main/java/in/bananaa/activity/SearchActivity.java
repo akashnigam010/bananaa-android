@@ -13,7 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -28,6 +30,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.adapter.GlobalSearchAdapter;
+import in.bananaa.object.DataGenerator;
 import in.bananaa.object.GlobalSearchResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
@@ -41,6 +44,8 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     ListView lvSearchResults;
     GlobalSearchAdapter globalSearchAdapter;
     AlertMessages messages;
+    ProgressBar progress;
+    ImageView cancelIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +71,13 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
     private void customizeSearchBar() {
         etSearch = (EditText) findViewById(R.id.etGlobalSearch);
-        etSearch.setOnTouchListener(new View.OnTouchListener() {
+        cancelIcon = (ImageView) findViewById(R.id.globalCancelButton);
+        progress = (ProgressBar) findViewById(R.id.globalSearchLoader);
+        cancelIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_RIGHT = 2;
-
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        etSearch.setText("");
-                        // update result list
-                        return true;
-                    }
-                }
-                return false;
+                etSearch.setText("");
+                return true;
             }
         });
 
@@ -100,7 +99,9 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        doSearch(s.toString());
+                        if (s.toString().length() >= 2) {
+                            doSearch(s.toString());
+                        }
                     }
                 };
                 handler.postDelayed(runnable, 500);
@@ -114,8 +115,10 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(SearchActivity.this, TestActivity.class);
+                Intent i = new Intent(SearchActivity.this, MerchantDetailsActivity.class);
+                i.putExtra("merchantDetails", DataGenerator.getMerchantDetails());
                 startActivity(i);
+                finish();
             }
         });
     }
@@ -126,6 +129,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
             return;
         } else {
             try {
+                asyncStart();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("searchString", searchString);
                 StringEntity entity = new StringEntity(jsonObject.toString());
@@ -147,6 +151,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            asyncEnd();
             GlobalSearchResponse response = new Gson().fromJson(new String(responseBody), GlobalSearchResponse.class);
             if (response.isResult()) {
                 if (response.getSearchItems() != null) {
@@ -171,6 +176,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            asyncEnd();
             //messages.showCustomMessage("Something seems fishy! Please try after some time.");
         }
     }
@@ -190,4 +196,15 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void asyncStart() {
+        cancelIcon.setVisibility(View.INVISIBLE);
+        progress.setVisibility(View.VISIBLE);
+    }
+
+    private void asyncEnd() {
+        cancelIcon.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.GONE);
+    }
+
 }
