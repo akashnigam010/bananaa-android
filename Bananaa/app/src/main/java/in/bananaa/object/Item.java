@@ -1,11 +1,26 @@
 package in.bananaa.object;
 
-public class Item {
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class Item implements Serializable {
+    @SerializedName("id")
     private Integer id;
+
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("thumbnail")
     private String thumbnail;
+
+    @SerializedName("recommendations")
     private Integer recommendations;
+
+    @SerializedName("ratingClass")
     private String ratingClass;
+
+    @SerializedName("rating")
     private String rating;
 
     public Integer getId() {

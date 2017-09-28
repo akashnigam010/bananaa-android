@@ -8,5 +8,5 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!--Merchant Detail Page-->
-    <dimen name="restaurant_title">16dp</dimen>
+    <dimen name="restaurant_title">20dp</dimen>
 </resources>

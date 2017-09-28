@@ -12,6 +12,10 @@ public class Utils {
         return Typeface.createFromAsset(mContext.getAssets(), "bna-regular.ttf");
     }
 
+    public static Typeface getBold(Context mContext) {
+        return Typeface.createFromAsset(mContext.getAssets(), "bna-bold.ttf");
+    }
+
     public static Typeface getSimpsonFont(Context mContext) {
         return Typeface.createFromAsset(mContext.getAssets(), "bna-simpson.ttf");
     }
@@ -37,9 +41,12 @@ public class Utils {
 
     public static String parseListToCommaSeparatedString(List<String> list) {
         String finalStr = "";
-        for (int i=0; i<list.size()-1; i++) {
+        int i;
+        for (i=0; i<list.size()-1; i++) {
             finalStr += list.get(i) + ", ";
         }
+
+        finalStr += list.get(i);
         return finalStr;
     }
 }

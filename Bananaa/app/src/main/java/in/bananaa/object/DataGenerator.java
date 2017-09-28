@@ -9,7 +9,7 @@ public class DataGenerator {
         MerchantDetails details = new MerchantDetails();
 
         details.setId(1);
-        details.setName("Chinese Pavilion");
+        details.setName("SodaBottleOpenerWala");
         details.setNameId("chinese-pavilion-gachibowli");
         details.setShortAddress("Gachibowli, Hyderabad");
         details.setImageUrl("https://bna-s3.s3.amazonaws.com/rest-img/chinese-pavilion-gachibowli.jpg");

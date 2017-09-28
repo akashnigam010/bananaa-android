@@ -1,11 +1,26 @@
 package in.bananaa.object;
 
-public class Tag {
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class Tag implements Serializable {
+    @SerializedName("id")
     private Integer id;
+
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("thumbnail")
     private String thumbnail;
+
+    @SerializedName("dishCount")
     private Integer dishCount;
+
+    @SerializedName("ratingClass")
     private String ratingClass;
+
+    @SerializedName("rating")
     private String rating;
 
     public Integer getId() {

@@ -20,30 +20,26 @@
             <ImageView
                 android:id="@+id/ivImage"
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
+                android:layout_height="180dp"
                 android:src="@color/grey" />
 
-            <ImageView
+            <ImageButton
+                android:id="@+id/ivBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="20dp"
+                android:background="@drawable/ic_arrow_back_white" />
+
+            <ImageButton
                 android:id="@+id/ivShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_margin="10dp"
+                android:layout_margin="20dp"
                 android:background="@drawable/ic_share" />
+
         </RelativeLayout>
-
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-        </android.support.design.widget.AppBarLayout>
     </FrameLayout>
 
 
@@ -53,9 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/restaurant_title"
-        android:textStyle="bold" />
+        android:textColor="@color/darkGrey"
+        android:textSize="@dimen/restaurant_title" />
 
     <TextView
         android:id="@+id/tvShortAddress"
@@ -93,6 +88,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvHoursTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Hours"
@@ -103,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/darkGrey" />
 
             </LinearLayout>
 
@@ -114,6 +110,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvPhoneTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Phone Number"
@@ -124,8 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="04068888831"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/darkGrey" />
 
             </LinearLayout>
 
@@ -145,6 +141,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvAverageCostTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cost for 2"
@@ -155,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/darkGrey" />
 
             </LinearLayout>
 
@@ -166,6 +163,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvTypeTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Type"
@@ -176,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/darkGrey" />
 
             </LinearLayout>
 
@@ -196,6 +194,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvLongAddressTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Address"
@@ -206,7 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/darkGrey" />
 
             </LinearLayout>
 
