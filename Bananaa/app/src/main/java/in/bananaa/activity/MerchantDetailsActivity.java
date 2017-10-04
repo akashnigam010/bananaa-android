@@ -1,23 +1,36 @@
 package in.bananaa.activity;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
+import android.widget.Toast;
 
 import in.bananaa.R;
+import in.bananaa.adapter.ItemListAdapter;
+import in.bananaa.adapter.TagListAdapter;
 import in.bananaa.object.MerchantDetails;
 import in.bananaa.utils.AlertMessages;
+import in.bananaa.utils.CustomListView;
 import in.bananaa.utils.Utils;
+
+import static com.bumptech.glide.Glide.with;
 
 public class MerchantDetailsActivity extends AppCompatActivity {
 
     MerchantDetails merchantDetails;
     AlertMessages messages;
+
+    ScrollView merchantDetailsView;
+    ProgressBar activityLoader;
 
     ImageView ivImage;
     ImageButton ivShare;
@@ -34,6 +47,16 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     TextView tvTypeTxt;
     TextView tvLongAddress;
     TextView tvLongAddressTxt;
+    TextView tvDelectableDishesTxt;
+    TextView tvCuisinesAndSpreadTxt;
+    CustomListView lvDelectableDishes;
+    CustomListView lvCuisinesAndSpread;
+
+    AppCompatButton btnSeeMore;
+    LinearLayout seeMoreSection;
+
+    ItemListAdapter itemListAdapter;
+    TagListAdapter cuisinesListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +65,28 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         messages = new AlertMessages(this);
         merchantDetails = (MerchantDetails) getIntent().getSerializableExtra("merchantDetails");
         initializeView();
-        getMerchantDetails();
     }
 
     private void initializeView() {
+        merchantDetailsView = (ScrollView) findViewById(R.id.merchantDetailsView);
+        activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
+
+        startAsync();
+        new CountDownTimer(1000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                endAsync();
+                setComponents();
+                setFont();
+                setMerchantDetails();
+            }
+        }.start();
+    }
+
+    private void setComponents() {
         ivBack = (ImageButton) findViewById(R.id.ivBack);
         ivShare = (ImageButton) findViewById(R.id.ivShare);
         ivImage = (ImageView) findViewById(R.id.ivImage);
@@ -56,17 +97,36 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         tvAverageCost = (TextView) findViewById(R.id.tvAverageCost);
         tvType = (TextView) findViewById(R.id.tvType);
         tvLongAddress = (TextView) findViewById(R.id.tvLongAddress);
-
         tvHoursTxt = (TextView) findViewById(R.id.tvHoursTxt);
         tvPhoneTxt = (TextView) findViewById(R.id.tvPhoneTxt);
         tvAverageCostTxt = (TextView) findViewById(R.id.tvAverageCostTxt);
         tvTypeTxt = (TextView) findViewById(R.id.tvTypeTxt);
         tvLongAddressTxt = (TextView) findViewById(R.id.tvLongAddressTxt);
+        tvCuisinesAndSpreadTxt = (TextView) findViewById(R.id.tvCuisinesAndSpreadTxt);
+        tvDelectableDishesTxt = (TextView) findViewById(R.id.tvDelectableDishesTxt);
+        lvCuisinesAndSpread = (CustomListView) findViewById(R.id.lvCuisinesAndSpread);
+        lvDelectableDishes = (CustomListView) findViewById(R.id.lvDelectableDishes);
+        seeMoreSection = (LinearLayout) findViewById(R.id.seeMoreSection);
+        btnSeeMore = (AppCompatButton) findViewById(R.id.btnSeeMore);
 
+        itemListAdapter = new ItemListAdapter(this);
+        itemListAdapter.addAll(merchantDetails.getItems());
+        cuisinesListAdapter = new TagListAdapter(this);
+        cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());
+        lvDelectableDishes.setAdapter(itemListAdapter);
+        lvCuisinesAndSpread.setAdapter(cuisinesListAdapter);
+        btnSeeMore.setOnClickListener(onClickSeeMoreListner);
         ivBack.setOnClickListener(onClickBackListener);
-        setFont();
+        setToastMessages();
     }
 
+    View.OnClickListener onClickSeeMoreListner = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            itemListAdapter.appendAll(merchantDetails.getItems());
+            seeMoreSection.setVisibility(View.GONE);
+        }
+    };
     View.OnClickListener onClickBackListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -74,21 +134,20 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         }
     };
 
-    private void getMerchantDetails() {
+    private void setMerchantDetails() {
         setImage();
         tvName.setText(merchantDetails.getName());
         tvShortAddress.setText(merchantDetails.getShortAddress());
         tvHours.setText(Utils.parseListToCommaSeparatedString(merchantDetails.getOpeningHours()));
         tvPhone.setText(merchantDetails.getPhone());
-        tvAverageCost.setText(merchantDetails.getAverageCost());
+        tvAverageCost.setText(getResources().getString(R.string.rupees)+ " " + merchantDetails.getAverageCost());
         tvType.setText(Utils.parseListToCommaSeparatedString(merchantDetails.getType()));
         tvLongAddress.setText(merchantDetails.getLongAddress());
     }
 
     private void setImage() {
         if (Utils.isNotEmpty(merchantDetails.getImageUrl())) {
-            Glide
-                    .with(MerchantDetailsActivity.this)
+            with(MerchantDetailsActivity.this)
                     .load(merchantDetails.getImageUrl())
                     .centerCrop()
                     .placeholder(R.color.grey)
@@ -112,5 +171,55 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         tvAverageCostTxt.setTypeface(Utils.getRegularFont(this));
         tvTypeTxt.setTypeface(Utils.getRegularFont(this));
         tvLongAddressTxt.setTypeface(Utils.getRegularFont(this));
+        tvDelectableDishesTxt.setTypeface(Utils.getRegularFont(this));
+        tvCuisinesAndSpreadTxt.setTypeface(Utils.getRegularFont(this));
+        btnSeeMore.setTypeface(Utils.getRegularFont(this));
+    }
+
+    private void startAsync() {
+        merchantDetailsView.setVisibility(View.GONE);
+        activityLoader.setVisibility(View.VISIBLE);
+    }
+
+    private void endAsync() {
+        merchantDetailsView.setVisibility(View.VISIBLE);
+        activityLoader.setVisibility(View.GONE);
+    }
+
+    private void setToastMessages() {
+        tvDelectableDishesTxt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= tvDelectableDishesTxt.getRight() - tvDelectableDishesTxt.getTotalPaddingRight()) {
+                        showToast(false);
+                    }
+                }
+                return true;
+            }
+        });
+
+        tvCuisinesAndSpreadTxt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= tvCuisinesAndSpreadTxt.getRight() - tvCuisinesAndSpreadTxt.getTotalPaddingRight()) {
+                        showToast(true);
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    private void showToast(boolean isCuisineToast) {
+        if (isCuisineToast) {
+            Toast.makeText(this,
+                    "Rated based on weighted average of most recent dish ratings and the number of dishes served per cuisine.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this,
+                    "Rated b" +
+                            "ased on weighted average of most recent ratings, user credibility and number of times people have tried a dish.", Toast.LENGTH_LONG).show();
+        }
     }
 }

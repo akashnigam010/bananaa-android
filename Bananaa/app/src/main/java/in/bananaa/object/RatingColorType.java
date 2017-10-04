@@ -1,30 +1,31 @@
 package in.bananaa.object;
+import in.bananaa.R;
 
 public enum RatingColorType {
-    R10("#CD1C26", "r10"),
-    R15("#DE1D05", "r15"),
-    R20("#FF7800", "r20"),
-    R25("#FFBA00", "r25"),
-    R30("#CDD614", "r30"),
-    R35("#9ACD32", "r35"),
-    R40("#5BA829", "r40"),
-    R45("#3F7E00", "r45"),
-    R50("#305D02", "r50");
+    R10("r10", R.color.r10),
+    R15("r15", R.color.r15),
+    R20("r20", R.color.r20),
+    R25("r25", R.color.r25),
+    R30("r30", R.color.r30),
+    R35("r35", R.color.r35),
+    R40("r40", R.color.r40),
+    R45("r45", R.color.r45),
+    R50("r50", R.color.r50);
 
-    private String code;
     private String cssClass;
+    private int color;
 
-    private RatingColorType(String code, String cssClass) {
+    private RatingColorType(String cssClass, int color) {
         this.cssClass = cssClass;
-        this.code = code;
+        this.color = color;
     }
 
     public String getCssClass() {
         return cssClass;
     }
 
-    public String getCode() {
-        return code;
+    public int getColor() {
+        return color;
     }
 
     public static RatingColorType getCodeByCssClass(String cssClass) {

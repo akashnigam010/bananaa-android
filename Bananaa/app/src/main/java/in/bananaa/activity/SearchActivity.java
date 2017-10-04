@@ -138,10 +138,10 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 client.setTimeout(Constant.TIMEOUT);
                 client.post(SearchActivity.this, URLs.GLOBAL_SEARCH, entity, "application/json", new GlobalSearchResponseHandler());
             } catch (UnsupportedEncodingException e) {
-                messages.showCustomMessage("FUCK!");
+                messages.showCustomMessage("Something seems fishy! Please try again");
                 e.printStackTrace();
             } catch (Exception e) {
-                messages.showCustomMessage("FUCK!");
+                messages.showCustomMessage("Something seems fishy! Please try again");
                 e.printStackTrace();
             }
         }

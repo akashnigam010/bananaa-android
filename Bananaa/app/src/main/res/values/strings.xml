@@ -5,6 +5,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="rupees">\u20B9</string>
+
     <!--Across App-->
     <string name="name">Bananaa</string>
     <string name="default_location">Hyderabad</string>
@@ -23,4 +25,6 @@
 
     <!-- Merchant Details Screen -->
     <string name="directions">Maps and Directions</string>
+    <string name="cuisinesAndSpread">Cuisines and Spread</string>
+    <string name="delectableDishes">Delectable Dishes</string>
 </resources>
