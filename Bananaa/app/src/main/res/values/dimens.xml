@@ -10,4 +10,6 @@
     <!--Merchant Detail Page-->
     <dimen name="restaurant_title">20sp</dimen>
     <dimen name="heading">20sp</dimen>
+    <dimen name="subHeading">12sp</dimen>
+    <dimen name="primaryButton">18sp</dimen>
 </resources>

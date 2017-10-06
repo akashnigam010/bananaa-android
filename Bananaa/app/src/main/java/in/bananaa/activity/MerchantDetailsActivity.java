@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.bananaa.R;
+import in.bananaa.adapter.FoodviewListAdapter;
 import in.bananaa.adapter.ItemListAdapter;
 import in.bananaa.adapter.TagListAdapter;
+import in.bananaa.object.DataGenerator;
 import in.bananaa.object.MerchantDetails;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.CustomListView;
@@ -47,16 +49,22 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     TextView tvTypeTxt;
     TextView tvLongAddress;
     TextView tvLongAddressTxt;
-    TextView tvDelectableDishesTxt;
     TextView tvCuisinesAndSpreadTxt;
+    TextView tvDelectableDishesTxt;
     CustomListView lvDelectableDishes;
     CustomListView lvCuisinesAndSpread;
+    CustomListView lvMyFoodViews;
 
     AppCompatButton btnSeeMore;
     LinearLayout seeMoreSection;
 
+    TextView tvMyFoodViewsTxt;
+    TextView tvFoodviewSubHeading;
+    AppCompatButton btnAddFoodview;
+
     ItemListAdapter itemListAdapter;
     TagListAdapter cuisinesListAdapter;
+    FoodviewListAdapter foodviewListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,13 +116,21 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         lvDelectableDishes = (CustomListView) findViewById(R.id.lvDelectableDishes);
         seeMoreSection = (LinearLayout) findViewById(R.id.seeMoreSection);
         btnSeeMore = (AppCompatButton) findViewById(R.id.btnSeeMore);
+        tvMyFoodViewsTxt = (TextView) findViewById(R.id.tvMyFoodViewsTxt);
+        tvFoodviewSubHeading = (TextView) findViewById(R.id.tvFoodviewSubHeading);
+        lvMyFoodViews = (CustomListView) findViewById(R.id.lvMyFoodviews);
+        btnAddFoodview = (AppCompatButton) findViewById(R.id.btnAddFoodview);
 
         itemListAdapter = new ItemListAdapter(this);
         itemListAdapter.addAll(merchantDetails.getItems());
         cuisinesListAdapter = new TagListAdapter(this);
         cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());
-        lvDelectableDishes.setAdapter(itemListAdapter);
+        foodviewListAdapter = new FoodviewListAdapter(this);
+        foodviewListAdapter.addAll(DataGenerator.getMyRecommendations());
+
         lvCuisinesAndSpread.setAdapter(cuisinesListAdapter);
+        lvDelectableDishes.setAdapter(itemListAdapter);
+        lvMyFoodViews.setAdapter(foodviewListAdapter);
         btnSeeMore.setOnClickListener(onClickSeeMoreListner);
         ivBack.setOnClickListener(onClickBackListener);
         setToastMessages();
@@ -143,6 +159,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         tvAverageCost.setText(getResources().getString(R.string.rupees)+ " " + merchantDetails.getAverageCost());
         tvType.setText(Utils.parseListToCommaSeparatedString(merchantDetails.getType()));
         tvLongAddress.setText(merchantDetails.getLongAddress());
+        tvFoodviewSubHeading.setText(getResources().getString(R.string.foodViewSubHeading) + merchantDetails.getName());
     }
 
     private void setImage() {
@@ -171,9 +188,12 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         tvAverageCostTxt.setTypeface(Utils.getRegularFont(this));
         tvTypeTxt.setTypeface(Utils.getRegularFont(this));
         tvLongAddressTxt.setTypeface(Utils.getRegularFont(this));
-        tvDelectableDishesTxt.setTypeface(Utils.getRegularFont(this));
-        tvCuisinesAndSpreadTxt.setTypeface(Utils.getRegularFont(this));
+        tvDelectableDishesTxt.setTypeface(Utils.getBold(this));
+        tvCuisinesAndSpreadTxt.setTypeface(Utils.getBold(this));
+        tvMyFoodViewsTxt.setTypeface(Utils.getBold(this));
         btnSeeMore.setTypeface(Utils.getRegularFont(this));
+        tvFoodviewSubHeading.setTypeface(Utils.getRegularFont(this));
+        btnAddFoodview.setTypeface(Utils.getRegularFont(this));
     }
 
     private void startAsync() {

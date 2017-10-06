@@ -27,4 +27,12 @@
     <string name="directions">Maps and Directions</string>
     <string name="cuisinesAndSpread">Cuisines and Spread</string>
     <string name="delectableDishes">Delectable Dishes</string>
+    <string name="seeMore">See More</string>
+    <string name="myFoodviews">My Foodviews</string>
+    <string name="addFoodview">Rate and Foodview</string>
+    <string name="foodViewSubHeading">My ratings and foodviews at\u0020</string>
+    <string name="peopleRated">%1d people rated</string>
+    <string name="youRated">You rated</string>
+    <string name="foodviewCountStr1">You rated this</string>
+    <string name="foodviewCountStr2">You and %1d others rated this</string>
 </resources>

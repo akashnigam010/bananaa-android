@@ -24,6 +24,30 @@ public class DataGenerator {
         return details;
     }
 
+    public static List<Foodview> getMyRecommendations() {
+        Recommendations recommendations = new Recommendations();
+        recommendations.setMerchantName("SodaBottleOpenerWala");
+        recommendations.getRecommendations().add(getFoodView(4, "Pan Fried Noodles", "2.5", "r25", "https://bna-s3.s3.amazonaws.com/d/77/t/pan-fried-noodles.jpg", "5 hours ago", 1, "Not good at all. It was pathetic and undercooked"));
+        recommendations.getRecommendations().add(getFoodView(3, "Bamboo Rice", "3.5", "r35", "https://bna-s3.s3.amazonaws.com/d/77/t/bamboo-rice.jpg", "28 days ago", 1, "Too good. I ate such rice the first time and it was exqisite"));
+        recommendations.getRecommendations().add(getFoodView(2, "Whiteboard Special Pizza", "5.0", "r50", "https://bna-s3.s3.amazonaws.com/d/23/t/wb-special-pizza.jpg", "2 months ago", 2, "Very very special pizza. Didn't expect Whiteboard Cafe to be serving this beautiful piece of food. Yummy!"));
+        recommendations.getRecommendations().add(getFoodView(1, "Quinoa Craving Salad", "4.5", "r45", "https://bna-s3.s3.amazonaws.com/item-img/t/green-leaf.png", "4 months ago", 4, null));
+        return recommendations.getRecommendations();
+    }
+
+    private static Foodview getFoodView(Integer id, String name, String rating, String ratingClass, String thumbnail, String timeDiff, Integer totalRcmds, String description) {
+        Foodview foodview = new Foodview();
+        foodview.setId(id);
+        foodview.setItemId(id);
+        foodview.setName(name);
+        foodview.setRating(rating);
+        foodview.setRatingClass(ratingClass);
+        foodview.setThumbnail(thumbnail);
+        foodview.setTimeDiff(timeDiff);
+        foodview.setTotalRcmdns(totalRcmds);
+        foodview.setDescription(description == null ? "" : description);
+        return foodview;
+    }
+
     private static List<String> getOpeningHours() {
         List<String> openingHours = new ArrayList<>();
         openingHours.add("12:00 PM to 03:30 PM");
