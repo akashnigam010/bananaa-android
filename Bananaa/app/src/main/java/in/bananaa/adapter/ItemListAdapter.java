@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -141,14 +142,15 @@ public class ItemListAdapter extends BaseAdapter {
     }
 
     private void showPreview(Item item) {
-        Dialog imageViewer = new Dialog(mContext);
-        imageViewer.setCancelable(true);
-        imageViewer.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        imageViewer.setContentView(R.layout.image_viewer);
-        ImageView image = (ImageView) imageViewer.findViewById(R.id.dialog_imageView);
-        TextView tvName = (TextView) imageViewer.findViewById(R.id.tvName);
-        TextView tvRating = (TextView) imageViewer.findViewById(R.id.tvRating);
-        TextView tvSubString = (TextView) imageViewer.findViewById(R.id.tvSubString);
+        Dialog imageDialog = new Dialog(mContext);
+
+        imageDialog.setCancelable(true);
+        imageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        imageDialog.setContentView(R.layout.image_viewer);
+        ImageView image = (ImageView) imageDialog.findViewById(R.id.dialog_imageView);
+        TextView tvName = (TextView) imageDialog.findViewById(R.id.tvName);
+        TextView tvRating = (TextView) imageDialog.findViewById(R.id.tvRating);
+        TextView tvSubString = (TextView) imageDialog.findViewById(R.id.tvSubString);
 
         background = (GradientDrawable) tvRating.getBackground();
         RatingColorType colorType = RatingColorType.getCodeByCssClass(item.getRatingClass());
@@ -157,7 +159,7 @@ public class ItemListAdapter extends BaseAdapter {
         }
         background.setColor(mContext.getResources().getColor(colorType.getColor()));
 
-        TextView tvSeeMore = (TextView) imageViewer.findViewById(R.id.tvSeeMore);
+        TextView tvSeeMore = (TextView) imageDialog.findViewById(R.id.tvSeeMore);
 
         tvName.setText(item.getName());
         tvRating.setText(item.getRating());
@@ -168,7 +170,10 @@ public class ItemListAdapter extends BaseAdapter {
         tvRating.setTypeface(Utils.getRegularFont(mContext));
         tvSeeMore.setTypeface(Utils.getRegularFont(mContext));
 
+        //Glide.with(mContext).load(item.getThumbnail()).placeholder(R.drawable.ic_top_feedback).into(image);
         Glide.with(mContext).load(item.getThumbnail()).into(image);
-        imageViewer.show();
+        imageDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        imageDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        imageDialog.show();
     }
 }
