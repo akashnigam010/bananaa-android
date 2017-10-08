@@ -1,11 +1,13 @@
 package in.bananaa.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,23 +22,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
+import in.bananaa.fragment.FoodviewModalFragment;
 import in.bananaa.object.Foodview;
+import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
+
+import static in.bananaa.R.layout.foodview;
 
 public class FoodviewListAdapter extends BaseAdapter {
 
     private static final String TAG = "FOODVIEW_LIST_ADAPTER";
     List<Foodview> foodviews;
-    private Activity mContext;
+    private AppCompatActivity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
+    String merchantName;
+    String locality;
 
-    public FoodviewListAdapter(Activity activity) {
+    public FoodviewListAdapter(AppCompatActivity activity, String merchantName, String locality) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
         foodviews = new ArrayList<>();
+        this.merchantName = merchantName;
+        this.locality = locality;
     }
 
     @Override
@@ -78,7 +88,7 @@ public class FoodviewListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = infalter.inflate(R.layout.foodview, null);
+            convertView = infalter.inflate(foodview, null);
             holder = new ViewHolder();
             holder.ivThumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
@@ -160,6 +170,21 @@ public class FoodviewListAdapter extends BaseAdapter {
     }
 
     private void openRecommendationModal(Foodview foodview) {
-        // add logic to open edit recommendation modal
+        ItemFoodViewDetails itemFoodViewDetails =
+                new ItemFoodViewDetails(foodview.getId(),foodview.getItemId(),
+                        merchantName, locality, foodview.getName(),
+                        foodview.getDescription(), foodview.getRating(), false);
+        openFoodviewFragment(itemFoodViewDetails);
+    }
+
+    public void openFoodviewFragment(ItemFoodViewDetails itemFoodViewDetails) {
+        android.support.v4.app.FragmentManager fragmentManager = mContext.getSupportFragmentManager();
+        FoodviewModalFragment foodviewFragment = new FoodviewModalFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(FoodviewModalFragment.ITEM_DETAILS, itemFoodViewDetails);
+        foodviewFragment.setArguments(args);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(android.R.id.content, foodviewFragment).addToBackStack(null).commit();
     }
 }

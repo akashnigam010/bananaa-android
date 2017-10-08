@@ -9,6 +9,7 @@
         <item name="android:colorForeground">@color/colorPrimary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
         <item name="buttonStyle">@style/MyButton</item>
+        <item name="android:actionMenuTextColor">@color/bnaColor</item>
     </style>
 
     <style name="MyButton" parent="Widget.AppCompat.Button">
@@ -21,11 +22,20 @@
         <item name="android:textColorSecondary">@color/bnaColor</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+    </style>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/zoom_up</item>
         <item name="android:windowExitAnimation">@anim/zoom_down</item>
+    </style>
+
+    <style name="DishRatingbar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/dish_ratingbar</item>
+        <item name="android:minHeight">23dp</item>
+        <item name="android:maxHeight">70dp</item>
+
     </style>
 
 </resources>

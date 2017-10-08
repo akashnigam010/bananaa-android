@@ -19,6 +19,7 @@ import in.bananaa.adapter.FoodviewListAdapter;
 import in.bananaa.adapter.ItemListAdapter;
 import in.bananaa.adapter.TagListAdapter;
 import in.bananaa.object.DataGenerator;
+import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetails;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.CustomListView;
@@ -125,7 +126,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         itemListAdapter.addAll(merchantDetails.getItems());
         cuisinesListAdapter = new TagListAdapter(this);
         cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());
-        foodviewListAdapter = new FoodviewListAdapter(this);
+        foodviewListAdapter = new FoodviewListAdapter(this, merchantDetails.getName(), merchantDetails.getShortAddress());
         foodviewListAdapter.addAll(DataGenerator.getMyRecommendations());
 
         lvCuisinesAndSpread.setAdapter(cuisinesListAdapter);
@@ -133,6 +134,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         lvMyFoodViews.setAdapter(foodviewListAdapter);
         btnSeeMore.setOnClickListener(onClickSeeMoreListner);
         ivBack.setOnClickListener(onClickBackListener);
+        btnAddFoodview.setOnClickListener(onClickRateAndFoodViewListener);
         setToastMessages();
     }
 
@@ -147,6 +149,16 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             finish();
+        }
+    };
+
+    View.OnClickListener onClickRateAndFoodViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ItemFoodViewDetails itemFoodViewDetails =
+                    new ItemFoodViewDetails(null,null, merchantDetails.getName(),
+                            merchantDetails.getShortAddress(), null, null, null, true);
+            foodviewListAdapter.openFoodviewFragment(itemFoodViewDetails);
         }
     };
 

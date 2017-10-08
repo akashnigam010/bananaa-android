@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:drawableStart="@drawable/ic_search"
-            android:drawableEnd="@drawable/ic_cancel"
+            android:drawableEnd="@drawable/ic_cancel_grey"
             android:elevation="3dp"
             android:inputType="text"
             android:maxLines="1"

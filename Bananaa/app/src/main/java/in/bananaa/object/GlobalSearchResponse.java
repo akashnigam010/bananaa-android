@@ -7,13 +7,13 @@ import java.util.List;
 public class GlobalSearchResponse extends GenericResponse {
 
     @SerializedName("searchItems")
-    private List<SearchItem> searchItems;
+    private List<GlobalSearchItem> searchItems;
 
-    public List<SearchItem> getSearchItems() {
+    public List<GlobalSearchItem> getSearchItems() {
         return searchItems;
     }
 
-    public void setSearchItems(List<SearchItem> searchItems) {
+    public void setSearchItems(List<GlobalSearchItem> searchItems) {
         this.searchItems = searchItems;
     }
 }

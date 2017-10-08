@@ -74,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="20dp"
-                            android:text="Chinese Pavilion"
+                            android:text="Chinese Pavilionsss"
                             android:textColor="@color/darkGrey"
                             android:textSize="@dimen/restaurant_title" />
 

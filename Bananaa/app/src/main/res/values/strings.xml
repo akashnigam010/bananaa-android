@@ -35,4 +35,10 @@
     <string name="youRated">You rated</string>
     <string name="foodviewCountStr1">You rated this</string>
     <string name="foodviewCountStr2">You and %1d others rated this</string>
+
+    <!--Foodview Modal-->
+    <string name="foodviewModalTitle">Add Foodview</string>
+    <string name="search_dish">Search for a dish name</string>
+    <string name="foodview_hint">Share a foodview ! A tiny review about this dish to help others know how it tastes and if they should give it a try. Just remember to keep it short, a minimum of 50 and a maximum of 200 characters only :)</string>
+    <string name="save">Save</string>
 </resources>
