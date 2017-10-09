@@ -1,9 +1,7 @@
 package in.bananaa.activity;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -11,7 +9,7 @@ import android.widget.TextView;
 import in.bananaa.R;
 import in.bananaa.utils.Utils;
 
-public class LocationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class LocationActivity extends AppCompatActivity {
 
     TextView title;
 
@@ -33,13 +31,10 @@ public class LocationActivity extends AppCompatActivity implements NavigationVie
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            finish();
         }
+        return super.onOptionsItemSelected(menuItem);
     }
 }

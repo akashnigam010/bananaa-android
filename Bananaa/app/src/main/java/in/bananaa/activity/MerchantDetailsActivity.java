@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,6 @@ import in.bananaa.adapter.ItemListAdapter;
 import in.bananaa.adapter.MyFoodviewsListAdapter;
 import in.bananaa.adapter.TagListAdapter;
 import in.bananaa.object.DataGenerator;
-import in.bananaa.object.FoodviewUtils;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetailsResponse;
 import in.bananaa.utils.AlertMessages;
@@ -68,8 +68,6 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     TagListAdapter cuisinesListAdapter;
     MyFoodviewsListAdapter myFoodviewsListAdapter;
 
-    FoodviewUtils foodviewUtils;
-
     AppCompatActivity mContext;
 
     @Override
@@ -79,7 +77,6 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_merchant_details);
         messages = new AlertMessages(this);
         merchantDetails = (MerchantDetailsResponse) getIntent().getSerializableExtra("merchantDetails");
-        foodviewUtils = new FoodviewUtils();
         initializeView();
     }
 
@@ -164,9 +161,10 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         public void onClick(View view) {
             ItemFoodViewDetails itemFoodViewDetails =
                     new ItemFoodViewDetails(null,null, merchantDetails.getName(),
-                            merchantDetails.getShortAddress(), null, null, null, true, false);
-            //myFoodviewsListAdapter.openFoodviewFragment(itemFoodViewDetails);
-            foodviewUtils.openFoodviewFragment(itemFoodViewDetails, mContext);
+                            merchantDetails.getShortAddress(), null, null, 0.0f, true);
+            Intent i = new Intent(MerchantDetailsActivity.this, FoodviewActivity.class);
+            i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
+            startActivity(i);
         }
     };
 

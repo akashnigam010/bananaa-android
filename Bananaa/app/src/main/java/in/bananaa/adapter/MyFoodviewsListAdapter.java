@@ -1,6 +1,7 @@
 package in.bananaa.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.FoodviewUtils;
+import in.bananaa.activity.FoodviewActivity;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MyFoodview;
 import in.bananaa.object.RatingColorType;
@@ -39,15 +40,12 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
     String merchantName;
     String locality;
 
-    private FoodviewUtils foodviewUtils;
-
     public MyFoodviewsListAdapter(AppCompatActivity activity, String merchantName, String locality) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
         myFoodviews = new ArrayList<>();
         this.merchantName = merchantName;
         this.locality = locality;
-        foodviewUtils = new FoodviewUtils();
     }
 
     @Override
@@ -174,7 +172,9 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
         ItemFoodViewDetails itemFoodViewDetails =
                 new ItemFoodViewDetails(myFoodview.getId(), myFoodview.getItemId(),
                         merchantName, locality, myFoodview.getName(),
-                        myFoodview.getDescription(), myFoodview.getRating(), false, false);
-        foodviewUtils.openFoodviewFragment(itemFoodViewDetails, mContext);
+                        myFoodview.getDescription(), Float.parseFloat(myFoodview.getRating()), false);
+        Intent i = new Intent(mContext, FoodviewActivity.class);
+        i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
+        mContext.startActivity(i);
     }
 }

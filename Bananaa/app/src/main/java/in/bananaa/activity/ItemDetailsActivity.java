@@ -15,7 +15,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import in.bananaa.R;
-import in.bananaa.object.FoodviewUtils;
 import in.bananaa.object.ItemDetailsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.RatingColorType;
@@ -30,7 +29,6 @@ public class ItemDetailsActivity extends AppCompatActivity {
     ScrollView itemDetailsView;
     ProgressBar activityLoader;
     ItemDetailsResponse itemDetails;
-    FoodviewUtils foodviewUtils;
 
     ImageView ivBack;
     ImageView ivShare;
@@ -53,7 +51,6 @@ public class ItemDetailsActivity extends AppCompatActivity {
         mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
-        foodviewUtils = new FoodviewUtils();
         messages = new AlertMessages(this);
         itemDetails = (ItemDetailsResponse) getIntent().getSerializableExtra("itemDetails");
         initializeView();
@@ -167,8 +164,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(null, itemDetails.getId(), itemDetails.getMerchantName(),
-                    itemDetails.getShortAddress(), itemDetails.getName(), null, null, true, true);
-            foodviewUtils.openFoodviewFragment(itemFoodViewDetails, mContext);
+                    itemDetails.getShortAddress(), itemDetails.getName(), null, 0.0f, false);
+            Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
+            i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
+            startActivity(i);
         }
     };
 }

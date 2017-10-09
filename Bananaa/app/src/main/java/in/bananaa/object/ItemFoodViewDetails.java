@@ -1,16 +1,36 @@
 package in.bananaa.object;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
-public class ItemFoodViewDetails implements Parcelable {
-    Integer id, itemId;
-    String restName, locality, itemName, desc, rating;
-    Boolean isAddNewFoodview;
-    Boolean isDetailsAddNew;
+import java.io.Serializable;
+
+public class ItemFoodViewDetails implements Serializable {
+    @SerializedName("id")
+    private Integer id;
+
+    @SerializedName("itemId")
+    private Integer itemId;
+
+    @SerializedName("restName")
+    private String restName;
+
+    @SerializedName("locality")
+    private String locality;
+
+    @SerializedName("itemName")
+    private String itemName;
+
+    @SerializedName("desc")
+    private String desc;
+
+    @SerializedName("rating")
+    private float rating;
+
+    @SerializedName("isBlankFoodview")
+    private Boolean isBlankFoodview;
 
     public ItemFoodViewDetails(Integer id, Integer itemId, String restName, String locality,
-                               String itemName, String desc, String rating, Boolean isAddNewFoodview, Boolean isDetailsAddNew) {
+                               String itemName, String desc, float rating, Boolean isBlankFoodview) {
         this.id = id;
         this.itemId = itemId;
         this.restName = restName;
@@ -18,51 +38,9 @@ public class ItemFoodViewDetails implements Parcelable {
         this.locality = locality;
         this.desc = desc;
         this.rating = rating;
-        this.isAddNewFoodview = isAddNewFoodview;
-        this.isDetailsAddNew = isDetailsAddNew;
+        this.isBlankFoodview = isBlankFoodview;
     }
 
-    public ItemFoodViewDetails(Parcel in) {
-        restName = in.readString();
-        locality = in.readString();
-        itemName = in.readString();
-        desc = in.readString();
-        id = in.readInt();
-        itemId = in.readInt();
-        rating = in.readString();
-        isAddNewFoodview  = (in.readInt() == 0) ? false : true;
-        isDetailsAddNew  = (in.readInt() == 0) ? false : true;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(restName);
-        dest.writeString(locality);
-        dest.writeString(itemName);
-        dest.writeString(desc);
-        dest.writeInt(id);
-        dest.writeInt(itemId);
-        dest.writeString(rating);
-        dest.writeInt(isAddNewFoodview ? 1 : 0);
-        dest.writeInt(isDetailsAddNew ? 1 : 0);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<ItemFoodViewDetails> CREATOR = new Creator<ItemFoodViewDetails>() {
-        @Override
-        public ItemFoodViewDetails createFromParcel(Parcel in) {
-            return new ItemFoodViewDetails(in);
-        }
-
-        @Override
-        public ItemFoodViewDetails[] newArray(int size) {
-            return new ItemFoodViewDetails[size];
-        }
-    };
 
     public String getRestName() {
         return restName;
@@ -112,27 +90,19 @@ public class ItemFoodViewDetails implements Parcelable {
         this.itemId = itemId;
     }
 
-    public String getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
-    public Boolean getAddNewFoodview() {
-        return isAddNewFoodview;
+    public Boolean isBlankFoodview() {
+        return isBlankFoodview;
     }
 
-    public void setAddNewFoodview(Boolean addNewFoodview) {
-        isAddNewFoodview = addNewFoodview;
-    }
-
-    public Boolean getDetailsAddNew() {
-        return isDetailsAddNew;
-    }
-
-    public void setDetailsAddNew(Boolean detailsAddNew) {
-        isDetailsAddNew = detailsAddNew;
+    public void setBlankFoodview(Boolean blankFoodview) {
+        isBlankFoodview = blankFoodview;
     }
 }

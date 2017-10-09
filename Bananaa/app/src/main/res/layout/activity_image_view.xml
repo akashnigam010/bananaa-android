@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="in.bananaa.activity.ImageViewActivity">
 
-    <ImageView
+    <TouchImageView
         android:id="@+id/ivImage"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

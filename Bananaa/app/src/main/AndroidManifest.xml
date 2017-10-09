@@ -52,24 +52,12 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activity.LocationActivity"
-            android:parentActivityName=".activity.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activity.SearchActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:windowSoftInputMode="stateVisible">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
-        </activity>
+        <activity android:name=".activity.LocationActivity" />
+        <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.MerchantDetailsActivity" />
         <activity android:name=".activity.ItemDetailsActivity" />
-        <activity android:name=".activity.ImageViewActivity"></activity>
+        <activity android:name=".activity.ImageViewActivity" />
+        <activity android:name=".activity.FoodviewActivity" />
     </application>
 
 </manifest>

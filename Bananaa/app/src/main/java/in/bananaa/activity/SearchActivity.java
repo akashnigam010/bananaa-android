@@ -2,8 +2,6 @@ package in.bananaa.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -37,7 +35,7 @@ import in.bananaa.utils.Constant;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
-public class SearchActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class SearchActivity extends AppCompatActivity {
 
     TextView tvTitle;
     EditText etSearch;
@@ -67,6 +65,14 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tvTitle = (TextView) findViewById(R.id.search_toolbar_title);
         return toolbar;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     private void customizeSearchBar() {
@@ -184,17 +190,6 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     private void setFont() {
         tvTitle.setTypeface(Utils.getRegularFont(this));
         etSearch.setTypeface(Utils.getRegularFont(this));
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private void asyncStart() {
