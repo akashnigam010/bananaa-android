@@ -8,29 +8,32 @@ public class Foodview implements Serializable {
     @SerializedName("id")
     private Integer id;
 
-    @SerializedName("itemId")
-    private Integer itemId;
+    @SerializedName("userId")
+    private Integer userId;
 
-    @SerializedName("name")
-    private String name;
+    @SerializedName("userName")
+    private String userName;
 
-    @SerializedName("thumbnail")
-    private String thumbnail;
+    @SerializedName("userImageUrl")
+    private String userImageUrl;
 
-    @SerializedName("description")
-    private String description;
+    @SerializedName("userRatingCount")
+    private Integer userRatingCount;
 
-    @SerializedName("timeDiff")
-    private String timeDiff;
+    @SerializedName("userFoodviewCount")
+    private Integer userFoodviewCount;
 
-    @SerializedName("totalRcmdns")
-    private Integer totalRcmdns;
+    @SerializedName("rating")
+    private String rating;
 
     @SerializedName("ratingClass")
     private String ratingClass;
 
-    @SerializedName("rating")
-    private String rating;
+    @SerializedName("desc")
+    private String desc;
+
+    @SerializedName("timeDiff")
+    private String timeDiff;
 
     public Integer getId() {
         return id;
@@ -40,52 +43,52 @@ public class Foodview implements Serializable {
         this.id = id;
     }
 
-    public Integer getItemId() {
-        return itemId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getUserImageUrl() {
+        return userImageUrl;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setUserImageUrl(String userImageUrl) {
+        this.userImageUrl = userImageUrl;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getUserRatingCount() {
+        return userRatingCount;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUserRatingCount(Integer userRatingCount) {
+        this.userRatingCount = userRatingCount;
     }
 
-    public String getTimeDiff() {
-        return timeDiff;
+    public Integer getUserFoodviewCount() {
+        return userFoodviewCount;
     }
 
-    public void setTimeDiff(String timeDiff) {
-        this.timeDiff = timeDiff;
+    public void setUserFoodviewCount(Integer userFoodviewCount) {
+        this.userFoodviewCount = userFoodviewCount;
     }
 
-    public Integer getTotalRcmdns() {
-        return totalRcmdns;
+    public String getRating() {
+        return rating;
     }
 
-    public void setTotalRcmdns(Integer totalRcmdns) {
-        this.totalRcmdns = totalRcmdns;
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     public String getRatingClass() {
@@ -96,11 +99,19 @@ public class Foodview implements Serializable {
         this.ratingClass = ratingClass;
     }
 
-    public String getRating() {
-        return rating;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getTimeDiff() {
+        return timeDiff;
+    }
+
+    public void setTimeDiff(String timeDiff) {
+        this.timeDiff = timeDiff;
     }
 }

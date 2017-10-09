@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class MerchantDetails extends GenericResponse implements Serializable {
+public class MerchantDetailsResponse extends GenericResponse implements Serializable {
 
     @SerializedName("id")
     private Integer id;

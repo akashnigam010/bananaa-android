@@ -5,8 +5,8 @@ import java.util.List;
 
 public class DataGenerator {
 
-    public static MerchantDetails getMerchantDetails() {
-        MerchantDetails details = new MerchantDetails();
+    public static MerchantDetailsResponse getMerchantDetails() {
+        MerchantDetailsResponse details = new MerchantDetailsResponse();
 
         details.setId(1);
         details.setName("SodaBottleOpenerWala");
@@ -24,7 +24,7 @@ public class DataGenerator {
         return details;
     }
 
-    public static List<Foodview> getMyRecommendations() {
+    public static List<MyFoodview> getMyRecommendations() {
         Recommendations recommendations = new Recommendations();
         recommendations.setMerchantName("SodaBottleOpenerWala");
         recommendations.getRecommendations().add(getFoodView(4, "Pan Fried Noodles", "2.5", "r25", "https://bna-s3.s3.amazonaws.com/d/77/t/pan-fried-noodles.jpg", "5 hours ago", 1, "Not good at all. It was pathetic and undercooked"));
@@ -34,18 +34,48 @@ public class DataGenerator {
         return recommendations.getRecommendations();
     }
 
-    private static Foodview getFoodView(Integer id, String name, String rating, String ratingClass, String thumbnail, String timeDiff, Integer totalRcmds, String description) {
+    public static ItemDetailsResponse getItemDetailsResponse() {
+        ItemDetailsResponse response = new ItemDetailsResponse();
+        response.setMerchantName("SodaBottlOpenerWala");
+        response.setName("Pan Fried Noodles");
+        response.setRating("4.0");
+        response.setRatingClass("r40");
+        response.setId(1);
+        response.setImageUrl("https://bna-s3.s3.amazonaws.com/d/12/pasta-donatella.jpg");
+        response.setNameId("pan-fried-noodles");
+        response.setShortAddress("Hitech City, Hyderabad");
+        response.setTotalRatings(13);
+        response.getFoodviews().add(getFoodview());
+        return response;
+    }
+
+    private static final Foodview getFoodview() {
         Foodview foodview = new Foodview();
-        foodview.setId(id);
-        foodview.setItemId(id);
-        foodview.setName(name);
-        foodview.setRating(rating);
-        foodview.setRatingClass(ratingClass);
-        foodview.setThumbnail(thumbnail);
-        foodview.setTimeDiff(timeDiff);
-        foodview.setTotalRcmdns(totalRcmds);
-        foodview.setDescription(description == null ? "" : description);
+        foodview.setId(1);
+        foodview.setRating("3.0");
+        foodview.setRatingClass("r30");
+        foodview.setTimeDiff("1 month ago");
+        foodview.setUserId(1);
+        foodview.setUserName("Yogesh Sadula");
+        foodview.setUserImageUrl("https://bna-usr.s3.amazonaws.com/yogesh-sadula-1492921443270.jpg");
+        foodview.setUserFoodviewCount(2);
+        foodview.setUserRatingCount(2);
+        foodview.setDesc("Pasta, in the the real italian style in hyderbad, then there is only one address.. little italy.. the fresh veggies, herbs, cream and cheese are unforgettable.. served with love");
         return foodview;
+    }
+
+    private static MyFoodview getFoodView(Integer id, String name, String rating, String ratingClass, String thumbnail, String timeDiff, Integer totalRcmds, String description) {
+        MyFoodview myFoodview = new MyFoodview();
+        myFoodview.setId(id);
+        myFoodview.setItemId(id);
+        myFoodview.setName(name);
+        myFoodview.setRating(rating);
+        myFoodview.setRatingClass(ratingClass);
+        myFoodview.setThumbnail(thumbnail);
+        myFoodview.setTimeDiff(timeDiff);
+        myFoodview.setTotalRcmdns(totalRcmds);
+        myFoodview.setDescription(description == null ? "" : description);
+        return myFoodview;
     }
 
     private static List<String> getOpeningHours() {

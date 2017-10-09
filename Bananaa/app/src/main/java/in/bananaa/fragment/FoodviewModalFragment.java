@@ -118,13 +118,18 @@ public class FoodviewModalFragment extends DialogFragment {
     }
 
     private void setDetailsIfExistingFoodview() {
-        if (!itemFoodViewDetails.getAddNewFoodview()) {
+        if (!itemFoodViewDetails.getAddNewFoodview() || itemFoodViewDetails.getDetailsAddNew()) {
             itemNotSelected = false;
             etDishSearch.setText(itemFoodViewDetails.getItemName());
             lvDishSearchResults.setVisibility(View.GONE);
             rateAndReviewLayout.setVisibility(View.VISIBLE);
             etFoodView.setText(itemFoodViewDetails.getDesc());
-            isRatingLoadedFromFoodview = true;
+            if (itemFoodViewDetails.getRating() == null) {
+                itemFoodViewDetails.setRating("0.0");
+                isRatingLoadedFromFoodview = false;
+            } else {
+                isRatingLoadedFromFoodview = true;
+            }
             dishRatingBar.setRating(Float.parseFloat(itemFoodViewDetails.getRating()));
         }
     }
@@ -159,7 +164,7 @@ public class FoodviewModalFragment extends DialogFragment {
                     @Override
                     public void run() {
                         if (s.toString().length() >= 2 && itemNotSelected) {
-                            isRatingLoadedFromFoodview = true;
+                            isRatingLoadedFromFoodview = false;
                             dishRatingBar.setRating(0.0f);
                             etFoodView.setText("");
                             doSearch(s.toString());
@@ -347,7 +352,8 @@ public class FoodviewModalFragment extends DialogFragment {
                     "Your foodview has been saved. Thank you!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == android.R.id.home) {
-            dismiss();
+            //dismiss();
+            getFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -6,10 +6,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-
-    <!--Merchant Detail Page-->
-    <dimen name="restaurant_title">20sp</dimen>
     <dimen name="heading">20sp</dimen>
     <dimen name="subHeading">12sp</dimen>
     <dimen name="primaryButton">18sp</dimen>
+
+    <!--Merchant Detail Page-->
+    <dimen name="restaurant_title">20sp</dimen>
+
+    <!--Item Detail Page-->
+    <dimen name="item_title">20sp</dimen>
 </resources>

@@ -3,6 +3,7 @@ package in.bananaa.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
+import in.bananaa.activity.ItemDetailsActivity;
+import in.bananaa.object.DataGenerator;
 import in.bananaa.object.Item;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.Debug;
@@ -31,7 +34,7 @@ import in.bananaa.utils.Utils;
 public class ItemListAdapter extends BaseAdapter {
 
     private static final String TAG = "ITEM_LIST_ADAPTER";
-    List<Item> items;
+    private List<Item> items;
     private Activity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
@@ -72,7 +75,7 @@ public class ItemListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public class ViewHolder {
+    private class ViewHolder {
         ImageView ivThumbnail;
         TextView tvName, tvSubString, tvRating;
     }
@@ -112,7 +115,7 @@ public class ItemListAdapter extends BaseAdapter {
                     holder.ivThumbnail.setImageDrawable(circularBitmapDrawable);
                 }
             });
-            convertView.setOnClickListener(new CustomImageClickListener(mContext, items.get(position)));
+            convertView.setOnClickListener(new CustomImageClickListener(items.get(position)));
         } else {
             holder.ivThumbnail.setImageResource(R.color.lightColor);
         }
@@ -121,11 +124,9 @@ public class ItemListAdapter extends BaseAdapter {
     }
 
     private class CustomImageClickListener implements View.OnClickListener{
-        private Context mContext;
         private Item item;
 
-        public CustomImageClickListener(Context context, Item item){
-            this.mContext = context;
+        public CustomImageClickListener(Item item){
             this.item = item;
         }
 
@@ -160,6 +161,7 @@ public class ItemListAdapter extends BaseAdapter {
         background.setColor(mContext.getResources().getColor(colorType.getColor()));
 
         TextView tvSeeMore = (TextView) imageDialog.findViewById(R.id.tvSeeMore);
+        tvSeeMore.setOnClickListener(new OnSeeMoreClickListener(item.getId(), imageDialog));
 
         tvName.setText(item.getName());
         tvRating.setText(item.getRating());
@@ -175,5 +177,24 @@ public class ItemListAdapter extends BaseAdapter {
         imageDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         imageDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         imageDialog.show();
+    }
+
+    private class OnSeeMoreClickListener implements View.OnClickListener {
+        private Integer itemId;
+        private Dialog dialog;
+
+        OnSeeMoreClickListener(Integer itemId, Dialog dialog) {
+            this.itemId = itemId;
+            this.dialog = dialog;
+        }
+
+        @Override
+        public void onClick(View v) {
+            dialog.cancel();
+            Intent i = new Intent(mContext, ItemDetailsActivity.class);
+            i.putExtra("id", this.itemId);
+            i.putExtra("itemDetails", DataGenerator.getItemDetailsResponse());
+            mContext.startActivity(i);
+        }
     }
 }

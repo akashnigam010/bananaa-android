@@ -11,7 +11,7 @@ public class Recommendations extends GenericResponse implements Serializable {
     private String merchantName;
 
     @SerializedName("recommendations")
-    private List<Foodview> recommendations;
+    private List<MyFoodview> recommendations;
 
     public String getMerchantName() {
         return merchantName;
@@ -21,14 +21,14 @@ public class Recommendations extends GenericResponse implements Serializable {
         this.merchantName = merchantName;
     }
 
-    public List<Foodview> getRecommendations() {
+    public List<MyFoodview> getRecommendations() {
         if (this.recommendations == null) {
             this.recommendations = new ArrayList<>();
         }
         return recommendations;
     }
 
-    public void setRecommendations(List<Foodview> recommendations) {
+    public void setRecommendations(List<MyFoodview> recommendations) {
         this.recommendations = recommendations;
     }
 }

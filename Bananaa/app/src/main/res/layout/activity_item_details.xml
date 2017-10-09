@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="in.bananaa.activity.ItemDetailsActivity">
+
+    <ProgressBar
+        android:id="@+id/activityLoader"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/bnaColor"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:id="@+id/itemDetailsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/ivImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="180dp"
+                                android:src="@color/grey" />
+
+                            <ImageButton
+                                android:id="@+id/ivBack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_margin="20dp"
+                                android:background="@drawable/ic_arrow_back_white" />
+
+                            <ImageButton
+                                android:id="@+id/ivShare"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="20dp"
+                                android:background="@drawable/ic_share" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="20dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvRating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:background="@drawable/bg_round_border_grey"
+                                    android:drawablePadding="5dp"
+                                    android:gravity="center"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:paddingLeft="10dp"
+                                    android:paddingRight="10dp"
+                                    android:text="4.1"
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvTotalRatings"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:layout_marginTop="2dp"
+                                    android:text="11 Ratings"
+                                    android:textColor="@color/grey" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Pan Fried Noodles"
+                                    android:textColor="@color/darkGrey"
+                                    android:textSize="@dimen/item_title" />
+
+                                <TextView
+                                    android:id="@+id/tvRestName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="At SodaBottleOpenerWala"
+                                    android:textColor="@color/grey" />
+                                <TextView
+                                    android:id="@+id/tvShortAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Hitech City, Hyderabad"
+                                    android:textColor="@color/grey" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginRight="25dp"
+                            android:background="@color/lightColor" />
+
+                    </LinearLayout>
+
+
+                </FrameLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvMyFoodViewsTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:text="@string/myRatingAndFoodviews"
+                        android:textColor="@color/bnaColor"
+                        android:textSize="@dimen/heading" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:background="@color/lightColor" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/btnAddFoodview"
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="@color/bnaColor"
+                            android:text="@string/addFoodview"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/primaryButton"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvFoodviewsTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:text="@string/foodviews"
+                        android:textColor="@color/bnaColor"
+                        android:textSize="@dimen/heading" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:background="@color/lightColor" />
+
+                    <TextView
+                        android:id="@+id/tvNoFoodviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="@color/grey"
+                        android:text="@string/noFoodviews"
+                        android:textSize="@dimen/subHeading" />
+
+                    <in.bananaa.utils.CustomListView
+                        android:id="@+id/lvFoodviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:divider="@null"
+                        android:layout_marginBottom="20dp"
+                        android:dividerHeight="0dp"></in.bananaa.utils.CustomListView>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

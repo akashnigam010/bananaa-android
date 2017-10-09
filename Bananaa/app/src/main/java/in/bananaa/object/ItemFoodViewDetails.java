@@ -7,9 +7,10 @@ public class ItemFoodViewDetails implements Parcelable {
     Integer id, itemId;
     String restName, locality, itemName, desc, rating;
     Boolean isAddNewFoodview;
+    Boolean isDetailsAddNew;
 
     public ItemFoodViewDetails(Integer id, Integer itemId, String restName, String locality,
-                               String itemName, String desc, String rating, Boolean isAddNewFoodview) {
+                               String itemName, String desc, String rating, Boolean isAddNewFoodview, Boolean isDetailsAddNew) {
         this.id = id;
         this.itemId = itemId;
         this.restName = restName;
@@ -18,6 +19,7 @@ public class ItemFoodViewDetails implements Parcelable {
         this.desc = desc;
         this.rating = rating;
         this.isAddNewFoodview = isAddNewFoodview;
+        this.isDetailsAddNew = isDetailsAddNew;
     }
 
     public ItemFoodViewDetails(Parcel in) {
@@ -29,6 +31,7 @@ public class ItemFoodViewDetails implements Parcelable {
         itemId = in.readInt();
         rating = in.readString();
         isAddNewFoodview  = (in.readInt() == 0) ? false : true;
+        isDetailsAddNew  = (in.readInt() == 0) ? false : true;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class ItemFoodViewDetails implements Parcelable {
         dest.writeInt(itemId);
         dest.writeString(rating);
         dest.writeInt(isAddNewFoodview ? 1 : 0);
+        dest.writeInt(isDetailsAddNew ? 1 : 0);
     }
 
     @Override
@@ -122,5 +126,13 @@ public class ItemFoodViewDetails implements Parcelable {
 
     public void setAddNewFoodview(Boolean addNewFoodview) {
         isAddNewFoodview = addNewFoodview;
+    }
+
+    public Boolean getDetailsAddNew() {
+        return isDetailsAddNew;
+    }
+
+    public void setDetailsAddNew(Boolean detailsAddNew) {
+        isDetailsAddNew = detailsAddNew;
     }
 }

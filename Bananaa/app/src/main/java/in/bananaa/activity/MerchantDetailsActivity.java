@@ -15,12 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.bananaa.R;
-import in.bananaa.adapter.FoodviewListAdapter;
 import in.bananaa.adapter.ItemListAdapter;
+import in.bananaa.adapter.MyFoodviewsListAdapter;
 import in.bananaa.adapter.TagListAdapter;
 import in.bananaa.object.DataGenerator;
+import in.bananaa.object.FoodviewUtils;
 import in.bananaa.object.ItemFoodViewDetails;
-import in.bananaa.object.MerchantDetails;
+import in.bananaa.object.MerchantDetailsResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.CustomListView;
 import in.bananaa.utils.Utils;
@@ -29,7 +30,7 @@ import static com.bumptech.glide.Glide.with;
 
 public class MerchantDetailsActivity extends AppCompatActivity {
 
-    MerchantDetails merchantDetails;
+    MerchantDetailsResponse merchantDetails;
     AlertMessages messages;
 
     ScrollView merchantDetailsView;
@@ -65,14 +66,20 @@ public class MerchantDetailsActivity extends AppCompatActivity {
 
     ItemListAdapter itemListAdapter;
     TagListAdapter cuisinesListAdapter;
-    FoodviewListAdapter foodviewListAdapter;
+    MyFoodviewsListAdapter myFoodviewsListAdapter;
+
+    FoodviewUtils foodviewUtils;
+
+    AppCompatActivity mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_merchant_details);
         messages = new AlertMessages(this);
-        merchantDetails = (MerchantDetails) getIntent().getSerializableExtra("merchantDetails");
+        merchantDetails = (MerchantDetailsResponse) getIntent().getSerializableExtra("merchantDetails");
+        foodviewUtils = new FoodviewUtils();
         initializeView();
     }
 
@@ -81,7 +88,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
 
         startAsync();
-        new CountDownTimer(1000, 1000) {
+        new CountDownTimer(500, 500) {
             public void onTick(long millisUntilFinished) {
                 //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
             }
@@ -126,12 +133,12 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         itemListAdapter.addAll(merchantDetails.getItems());
         cuisinesListAdapter = new TagListAdapter(this);
         cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());
-        foodviewListAdapter = new FoodviewListAdapter(this, merchantDetails.getName(), merchantDetails.getShortAddress());
-        foodviewListAdapter.addAll(DataGenerator.getMyRecommendations());
+        myFoodviewsListAdapter = new MyFoodviewsListAdapter(this, merchantDetails.getName(), merchantDetails.getShortAddress());
+        myFoodviewsListAdapter.addAll(DataGenerator.getMyRecommendations());
 
         lvCuisinesAndSpread.setAdapter(cuisinesListAdapter);
         lvDelectableDishes.setAdapter(itemListAdapter);
-        lvMyFoodViews.setAdapter(foodviewListAdapter);
+        lvMyFoodViews.setAdapter(myFoodviewsListAdapter);
         btnSeeMore.setOnClickListener(onClickSeeMoreListner);
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onClickRateAndFoodViewListener);
@@ -157,8 +164,9 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         public void onClick(View view) {
             ItemFoodViewDetails itemFoodViewDetails =
                     new ItemFoodViewDetails(null,null, merchantDetails.getName(),
-                            merchantDetails.getShortAddress(), null, null, null, true);
-            foodviewListAdapter.openFoodviewFragment(itemFoodViewDetails);
+                            merchantDetails.getShortAddress(), null, null, null, true, false);
+            //myFoodviewsListAdapter.openFoodviewFragment(itemFoodViewDetails);
+            foodviewUtils.openFoodviewFragment(itemFoodViewDetails, mContext);
         }
     };
 
