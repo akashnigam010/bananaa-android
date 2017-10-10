@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Bananaa</string>
     <string name="facebook_app_id">1631840747117125</string>
+    <string name="google_server_client_id">462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com</string>
     <string name="fb_login_protocol_scheme">fb1631840747117125</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

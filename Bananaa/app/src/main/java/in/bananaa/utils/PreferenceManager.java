@@ -5,7 +5,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import in.bananaa.utils.login.LoginDetails;
+import in.bananaa.utils.login.LoginResponse;
 
 public class PreferenceManager extends Application implements Application.ActivityLifecycleCallbacks {
     private static final String BANANAA = "Bananaa";
@@ -23,16 +23,16 @@ public class PreferenceManager extends Application implements Application.Activi
         prefEditor.commit();
     }
 
-    public static void putLoginDetails(LoginDetails loginDetails) {
-        if (loginDetails == null) {
+    public static void putLoginDetails(LoginResponse loginResponse) {
+        if (loginResponse == null) {
             return;
         }
 
-        putIsLoggedIn(loginDetails.isLoggedIn());
-        putIsSkippedLogin(loginDetails.isSkippedLogin());
+        //putIsLoggedIn(loginDetails.isLoggedIn());
+        //putIsSkippedLogin(loginDetails.isSkippedLogin());
     }
 
-    public static Boolean doSkipLoginScreen() {
+    public static Boolean isSkipLoginScreen() {
         return (preferences.getBoolean(IS_LOGGED_IN, false) ||
                 preferences.getBoolean(IS_SKIPPED_LOGIN, false)) ? true : false;
     }

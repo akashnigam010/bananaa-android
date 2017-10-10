@@ -1,5 +1,7 @@
 package in.bananaa.activity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,17 +12,32 @@ import android.widget.TextView;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.Scopes;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.utils.AlertMessages;
+import in.bananaa.utils.Constant;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
-import in.bananaa.utils.login.LoginDetails;
-import in.bananaa.utils.login.LoginMethod;
+import in.bananaa.utils.login.ClientType;
+import in.bananaa.utils.login.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
@@ -40,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        if (PreferenceManager.doSkipLoginScreen()) {
+        if (PreferenceManager.isSkipLoginScreen()) {
             startMainActivity();
         }
 
@@ -60,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     View.OnClickListener onClickListenerSkip = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            saveLoginDetails(true, false, null);
+            //saveLoginDetails(true, false);
             startMainActivity();
         }
     };
@@ -76,8 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             facebookManager.login(new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    saveLoginDetails(false, true, LoginMethod.FACEBOOK);
-                    startMainActivity();
+                    doLogin(loginResult.getAccessToken().getToken(), ClientType.FACEBOOK);
                 }
 
                 @Override
@@ -117,17 +133,66 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInResult result = googleManager.onActivityResult(requestCode, resultCode, data);
             if (result != null && result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
-                saveLoginDetails(false, true, LoginMethod.GOOGLE);
-                startMainActivity();
+                String scope = "oauth2:"+ Scopes.EMAIL+" "+ Scopes.PROFILE;
+                String mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                String mType = data.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
+                // With the account name acquired, go get the auth token
+                Account account = new Account(mEmail, mType);
+                String accessToken = null;
+                try {
+                    accessToken = GoogleAuthUtil.getToken(getApplicationContext(), account, scope, new Bundle());
+                    doLogin(accessToken, ClientType.GOOGLE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GoogleAuthException e) {
+                    e.printStackTrace();
+                }
             } else {
                 messages.showCustomMessage("Login failed");
             }
         }
     }
 
-    private void saveLoginDetails(Boolean isSkippedLogin, Boolean isLoggedIn, LoginMethod loginMethod) {
-        LoginDetails loginDetails = new LoginDetails(isSkippedLogin, isLoggedIn, loginMethod);
-        PreferenceManager.putLoginDetails(loginDetails);
+    private void doLogin(String accessToken, ClientType clientType) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("accessToken", accessToken);
+            jsonObject.put("client", clientType);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(LoginActivity.this, URLs.LOGIN, entity, "application/json", new LoginActivity.LoginResponseHandler());
+        } catch (UnsupportedEncodingException e) {
+            messages.showCustomMessage("Something seems fishy! Please try again");
+            e.printStackTrace();
+        } catch (Exception e) {
+            messages.showCustomMessage("Something seems fishy! Please try again");
+            e.printStackTrace();
+        }
+    }
+
+    public class LoginResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            LoginResponse response = new Gson().fromJson(new String(responseBody), LoginResponse.class);
+            if (response.isResult()) {
+                saveLoginDetails(response);
+                startMainActivity();
+            } else {
+                messages.showCustomMessage("Something seems fishy! Please try after some time.");
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            //asyncEnd();
+            messages.showCustomMessage("Something seems fishy! Please try after some time.");
+        }
+    }
+
+    private void saveLoginDetails(LoginResponse loginResponse) {
+        PreferenceManager.putLoginDetails(loginResponse);
     }
 
     private void startMainActivity() {
