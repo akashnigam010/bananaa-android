@@ -1,7 +1,6 @@
 package in.bananaa.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -21,41 +20,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.activity.FoodviewActivity;
-import in.bananaa.object.ItemFoodViewDetails;
-import in.bananaa.object.MyFoodview;
+import in.bananaa.object.Foodview;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.R.layout.foodview;
 
-public class MyFoodviewsListAdapter extends BaseAdapter {
+public class FoodviewsListAdapter extends BaseAdapter {
 
-    private static final String TAG = "MY_FOODVIEW_LIST_ADAPTER";
-    List<MyFoodview> myFoodviews;
+    private static final String TAG = "FOODVIEW_LIST_ADAPTER";
+    List<Foodview> foodviews;
     private AppCompatActivity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
-    String merchantName;
-    String locality;
 
-    public MyFoodviewsListAdapter(AppCompatActivity activity, String merchantName, String locality) {
+    public FoodviewsListAdapter(AppCompatActivity activity) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
-        myFoodviews = new ArrayList<>();
-        this.merchantName = merchantName;
-        this.locality = locality;
+        foodviews = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return myFoodviews.size();
+        return foodviews.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return myFoodviews.get(position);
+        return foodviews.get(position);
     }
 
     @Override
@@ -63,14 +56,14 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addAll(List<MyFoodview> myFoodviews) {
-        this.myFoodviews.clear();
+    public void addAll(List<Foodview> myFoodviews) {
+        this.foodviews.clear();
         appendAll(myFoodviews);
     }
 
-    public void appendAll(List<MyFoodview> myFoodviews) {
+    public void appendAll(List<Foodview> myFoodviews) {
         try {
-            this.myFoodviews.addAll(myFoodviews);
+            this.foodviews.addAll(myFoodviews);
         } catch (Exception e) {
             Debug.e(TAG, e.getMessage());
         }
@@ -101,25 +94,26 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tvName.setText(myFoodviews.get(position).getName());
-        setSubheading(holder, myFoodviews.get(position).getTotalRcmdns());
-        holder.tvRating.setText(myFoodviews.get(position).getRating());
+        holder.tvName.setText(foodviews.get(position).getUserName());
+        setSubheading(holder, foodviews.get(position).getUserRatingCount(), foodviews.get(position).getUserFoodviewCount());
+        holder.tvRating.setText(foodviews.get(position).getRating());
+        holder.tvYouRated.setVisibility(View.GONE);
         background = (GradientDrawable) holder.tvRating.getBackground();
-        RatingColorType colorType = RatingColorType.getCodeByCssClass(myFoodviews.get(position).getRatingClass());
+        RatingColorType colorType = RatingColorType.getCodeByCssClass(foodviews.get(position).getRatingClass());
         if (colorType == null) {
             colorType = RatingColorType.R25;
         }
         background.setColor(mContext.getResources().getColor(colorType.getColor()));
-        if (Utils.isEmpty(myFoodviews.get(position).getDescription())) {
+        if (Utils.isEmpty(foodviews.get(position).getDesc())) {
             holder.tvDescription.setVisibility(View.GONE);
         } else {
             holder.tvDescription.setVisibility(View.VISIBLE);
-            holder.tvDescription.setText(myFoodviews.get(position).getDescription());
+            holder.tvDescription.setText(foodviews.get(position).getDesc());
         }
-        holder.tvTimeDiff.setText(myFoodviews.get(position).getTimeDiff());
+        holder.tvTimeDiff.setText(foodviews.get(position).getTimeDiff());
 
-        if (Utils.isNotEmpty(myFoodviews.get(position).getThumbnail())) {
-            Glide.with(mContext).load(myFoodviews.get(position).getThumbnail()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
+        if (Utils.isNotEmpty(foodviews.get(position).getUserImageUrl())) {
+            Glide.with(mContext).load(foodviews.get(position).getUserImageUrl()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =
@@ -128,53 +122,41 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
                     holder.ivThumbnail.setImageDrawable(circularBitmapDrawable);
                 }
             });
-            convertView.setOnClickListener(new CustomImageClickListener(mContext, myFoodviews.get(position)));
+            convertView.setOnClickListener(new CustomUserClickListener(mContext, foodviews.get(position).getUserId()));
         } else {
             holder.ivThumbnail.setImageResource(R.color.lightColor);
         }
+
+        holder.tvName.setOnClickListener(new CustomUserClickListener(mContext, foodviews.get(position).getUserId()));
+        holder.tvSubString.setOnClickListener(new CustomUserClickListener(mContext, foodviews.get(position).getUserId()));
         setFont(holder);
         return convertView;
     }
 
-    private class CustomImageClickListener implements View.OnClickListener{
+    private class CustomUserClickListener implements View.OnClickListener{
         private Context mContext;
-        private MyFoodview myFoodview;
+        private Integer userId;
 
-        public CustomImageClickListener(Context context, MyFoodview myFoodview){
+        public CustomUserClickListener(Context context, Integer userId){
             this.mContext = context;
-            this.myFoodview = myFoodview;
+            this.userId = userId;
         }
 
         @Override
         public void onClick(View v){
-            openRecommendationModal(this.myFoodview);
+            // open user profile using user id
         }
     }
 
-    private void setSubheading(ViewHolder holder, Integer totalRcmds) {
-        if (totalRcmds == 1) {
-            holder.tvSubString.setText(mContext.getResources().getString(R.string.foodviewCountStr1));
-        } else {
-            holder.tvSubString.setText(mContext.getResources().getString(R.string.foodviewCountStr2, (totalRcmds-1)));
-        }
+    private void setSubheading(ViewHolder holder, Integer ratingCount, Integer foodviewCount) {
+        holder.tvSubString.setText(mContext.getResources().getString(R.string.ratingAndFoodviwes, ratingCount, foodviewCount));
     }
 
     private void setFont(ViewHolder holder) {
         holder.tvName.setTypeface(Utils.getBold(mContext));
         holder.tvSubString.setTypeface(Utils.getRegularFont(mContext));
         holder.tvRating.setTypeface(Utils.getRegularFont(mContext));
-        holder.tvYouRated.setTypeface(Utils.getRegularFont(mContext));
         holder.tvDescription.setTypeface(Utils.getRegularFont(mContext));
         holder.tvTimeDiff.setTypeface(Utils.getRegularFont(mContext));
-    }
-
-    private void openRecommendationModal(MyFoodview myFoodview) {
-        ItemFoodViewDetails itemFoodViewDetails =
-                new ItemFoodViewDetails(myFoodview.getId(), myFoodview.getItemId(),
-                        merchantName, locality, myFoodview.getName(),
-                        myFoodview.getDescription(), Float.parseFloat(myFoodview.getRating()), false);
-        Intent i = new Intent(mContext, FoodviewActivity.class);
-        i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-        mContext.startActivity(i);
     }
 }

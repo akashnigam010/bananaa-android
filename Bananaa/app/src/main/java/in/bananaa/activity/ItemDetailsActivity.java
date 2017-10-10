@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import in.bananaa.R;
+import in.bananaa.adapter.FoodviewsListAdapter;
 import in.bananaa.object.ItemDetailsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.RatingColorType;
@@ -42,9 +43,11 @@ public class ItemDetailsActivity extends AppCompatActivity {
     TextView tvMyFoodViewsTxt;
     Button btnAddFoodview;
     TextView tvFoodviewsTxt;
-    TextView tvNoFoodviews;
 
+    TextView tvNoFoodviews;
     ListView lvFoodviews;
+
+    FoodviewsListAdapter foodviewsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
         messages = new AlertMessages(this);
+        foodviewsListAdapter = new FoodviewsListAdapter(this);
         itemDetails = (ItemDetailsResponse) getIntent().getSerializableExtra("itemDetails");
         initializeView();
     }
@@ -71,6 +75,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 setComponents();
                 setFonts();
                 setItemDetails();
+                setFoodviews();
             }
         }.start();
     }
@@ -135,6 +140,18 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     .into(ivImage);
         } else {
             ivImage.setImageResource(R.color.lightColor);
+        }
+    }
+
+    private void setFoodviews() {
+        if (itemDetails.getFoodviews().size() == 0) {
+            tvNoFoodviews.setVisibility(View.VISIBLE);
+            lvFoodviews.setVisibility(View.GONE);
+        } else {
+            tvNoFoodviews.setVisibility(View.GONE);
+            lvFoodviews.setVisibility(View.VISIBLE);
+            foodviewsListAdapter.addAll(itemDetails.getFoodviews());
+            lvFoodviews.setAdapter(foodviewsListAdapter);
         }
     }
 

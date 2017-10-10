@@ -3,15 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context="in.bananaa.activity.ImageViewActivity">
 
-    <TouchImageView
-        android:id="@+id/ivImage"
-        android:layout_width="fill_parent"
+    <ImageButton
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="matrix"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_top_feedback"
-        android:adjustViewBounds="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_margin="20dp"
+        android:background="@drawable/ic_arrow_back_white" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_centerInParent="true">
+
+        <in.bananaa.utils.TouchImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:id="@+id/ivImage" />
+
+    </LinearLayout>
 
 </RelativeLayout>

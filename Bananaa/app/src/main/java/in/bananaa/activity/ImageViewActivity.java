@@ -1,10 +1,9 @@
 package in.bananaa.activity;
 
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import in.bananaa.R;
@@ -13,8 +12,7 @@ import static com.bumptech.glide.Glide.with;
 
 public class ImageViewActivity extends AppCompatActivity {
     private ImageView ivImage;
-    private ScaleGestureDetector scaleGestureDetector;
-    private Matrix matrix = new Matrix();
+    private ImageButton ivBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,24 +25,12 @@ public class ImageViewActivity extends AppCompatActivity {
                 .placeholder(R.color.grey)
                 .crossFade()
                 .into(ivImage);
-        scaleGestureDetector = new ScaleGestureDetector(this,new ScaleListener());
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        scaleGestureDetector.onTouchEvent(ev);
-        return true;
-    }
-
-    private class ScaleListener extends ScaleGestureDetector.
-            SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            float scaleFactor = detector.getScaleFactor();
-            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
-            matrix.setScale(scaleFactor, scaleFactor);
-            ivImage.setImageMatrix(matrix);
-            return true;
-        }
+        ivBack = (ImageButton) findViewById(R.id.ivBack);
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

@@ -46,4 +46,5 @@
     <string name="myRatingAndFoodviews">My Rating and Foodview</string>
     <string name="foodviews">Foodviews</string>
     <string name="noFoodviews">No one has added a foodview yet</string>
+    <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
 </resources>
