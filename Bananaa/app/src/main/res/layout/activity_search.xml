@@ -60,9 +60,6 @@
         <ProgressBar
             android:id="@+id/globalSearchLoader"
             style="?android:attr/progressBarStyleLarge"
-            android:layout_alignTop="@id/etGlobalSearch"
-            android:layout_alignBottom="@id/etGlobalSearch"
-            android:layout_alignRight="@id/etGlobalSearch"
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight="0.2"

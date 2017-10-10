@@ -1,29 +1,24 @@
 package in.bananaa.activity;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.Scopes;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import cz.msebera.android.httpclient.Header;
@@ -40,8 +35,7 @@ import in.bananaa.utils.login.ClientType;
 import in.bananaa.utils.login.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final int RC_SIGN_IN = 9001;
-
+    ProgressBar progress;
     TextView tvSkip;
     Button fbLoginBtn;
     Button googleLoginBtn;
@@ -57,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        if (PreferenceManager.isSkipLoginScreen()) {
+        if (PreferenceManager.isUserLoggedIn()) {
             startMainActivity();
         }
 
@@ -65,10 +59,12 @@ public class LoginActivity extends AppCompatActivity {
         googleManager = new GoogleManager(this);
 
         messages = new AlertMessages(this);
+        progress = (ProgressBar) findViewById(R.id.loginLoader);
         tvSkip = (TextView) findViewById(R.id.tvSkip);
         fbLoginBtn = (Button) findViewById(R.id.fbLogin);
         googleLoginBtn = (Button) findViewById(R.id.googleLogin);
         setFont();
+        tvSkip.setVisibility(View.GONE);
         tvSkip.setOnClickListener(onClickListenerSkip);
         fbLoginBtn.setOnClickListener(onFbSignIn);
         googleLoginBtn.setOnClickListener(onGoogleSignIn);
@@ -77,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
     View.OnClickListener onClickListenerSkip = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //saveLoginDetails(true, false);
             startMainActivity();
         }
     };
@@ -133,20 +128,8 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInResult result = googleManager.onActivityResult(requestCode, resultCode, data);
             if (result != null && result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
-                String scope = "oauth2:"+ Scopes.EMAIL+" "+ Scopes.PROFILE;
-                String mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                String mType = data.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
-                // With the account name acquired, go get the auth token
-                Account account = new Account(mEmail, mType);
-                String accessToken = null;
-                try {
-                    accessToken = GoogleAuthUtil.getToken(getApplicationContext(), account, scope, new Bundle());
-                    doLogin(accessToken, ClientType.GOOGLE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (GoogleAuthException e) {
-                    e.printStackTrace();
-                }
+                String authCode = acct.getServerAuthCode();
+                doLogin(authCode, ClientType.GOOGLE);
             } else {
                 messages.showCustomMessage("Login failed");
             }
@@ -156,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
     private void doLogin(String accessToken, ClientType clientType) {
         try {
             JSONObject jsonObject = new JSONObject();
+            asyncStart();
             jsonObject.put("accessToken", accessToken);
             jsonObject.put("client", clientType);
             StringEntity entity = new StringEntity(jsonObject.toString());
@@ -175,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            asyncEnd();
             LoginResponse response = new Gson().fromJson(new String(responseBody), LoginResponse.class);
             if (response.isResult()) {
                 saveLoginDetails(response);
@@ -186,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            //asyncEnd();
+            asyncEnd();
             messages.showCustomMessage("Something seems fishy! Please try after some time.");
         }
     }
@@ -205,5 +190,13 @@ public class LoginActivity extends AppCompatActivity {
         tvSkip.setTypeface(Utils.getRegularFont(this));
         fbLoginBtn.setTypeface(Utils.getRegularFont(this));
         googleLoginBtn.setTypeface(Utils.getRegularFont(this));
+    }
+
+    public void asyncStart() {
+        progress.setVisibility(View.VISIBLE);
+    }
+
+    public void asyncEnd() {
+        progress.setVisibility(View.INVISIBLE);
     }
 }
