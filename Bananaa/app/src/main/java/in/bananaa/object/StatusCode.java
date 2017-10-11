@@ -2,7 +2,9 @@ package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
 
-public class StatusCode {
+import java.io.Serializable;
+
+public class StatusCode implements Serializable {
     @SerializedName("code")
     public String code;
 

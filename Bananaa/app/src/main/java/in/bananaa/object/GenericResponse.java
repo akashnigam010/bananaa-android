@@ -2,9 +2,10 @@ package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class GenericResponse {
+public class GenericResponse implements Serializable {
 
     @SerializedName("result")
     private boolean result;

@@ -2,7 +2,9 @@ package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GlobalSearchItem {
+import java.io.Serializable;
+
+public class GlobalSearchItem implements Serializable {
     @SerializedName("type")
     private SearchResultType type;
 

@@ -15,6 +15,9 @@ public class LoginUserDto {
     @SerializedName("imageUrl")
     private String imageUrl;
 
+    @SerializedName("isPreferencesSaved")
+    private boolean isPreferencesSaved;
+
     public Integer getId() {
         return id;
     }
@@ -45,5 +48,13 @@ public class LoginUserDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isPreferencesSaved() {
+        return isPreferencesSaved;
+    }
+
+    public void setPreferencesSaved(boolean preferencesSaved) {
+        isPreferencesSaved = preferencesSaved;
     }
 }

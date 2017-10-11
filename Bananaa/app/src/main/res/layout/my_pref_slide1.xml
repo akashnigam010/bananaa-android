@@ -7,22 +7,24 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvPref1Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Veg or Non Veg?"
+            android:text="Veg or NonVeg ?"
             android:textColor="@color/bnaColor"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:textSize="40dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="40dp"
+            android:layout_marginTop="60dp"
             android:paddingLeft="40dp"
             android:orientation="vertical">
 
@@ -34,22 +36,25 @@
                 <RadioButton android:id="@+id/rbVeg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Only Veg"
+                    android:text="@string/veg"
                     android:textColor="@color/darkGrey"
+                    android:buttonTint="@color/bnaColor"
                     android:textSize="20dp"/>
                 <RadioButton android:id="@+id/rbNonVeg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Non Veg-ggggg"
+                    android:text="@string/nonveg"
                     android:textColor="@color/darkGrey"
+                    android:buttonTint="@color/bnaColor"
                     android:textSize="20dp"/>
                 <RadioButton android:id="@+id/rbAnything"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Duh! Anything"
+                    android:text="@string/anything"
                     android:textColor="@color/darkGrey"
+                    android:buttonTint="@color/bnaColor"
                     android:textSize="20dp"/>
             </RadioGroup>
 

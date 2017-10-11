@@ -15,7 +15,9 @@ public class PreferenceManager extends Application implements Application.Activi
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
     private static final String IMAGE_URL = "imageUrl";
+    private static final String IS_PREFERENCES_SAVED = "isPreferencesSaved";
     private static final String ACCESS_TOKEN = "accessToken";
+    private static final String IS_FIRST_TIME_LAUNCH = "isFirstLaunch";
 
     private static SharedPreferences preferences;
     private static SharedPreferences.Editor prefEditor;
@@ -38,6 +40,7 @@ public class PreferenceManager extends Application implements Application.Activi
         prefEditor.putString(FIRST_NAME, loginResponse.getUser().getFirstName());
         prefEditor.putString(LAST_NAME, loginResponse.getUser().getLastName());
         prefEditor.putString(IMAGE_URL, loginResponse.getUser().getImageUrl());
+        prefEditor.putBoolean(IS_PREFERENCES_SAVED, loginResponse.getUser().isPreferencesSaved());
         prefEditor.putString(ACCESS_TOKEN, loginResponse.getAccessToken());
         prefEditor.commit();
     }
@@ -46,16 +49,21 @@ public class PreferenceManager extends Application implements Application.Activi
         return preferences.getBoolean(IS_LOGGED_IN, false);
     }
 
-    public static void setFirstTimeLaunch(Boolean flag) {
-        // add logic
+    public static void setFirstTimeLaunch(Boolean value) {
+        prefEditor.putBoolean(IS_FIRST_TIME_LAUNCH, value);
+        prefEditor.commit();
     }
 
     public static Boolean isFirstTimeLaunch() {
-        return true;
+        return preferences.getBoolean(IS_FIRST_TIME_LAUNCH, false);
     }
 
     public static String getAccessToken() {
         return preferences.getString(ACCESS_TOKEN, null);
+    }
+
+    public static Boolean getIsPreferencesSaved() {
+        return preferences.getBoolean(IS_PREFERENCES_SAVED, false);
     }
 
     public static LoginUserDto getLoginDetails() {
@@ -64,6 +72,7 @@ public class PreferenceManager extends Application implements Application.Activi
         user.setFirstName(preferences.getString(FIRST_NAME, null));
         user.setLastName(preferences.getString(LAST_NAME, null));
         user.setImageUrl(preferences.getString(IMAGE_URL, null));
+        user.setPreferencesSaved(preferences.getBoolean(IS_PREFERENCES_SAVED, false));
         return user;
     }
 
@@ -73,6 +82,7 @@ public class PreferenceManager extends Application implements Application.Activi
         prefEditor.putString(FIRST_NAME, null);
         prefEditor.putString(LAST_NAME, null);
         prefEditor.putString(IMAGE_URL, null);
+        prefEditor.putString(IS_PREFERENCES_SAVED, null);
         prefEditor.putString(ACCESS_TOKEN, null);
         prefEditor.commit();
     }

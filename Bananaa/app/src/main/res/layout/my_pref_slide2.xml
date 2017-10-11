@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
         <TextView
@@ -17,22 +17,35 @@
             android:layout_height="wrap_content"
             android:text="Cuisines you'd kill for ?"
             android:textColor="@color/bnaColor"
+            android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:textSize="40dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="40dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
 
             <EditText
                 android:id="@+id/etPrefCuisine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Biryani, Chinese, Tex Mex, Parsi..."/>
+                android:hint="Biryani, Chinese, Tex Mex, Parsi..." />
 
+            <!--<ListView-->
+                <!--android:id="@+id/lvSearchResults"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_margin="6dp"-->
+                <!--android:divider="@android:color/transparent"-->
+                <!--android:background="@color/white"-->
+                <!--android:dividerHeight="1dp">-->
+
+            <!--</ListView>-->
         </LinearLayout>
+
 
     </LinearLayout>
 </RelativeLayout>

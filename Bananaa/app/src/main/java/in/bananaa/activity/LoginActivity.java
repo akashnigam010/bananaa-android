@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
+import in.bananaa.object.myPreferences.MyPreferences;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.FacebookManager;
@@ -170,6 +171,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MyPreferencesActivity.class);
+        MyPreferences myPreferences = new MyPreferences();
+        myPreferences.setType(2);
+        intent.putExtra(MyPreferencesActivity.MY_PREFERENCES, myPreferences);
         startActivity(intent);
         finish();
     }

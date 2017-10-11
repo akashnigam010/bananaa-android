@@ -14,6 +14,13 @@
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
 
+    <!--My Preferences Screen-->
+    <string name="back">BACK</string>
+    <string name="submit">SUBMIT</string>
+    <string name="veg">Only Veg</string>
+    <string name="nonveg">Non Veg-ggg</string>
+    <string name="anything">Duh! Really Anything</string>
+
     <string name="slide_1_title">Hello Food!</string>
     <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>
 

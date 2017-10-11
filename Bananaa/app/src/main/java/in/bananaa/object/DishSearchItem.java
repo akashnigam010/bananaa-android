@@ -2,7 +2,9 @@ package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DishSearchItem {
+import java.io.Serializable;
+
+public class DishSearchItem implements Serializable {
     @SerializedName("id")
     private Integer id;
 
