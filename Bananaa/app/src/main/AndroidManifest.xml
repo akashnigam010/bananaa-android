@@ -58,6 +58,8 @@
         <activity android:name=".activity.ItemDetailsActivity" />
         <activity android:name=".activity.ImageViewActivity" />
         <activity android:name=".activity.FoodviewActivity" />
+        <activity android:name=".activity.WelcomeActivity" />
+        <activity android:name=".activity.MyPreferencesActivity"></activity>
     </application>
 
 </manifest>

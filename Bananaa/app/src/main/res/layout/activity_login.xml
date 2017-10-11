@@ -52,6 +52,21 @@
                     android:indeterminateTint="@color/bnaColor"
                     android:visibility="invisible"/>
 
+                <TextView
+                    android:id="@+id/tvNoInternet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="all"
+                    android:linksClickable="false"
+                    android:padding="10dp"
+                    android:selectAllOnFocus="false"
+                    android:text="@string/noInternetLogin"
+                    android:textColor="@color/bnaColor"
+                    android:textSize="14sp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginBottom="30dip"/>
+
                 <Button
                     android:layout_width="300dip"
                     android:layout_height="50dip"
@@ -85,6 +100,7 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:layout_gravity="center"
+                    android:visibility="gone"
                     android:layout_marginBottom="30dip"/>
 
             </LinearLayout>

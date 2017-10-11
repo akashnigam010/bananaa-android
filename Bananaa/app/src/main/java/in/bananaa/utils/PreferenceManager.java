@@ -46,6 +46,14 @@ public class PreferenceManager extends Application implements Application.Activi
         return preferences.getBoolean(IS_LOGGED_IN, false);
     }
 
+    public static void setFirstTimeLaunch(Boolean flag) {
+        // add logic
+    }
+
+    public static Boolean isFirstTimeLaunch() {
+        return true;
+    }
+
     public static String getAccessToken() {
         return preferences.getString(ACCESS_TOKEN, null);
     }

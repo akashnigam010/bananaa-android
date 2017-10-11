@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,20 +37,19 @@ import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 public class SearchActivity extends AppCompatActivity {
-
+    Context mContext;
     TextView tvTitle;
     EditText etSearch;
     ListView lvSearchResults;
     GlobalSearchAdapter globalSearchAdapter;
-    AlertMessages messages;
     ProgressBar progress;
     ImageView cancelIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        messages = new AlertMessages(this);
         globalSearchAdapter = new GlobalSearchAdapter(this);
 
         customizeToolbar();
@@ -131,7 +131,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void doSearch(String searchString) {
         if (!Utils.isInternetConnected(SearchActivity.this)) {
-            messages.showCustomMessage("No Internet Connection");
+            AlertMessages.noInternet(mContext);
             return;
         } else {
             try {
@@ -140,15 +140,12 @@ public class SearchActivity extends AppCompatActivity {
                 jsonObject.put("searchString", searchString);
                 StringEntity entity = new StringEntity(jsonObject.toString());
                 AsyncHttpClient client = new AsyncHttpClient();
-                //client.addHeader("Authorization", "Bearer " + PreferenceManager.getToken());
                 client.setTimeout(Constant.TIMEOUT);
                 client.post(SearchActivity.this, URLs.GLOBAL_SEARCH, entity, "application/json", new GlobalSearchResponseHandler());
             } catch (UnsupportedEncodingException e) {
-                messages.showCustomMessage("Something seems fishy! Please try again");
-                e.printStackTrace();
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             } catch (Exception e) {
-                messages.showCustomMessage("Something seems fishy! Please try again");
-                e.printStackTrace();
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
         }
     }
@@ -160,30 +157,20 @@ public class SearchActivity extends AppCompatActivity {
             asyncEnd();
             GlobalSearchResponse response = new Gson().fromJson(new String(responseBody), GlobalSearchResponse.class);
             if (response.isResult()) {
-                if (response.getSearchItems() != null) {
-                    // remove below extra logic to handle no results found
-                    if (response.getSearchItems().size() == 1) {
-                        if (response.getSearchItems().get(0).getType() != null){
-                            globalSearchAdapter.addAll(response.getSearchItems());
-                        } else {
-                            messages.showCustomMessage("No results found");
-                        }
-                    } else {
-                        globalSearchAdapter.addAll(response.getSearchItems());
-                    }
-
+                if (response.getSearchItems() != null && response.getSearchItems().size() > 0) {
+                    globalSearchAdapter.addAll(response.getSearchItems());
                 } else {
-                    messages.showCustomMessage("No results found");
+                    //messages.showCustomMessage("No results found");
                 }
             } else {
-                messages.showCustomMessage("Something seems fishy! Please try after some time.");
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            //messages.showCustomMessage("Something seems fishy! Please try after some time.");
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
 

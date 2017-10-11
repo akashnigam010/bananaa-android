@@ -8,6 +8,30 @@
 
     <string name="rupees">\u20B9</string>
 
+    <!--Welcome Screen-->
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Hello Food!</string>
+    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>
+
+    <string name="slide_2_title">Movie Tickets</string>
+    <string name="slide_2_desc">Book movie tickets for your family and friends!</string>
+
+    <string name="slide_3_title">Great Discounts</string>
+    <string name="slide_3_desc">Best discounts on every single service we offer!</string>
+
+    <string name="slide_4_title">World Travel</string>
+    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
+    <!--Error messages-->
+    <string name="genericError">Something seems fishy. Please try again</string>
+
     <!--Across App-->
     <string name="name">Bananaa</string>
     <string name="default_location">Hyderabad</string>
@@ -23,6 +47,7 @@
     <string name="login_fb">Continue with Facebook</string>
     <string name="login_google">Continue with Google</string>
     <string name="skip_for_now">SKIP FOR NOW</string>
+    <string name="noInternetLogin">No internet connection :(</string>
 
     <!-- Merchant Details Screen -->
     <string name="directions">Maps and Directions</string>
@@ -48,4 +73,9 @@
     <string name="foodviews">Foodviews</string>
     <string name="noFoodviews">No one has added a foodview yet</string>
     <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
+
+    <!--Alert Modals-->
+    <string name="defaultErrorTitle">Uh-oh!</string>
+    <string name="noInternet">No internet connection</string>
+    <string name="defaultDismissText">DISMISS</string>
 </resources>

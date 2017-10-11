@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvPref3Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Things you can never give up ?"
+            android:textColor="@color/bnaColor"
+            android:gravity="center"
+            android:textSize="40dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="40dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etPrefItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chicken, Paneer, Dosa, Nachos..."/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

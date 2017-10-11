@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,11 +36,11 @@ import in.bananaa.utils.login.ClientType;
 import in.bananaa.utils.login.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
+    Context mContext;
     ProgressBar progress;
-    TextView tvSkip;
     Button fbLoginBtn;
     Button googleLoginBtn;
-    AlertMessages messages;
+    TextView tvNoInternet;
 
     FacebookManager facebookManager;
     GoogleManager googleManager;
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if (PreferenceManager.isUserLoggedIn()) {
@@ -58,33 +60,24 @@ public class LoginActivity extends AppCompatActivity {
         facebookManager = new FacebookManager(this);
         googleManager = new GoogleManager(this);
 
-        messages = new AlertMessages(this);
+        tvNoInternet = (TextView) findViewById(R.id.tvNoInternet);
         progress = (ProgressBar) findViewById(R.id.loginLoader);
-        tvSkip = (TextView) findViewById(R.id.tvSkip);
         fbLoginBtn = (Button) findViewById(R.id.fbLogin);
         googleLoginBtn = (Button) findViewById(R.id.googleLogin);
         setFont();
-        tvSkip.setVisibility(View.GONE);
-        tvSkip.setOnClickListener(onClickListenerSkip);
         fbLoginBtn.setOnClickListener(onFbSignIn);
         googleLoginBtn.setOnClickListener(onGoogleSignIn);
     }
-
-    View.OnClickListener onClickListenerSkip = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startMainActivity();
-        }
-    };
 
     View.OnClickListener onFbSignIn = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             isFbLogin = true;
             if (!Utils.isInternetConnected(LoginActivity.this)) {
-                messages.showCustomMessage("No Internet Connection");
+                tvNoInternet.setVisibility(View.VISIBLE);
                 return;
             }
+            tvNoInternet.setVisibility(View.GONE);
             facebookManager.login(new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
@@ -92,13 +85,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancel() {
-                    messages.showCustomMessage("FB Login cancelled");
-                }
+                public void onCancel() {}
 
                 @Override
                 public void onError(FacebookException error) {
-                    messages.showCustomMessage("Some error occurred - fb login");
+                    AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
                 }
             });
         }
@@ -109,9 +100,10 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             isGoogleLogin = true;
             if (!Utils.isInternetConnected(LoginActivity.this)) {
-                messages.showCustomMessage("No connection");
+                tvNoInternet.setVisibility(View.VISIBLE);
                 return;
             } else {
+                tvNoInternet.setVisibility(View.GONE);
                 googleManager.login();
                 return;
             }
@@ -130,8 +122,6 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String authCode = acct.getServerAuthCode();
                 doLogin(authCode, ClientType.GOOGLE);
-            } else {
-                messages.showCustomMessage("Login failed");
             }
         }
     }
@@ -147,11 +137,9 @@ public class LoginActivity extends AppCompatActivity {
             client.setTimeout(Constant.TIMEOUT);
             client.post(LoginActivity.this, URLs.LOGIN, entity, "application/json", new LoginActivity.LoginResponseHandler());
         } catch (UnsupportedEncodingException e) {
-            messages.showCustomMessage("Something seems fishy! Please try again");
-            e.printStackTrace();
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            messages.showCustomMessage("Something seems fishy! Please try again");
-            e.printStackTrace();
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
 
@@ -165,14 +153,14 @@ public class LoginActivity extends AppCompatActivity {
                 saveLoginDetails(response);
                 startMainActivity();
             } else {
-                messages.showCustomMessage("Something seems fishy! Please try after some time.");
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            messages.showCustomMessage("Something seems fishy! Please try after some time.");
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
 
@@ -181,13 +169,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MyPreferencesActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void setFont() {
-        tvSkip.setTypeface(Utils.getRegularFont(this));
+        tvNoInternet.setTypeface(Utils.getRegularFont(this));
         fbLoginBtn.setTypeface(Utils.getRegularFont(this));
         googleLoginBtn.setTypeface(Utils.getRegularFont(this));
     }
