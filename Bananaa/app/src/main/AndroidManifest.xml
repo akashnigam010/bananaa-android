@@ -59,7 +59,8 @@
         <activity android:name=".activity.ImageViewActivity" />
         <activity android:name=".activity.FoodviewActivity" />
         <activity android:name=".activity.WelcomeActivity" />
-        <activity android:name=".activity.MyPreferencesActivity"></activity>
+        <activity android:name=".activity.MyPreferencesActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

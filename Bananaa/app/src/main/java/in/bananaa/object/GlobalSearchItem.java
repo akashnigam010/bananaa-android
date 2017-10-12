@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class GlobalSearchItem implements Serializable {
+    @SerializedName("id")
+    private Integer id;
+
     @SerializedName("type")
     private SearchResultType type;
 
@@ -19,6 +22,14 @@ public class GlobalSearchItem implements Serializable {
 
     @SerializedName("merchantUrl")
     private String merchantUrl;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public SearchResultType getType() {
         return type;

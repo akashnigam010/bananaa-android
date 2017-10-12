@@ -31,19 +31,41 @@
                 android:id="@+id/etPrefCuisine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:imeOptions="actionDone"
                 android:hint="Biryani, Chinese, Tex Mex, Parsi..." />
 
-            <!--<ListView-->
-                <!--android:id="@+id/lvSearchResults"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_margin="6dp"-->
-                <!--android:divider="@android:color/transparent"-->
-                <!--android:background="@color/white"-->
-                <!--android:dividerHeight="1dp">-->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
 
-            <!--</ListView>-->
+                <com.plumillonforge.android.chipview.ChipView
+                    android:id="@+id/cvCuisines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    chip_corner_radius="10dp"
+                    chip_line_spacing="8dp"
+                    chip_padding="5dp"
+                    chip_side_padding="5dp"
+                    chip_spacing="6dp" />
+
+                <ListView
+                    android:id="@+id/lvSearchCuisine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="6dp"
+                    android:divider="@android:color/transparent"
+                    android:background="@color/white"
+                    android:dividerHeight="1dp">
+                </ListView>
+
+            </FrameLayout>
+
         </LinearLayout>
 
 

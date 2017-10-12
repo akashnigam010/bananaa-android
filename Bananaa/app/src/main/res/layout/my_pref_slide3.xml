@@ -28,10 +28,45 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/etPrefItem"
+                android:id="@+id/etPrefSuggestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:imeOptions="actionDone"
                 android:hint="Chicken, Paneer, Dosa, Nachos..."/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <com.plumillonforge.android.chipview.ChipView
+                    android:id="@+id/cvSuggestions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    chip_corner_radius="10dp"
+                    chip_line_spacing="8dp"
+                    chip_padding="5dp"
+                    chip_side_padding="5dp"
+                    chip_spacing="6dp" />
+
+                <ListView
+                    android:id="@+id/lvSearchSuggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="6dp"
+
+                    android:divider="@android:color/transparent"
+                    android:background="@color/white"
+                    android:dividerHeight="1dp">
+                </ListView>
+
+            </FrameLayout>
 
         </LinearLayout>
 
