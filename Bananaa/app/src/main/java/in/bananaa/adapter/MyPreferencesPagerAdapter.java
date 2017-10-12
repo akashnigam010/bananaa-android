@@ -7,12 +7,15 @@ import android.support.v4.view.PagerAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipView;
 import com.plumillonforge.android.chipview.ChipViewAdapter;
+import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import org.json.JSONObject;
 
@@ -33,6 +37,7 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
+import in.bananaa.object.DataGenerator;
 import in.bananaa.object.GlobalSearchItem;
 import in.bananaa.object.GlobalSearchResponse;
 import in.bananaa.object.SearchResultType;
@@ -58,6 +63,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
     private TextView tvPref2Title;
     private EditText etPrefCuisine;
+    private ProgressBar pbCuisineLoader;
+    private ImageView ivCuisineSearchCancel;
     private ListView lvSearchCuisine;
     private TagSearchAdapter cuisineSearchAdapter;
     private ChipView cvCuisines;
@@ -66,7 +73,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
     private TextView tvPref3Title;
     private EditText etPrefSuggestion;
-    private ListView lvSearchSuggestion;
+    private ProgressBar pbSuggestionLoader;
+    private ImageView ivSuggestionSearchCancel;
+    //private ListView lvSearchSuggestion;
     private TagSearchAdapter suggestionSearchAdapter;
     private ChipView cvSuggestions;
     private ChipViewAdapter cvSuggestionChipViewAdapter;
@@ -112,8 +121,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         tvPref1Title = (TextView) view.findViewById(R.id.tvPref1Title);
         rgVegNonVeg = (RadioGroup) view.findViewById(R.id.rgVegNonVeg);
         rbVeg = (RadioButton) view.findViewById(R.id.rbVeg);
-        rbNonVeg = (RadioButton) view.findViewById(R.id.rbVeg);
-        rbAnything = (RadioButton) view.findViewById(R.id.rbVeg);
+        rbNonVeg = (RadioButton) view.findViewById(R.id.rbNonVeg);
+        rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
         if (!isNewPreference) {
             switch (myPreferences.getType()) {
                 case 0 :
@@ -160,6 +169,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private void customizePage2(View view) {
         tvPref2Title = (TextView) view.findViewById(R.id.tvPref2Title);
         etPrefCuisine = (EditText) view.findViewById(R.id.etPrefCuisine);
+        pbCuisineLoader = (ProgressBar) view.findViewById(R.id.pbCuisineLoader);
+        ivCuisineSearchCancel = (ImageView) view.findViewById(R.id.ivCuisineSearchCancel);
         cvCuisines = (ChipView) view.findViewById(R.id.cvCuisines);
         lvSearchCuisine = (ListView) view.findViewById(R.id.lvSearchCuisine);
         cuisineSearchAdapter = new TagSearchAdapter(mContext);
@@ -169,13 +180,31 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
         cvCuisines.setAdapter(cvCuisineChipViewAdapter);
         cvCuisines.setChipList(cvCuisineChipList);
+        cvCuisines.setOnChipClickListener(new OnChipClickListener() {
+            @Override
+            public void onChipClick(Chip chip) {
+                cvCuisines.remove(chip);
+            }
+        });
+        ivCuisineSearchCancel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                etPrefCuisine.setText("");
+                lvSearchCuisine.setVisibility(View.GONE);
+                return true;
+            }
+        });
 
         lvSearchCuisine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GlobalSearchItem item = cuisineSearchAdapter.getItem(position);
                 TagChip tag = new TagChip(item.getId(), item.getName(), item.getType());
+                if (cvCuisines.getChipList().contains(tag)) {
+                    cvCuisines.remove(tag);
+                }
                 cvCuisines.add(tag);
+                etPrefCuisine.setText("");
                 lvSearchCuisine.setVisibility(View.GONE);
             }
         });
@@ -211,25 +240,51 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private void customizePage3(View view) {
         tvPref3Title = (TextView) view.findViewById(R.id.tvPref3Title);
         etPrefSuggestion = (EditText) view.findViewById(R.id.etPrefSuggestion);
+        pbSuggestionLoader = (ProgressBar) view.findViewById(R.id.pbSuggestionLoader);
+        ivSuggestionSearchCancel = (ImageView) view.findViewById(R.id.ivSuggestionSearchCancel);
         cvSuggestions = (ChipView) view.findViewById(R.id.cvSuggestions);
-        lvSearchSuggestion = (ListView) view.findViewById(R.id.lvSearchSuggestion);
+        //lvSearchSuggestion = (ListView) view.findViewById(lvSearchSuggestion);
         suggestionSearchAdapter = new TagSearchAdapter(mContext);
-        lvSearchSuggestion.setAdapter(suggestionSearchAdapter);
+        //lvSearchSuggestion.setAdapter(suggestionSearchAdapter);
 
         cvSuggestions.setChipLayoutRes(R.layout.chip_close);
         cvSuggestionChipViewAdapter = new TagChipViewAdapter(mContext);
         cvSuggestions.setAdapter(cvSuggestionChipViewAdapter);
         cvSuggestions.setChipList(cvSuggestionChipList);
-
-        lvSearchSuggestion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        cvSuggestions.setOnChipClickListener(new OnChipClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GlobalSearchItem item = suggestionSearchAdapter.getItem(position);
-                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType());
-                cvSuggestions.add(tag);
-                lvSearchSuggestion.setVisibility(View.GONE);
+            public void onChipClick(Chip chip) {
+                cvSuggestions.remove(chip);
             }
         });
+
+        List<TagChip> tcs = DataGenerator.getSuggestionTags();
+        for (TagChip tc : tcs) {
+            cvSuggestions.add(tc);
+        }
+
+        ivSuggestionSearchCancel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                etPrefSuggestion.setText("");
+                //lvSearchSuggestion.setVisibility(View.GONE);
+                return true;
+            }
+        });
+
+//        lvSearchSuggestion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                GlobalSearchItem item = suggestionSearchAdapter.getItem(position);
+//                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType());
+//                if (cvSuggestions.getChipList().contains(tag)) {
+//                    cvSuggestions.remove(tag);
+//                }
+//                cvSuggestions.add(tag);
+//                etPrefSuggestion.setText("");
+//                lvSearchSuggestion.setVisibility(View.GONE);
+//            }
+//        });
 
         etPrefSuggestion.addTextChangedListener(new TextWatcher() {
             final android.os.Handler handler = new android.os.Handler();
@@ -265,7 +320,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             return;
         } else {
             try {
-                asyncStart();
+                asyncStart(type);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("searchString", searchString);
                 StringEntity entity = new StringEntity(jsonObject.toString());
@@ -293,7 +348,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            asyncEnd();
+            asyncEnd(type);
             GlobalSearchResponse response = new Gson().fromJson(new String(responseBody), GlobalSearchResponse.class);
             if (response.isResult()) {
                 if (response.getSearchItems() != null && response.getSearchItems().size() > 0) {
@@ -302,7 +357,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                         lvSearchCuisine.setVisibility(View.VISIBLE);
                     } else {
                         suggestionSearchAdapter.addAll(response.getSearchItems());
-                        lvSearchSuggestion.setVisibility(View.VISIBLE);
+                        //lvSearchSuggestion.setVisibility(View.VISIBLE);
                     }
                 } else {
                     //messages.showCustomMessage("No results found");
@@ -314,7 +369,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            asyncEnd();
+            asyncEnd(type);
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
@@ -353,13 +408,23 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         etPrefSuggestion.setTypeface(Utils.getRegularFont(mContext));
     }
 
-    private void asyncStart() {
-        //cancelIcon.setVisibility(View.INVISIBLE);
-        //progress.setVisibility(View.VISIBLE);
+    private void asyncStart(SearchResultType type) {
+        if (type == SearchResultType.CUISINE) {
+            ivCuisineSearchCancel.setVisibility(View.INVISIBLE);
+            pbCuisineLoader.setVisibility(View.VISIBLE);
+        } else {
+            ivSuggestionSearchCancel.setVisibility(View.INVISIBLE);
+            pbSuggestionLoader.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void asyncEnd() {
-        //cancelIcon.setVisibility(View.VISIBLE);
-        //progress.setVisibility(View.GONE);
+    private void asyncEnd(SearchResultType type) {
+        if (type == SearchResultType.CUISINE) {
+            ivCuisineSearchCancel.setVisibility(View.VISIBLE);
+            pbCuisineLoader.setVisibility(View.GONE);
+        } else {
+            ivSuggestionSearchCancel.setVisibility(View.VISIBLE);
+            pbSuggestionLoader.setVisibility(View.GONE);
+        }
     }
 }

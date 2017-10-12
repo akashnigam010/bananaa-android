@@ -2,6 +2,8 @@ package in.bananaa.object;
 
 import com.plumillonforge.android.chipview.Chip;
 
+import java.util.Objects;
+
 public class TagChip implements Chip {
     private Integer id;
     private String name;
@@ -36,5 +38,20 @@ public class TagChip implements Chip {
     @Override
     public String getText() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof TagChip)) {
+            return false;
+        }
+        TagChip tc = (TagChip) o;
+        return id == tc.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, type);
     }
 }

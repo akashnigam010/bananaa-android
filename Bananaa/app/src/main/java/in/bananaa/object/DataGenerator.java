@@ -49,6 +49,55 @@ public class DataGenerator {
         return response;
     }
 
+    public static List<TagChip> getSuggestionTags() {
+        List<TagChip> items = new ArrayList<>();
+        items.add(getSuggestionTag(1, "Noodles Noodles"));
+        items.add(getSuggestionTag(2, "Noodles zxc"));
+        items.add(getSuggestionTag(3, "Noodlesa s"));
+        items.add(getSuggestionTag(4, "Noodlesasasd asd"));
+        items.add(getSuggestionTag(5, "Noodles3"));
+        items.add(getSuggestionTag(6, "Noodlessd3 3"));
+        items.add(getSuggestionTag(7, "Noodles Noodles Noodles"));
+        items.add(getSuggestionTag(8, "Noodles"));
+        items.add(getSuggestionTag(9, "Noodles Nood"));
+        items.add(getSuggestionTag(10, "Noodles"));
+        items.add(getSuggestionTag(11, "Noodlesnasdasd"));
+        items.add(getSuggestionTag(12, "Noodles asd asd"));
+        items.add(getSuggestionTag(13, "Noodles asd"));
+        items.add(getSuggestionTag(14, "Noodlesasd"));
+        items.add(getSuggestionTag(15, "Noodles asd"));
+        items.add(getSuggestionTag(16, "Noodles asda asdd"));
+        items.add(getSuggestionTag(17, "Noodlesasd"));
+        items.add(getSuggestionTag(18, "Noodles asd"));
+        items.add(getSuggestionTag(19, "Noodles"));
+        items.add(getSuggestionTag(20, "Noodlesasd"));
+        items.add(getSuggestionTag(21, "Noodles"));
+        items.add(getSuggestionTag(22, "Noodlesasdas"));
+        items.add(getSuggestionTag(23, "Noodles asd"));
+        items.add(getSuggestionTag(24, "Noodlesasd asd asd"));
+        items.add(getSuggestionTag(25, "Noodles asdsdas"));
+        items.add(getSuggestionTag(26, "Noodlesads a"));
+        items.add(getSuggestionTag(27, "Nood"));
+        items.add(getSuggestionTag(28, "Noodles"));
+        items.add(getSuggestionTag(29, "Noodlessdd"));
+        items.add(getSuggestionTag(30, "Nood"));
+        items.add(getSuggestionTag(31, "Noodlesas sd"));
+        items.add(getSuggestionTag(32, "Noodles"));
+        items.add(getSuggestionTag(33, "Noodlesa "));
+        items.add(getSuggestionTag(34, "Nood"));
+        items.add(getSuggestionTag(35, "Noodlesasd asd asd"));
+        items.add(getSuggestionTag(36, "Nood"));
+        items.add(getSuggestionTag(37, "Noodl sdsd"));
+        items.add(getSuggestionTag(38, "Noodles ads"));
+        items.add(getSuggestionTag(39, "Noodles"));
+        items.add(getSuggestionTag(40, "Noodlesasd"));
+        return items;
+    }
+
+    private static TagChip getSuggestionTag(Integer id, String name) {
+        return new TagChip(id, name, SearchResultType.DISH);
+    }
+
     private static final Foodview getFoodview() {
         Foodview foodview = new Foodview();
         foodview.setId(1);

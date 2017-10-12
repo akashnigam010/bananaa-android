@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/preference_bg">
 
     <LinearLayout
         android:layout_width="300dp"
@@ -21,53 +21,81 @@
             android:gravity="center"
             android:textSize="40dp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:weightSum="1"
             android:layout_marginTop="20dp">
 
             <EditText
                 android:id="@+id/etPrefCuisine"
                 android:layout_width="match_parent"
+                android:layout_weight="0.90"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:background="@color/lightColor"
                 android:maxLines="1"
-                android:imeOptions="actionDone"
-                android:hint="Biryani, Chinese, Tex Mex, Parsi..." />
+                android:textSize="18sp"
+                android:padding="15dp"
+                android:drawablePadding="10dp"
+                android:hint="Biryani, Chinese, Tex Mex, Parsi..."
+                android:textColor="@color/darkGrey"
+                android:inputType="textNoSuggestions"/>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+            <ProgressBar
+                android:id="@+id/pbCuisineLoader"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_height="20dp"
+                android:layout_width="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="5dp"
+                android:indeterminate="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/bnaColor"
+                android:visibility="gone"
+                />
 
-                <com.plumillonforge.android.chipview.ChipView
-                    android:id="@+id/cvCuisines"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    chip_corner_radius="10dp"
-                    chip_line_spacing="8dp"
-                    chip_padding="5dp"
-                    chip_side_padding="5dp"
-                    chip_spacing="6dp" />
+            <ImageView
+                android:id="@+id/ivCuisineSearchCancel"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_cancel_grey"/>
 
-                <ListView
-                    android:id="@+id/lvSearchCuisine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="6dp"
-                    android:divider="@android:color/transparent"
-                    android:background="@color/white"
-                    android:dividerHeight="1dp">
-                </ListView>
+        </RelativeLayout>
 
-            </FrameLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-        </LinearLayout>
+            <com.plumillonforge.android.chipview.ChipView
+                android:id="@+id/cvCuisines"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                chip_corner_radius="10dp"
+                chip_line_spacing="8dp"
+                chip_padding="5dp"
+                chip_side_padding="5dp"
+                chip_spacing="6dp" />
 
+            <ListView
+                android:id="@+id/lvSearchCuisine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="6dp"
+                android:divider="@android:color/transparent"
+                android:background="@color/white"
+                android:dividerHeight="1dp">
+            </ListView>
+
+        </FrameLayout>
 
     </LinearLayout>
 </RelativeLayout>

@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import com.plumillonforge.android.chipview.ChipViewAdapter;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import in.bananaa.R;
 import in.bananaa.object.TagChip;
 import in.bananaa.utils.Utils;
@@ -13,11 +15,12 @@ import in.bananaa.utils.Utils;
 public class TagChipViewAdapter extends ChipViewAdapter {
 
     Context context;
+    int[] rainbow;
 
     public TagChipViewAdapter(Context context) {
-
         super(context);
         this.context = context;
+        rainbow = context.getResources().getIntArray(R.array.rainbow);
     }
 
     @Override
@@ -43,6 +46,11 @@ public class TagChipViewAdapter extends ChipViewAdapter {
     @Override
     public void onLayout(View view, int position) {
         TagChip tag = (TagChip) getChip(position);
-        ((TextView) view.findViewById(android.R.id.text1)).setTypeface(Utils.getRegularFont(context));
+        TextView tv = ((TextView) view.findViewById(android.R.id.text1));
+        tv.setTypeface(Utils.getRegularFont(context));
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 9 + 1);
+
+        tv.setBackground(context.getResources().getDrawable(R.drawable.bg_chip));
+        tv.setBackgroundColor(rainbow[randomNum]);
     }
 }
