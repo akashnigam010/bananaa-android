@@ -8,11 +8,13 @@ public class TagChip implements Chip {
     private Integer id;
     private String name;
     private SearchResultType type;
+    private boolean isSelected;
 
-    public TagChip(Integer id, String name, SearchResultType type) {
+    public TagChip(Integer id, String name, SearchResultType type, boolean isSelected) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.isSelected = isSelected;
     }
 
     public Integer getId() {
@@ -33,6 +35,14 @@ public class TagChip implements Chip {
 
     public void setType(SearchResultType type) {
         this.type = type;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     @Override

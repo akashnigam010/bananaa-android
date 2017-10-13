@@ -68,15 +68,15 @@
 
 
         <ScrollView
+            android:id="@+id/svSearchSuggestions"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_marginTop="10dp">
 
-            <com.plumillonforge.android.chipview.ChipView
+            <in.bananaa.utils.TagChipView
                 android:id="@+id/cvSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
                 chip_corner_radius="10dp"
                 chip_line_spacing="8dp"
                 chip_padding="5dp"

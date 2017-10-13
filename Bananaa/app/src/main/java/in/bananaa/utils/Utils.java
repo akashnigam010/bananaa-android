@@ -7,7 +7,22 @@ import android.net.NetworkInfo;
 
 import java.util.List;
 
+import in.bananaa.R;
+
 public class Utils {
+    public static int[] chipsBackgrounds = new int[]{
+            R.drawable.bg_chip1,
+            R.drawable.bg_chip2,
+            R.drawable.bg_chip3,
+            R.drawable.bg_chip4,
+            R.drawable.bg_chip5,
+            R.drawable.bg_chip6,
+            R.drawable.bg_chip7,
+            R.drawable.bg_chip8,
+            R.drawable.bg_chip9,
+            R.drawable.bg_chip10
+    };
+
     public static Typeface getRegularFont(Context mContext) {
         return Typeface.createFromAsset(mContext.getAssets(), "bna-regular.ttf");
     }

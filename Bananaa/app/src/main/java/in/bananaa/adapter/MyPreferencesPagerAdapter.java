@@ -3,6 +3,7 @@ package in.bananaa.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.IdRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -45,8 +48,12 @@ import in.bananaa.object.TagChip;
 import in.bananaa.object.myPreferences.MyPreferences;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
+import in.bananaa.utils.OnTagChipClickListener;
+import in.bananaa.utils.TagChipView;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
+
+import static in.bananaa.utils.Utils.chipsBackgrounds;
 
 public class MyPreferencesPagerAdapter extends PagerAdapter {
     private MyPreferences myPreferences;
@@ -75,9 +82,10 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private EditText etPrefSuggestion;
     private ProgressBar pbSuggestionLoader;
     private ImageView ivSuggestionSearchCancel;
-    //private ListView lvSearchSuggestion;
+    private int pageSuggestions = 1;
     private TagSearchAdapter suggestionSearchAdapter;
-    private ChipView cvSuggestions;
+    private ScrollView svSearchSuggestions;
+    private TagChipView cvSuggestions;
     private ChipViewAdapter cvSuggestionChipViewAdapter;
     private List<Chip> cvSuggestionChipList = new ArrayList<>();
 
@@ -176,7 +184,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         cuisineSearchAdapter = new TagSearchAdapter(mContext);
         lvSearchCuisine.setAdapter(cuisineSearchAdapter);
 
-        cvCuisines.setChipLayoutRes(R.layout.chip_close);
+        cvCuisines.setChipLayoutRes(R.layout.chip);
         cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
         cvCuisines.setAdapter(cvCuisineChipViewAdapter);
         cvCuisines.setChipList(cvCuisineChipList);
@@ -199,7 +207,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GlobalSearchItem item = cuisineSearchAdapter.getItem(position);
-                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType());
+                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType(), false);
                 if (cvCuisines.getChipList().contains(tag)) {
                     cvCuisines.remove(tag);
                 }
@@ -242,26 +250,46 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         etPrefSuggestion = (EditText) view.findViewById(R.id.etPrefSuggestion);
         pbSuggestionLoader = (ProgressBar) view.findViewById(R.id.pbSuggestionLoader);
         ivSuggestionSearchCancel = (ImageView) view.findViewById(R.id.ivSuggestionSearchCancel);
-        cvSuggestions = (ChipView) view.findViewById(R.id.cvSuggestions);
-        //lvSearchSuggestion = (ListView) view.findViewById(lvSearchSuggestion);
+        svSearchSuggestions = (ScrollView) view.findViewById(R.id.svSearchSuggestions);
+        cvSuggestions = (TagChipView) view.findViewById(R.id.cvSuggestions);
         suggestionSearchAdapter = new TagSearchAdapter(mContext);
-        //lvSearchSuggestion.setAdapter(suggestionSearchAdapter);
 
-        cvSuggestions.setChipLayoutRes(R.layout.chip_close);
+        cvSuggestions.setChipLayoutRes(R.layout.chip);
         cvSuggestionChipViewAdapter = new TagChipViewAdapter(mContext);
         cvSuggestions.setAdapter(cvSuggestionChipViewAdapter);
         cvSuggestions.setChipList(cvSuggestionChipList);
-        cvSuggestions.setOnChipClickListener(new OnChipClickListener() {
+        cvSuggestions.setOnChipClickListener(new OnTagChipClickListener() {
             @Override
-            public void onChipClick(Chip chip) {
-                cvSuggestions.remove(chip);
+            public void onChipClick(Chip chip, View view, int position) {
+                TagChip tc = (TagChip) chip;
+                TextView tv = ((TextView) view.findViewById(android.R.id.text1));
+                if (tc.isSelected()) {
+                    tc.setSelected(false);
+                    tv.setBackground(mContext.getResources().getDrawable(R.drawable.bg_chip, null));
+                    tv.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
+                } else {
+                    tc.setSelected(true);
+                    tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[position%10], null));
+                    tv.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                }
             }
         });
 
-        List<TagChip> tcs = DataGenerator.getSuggestionTags();
-        for (TagChip tc : tcs) {
-            cvSuggestions.add(tc);
-        }
+
+
+        searchSuggestions(pageSuggestions);
+        svSearchSuggestions.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (svSearchSuggestions != null) {
+                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + svSearchSuggestions.getScrollY())) {
+                        searchSuggestions(++ pageSuggestions);
+                    } else {
+                        //scroll view is not at bottom
+                    }
+                }
+            }
+        });
 
         ivSuggestionSearchCancel.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -271,20 +299,6 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                 return true;
             }
         });
-
-//        lvSearchSuggestion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                GlobalSearchItem item = suggestionSearchAdapter.getItem(position);
-//                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType());
-//                if (cvSuggestions.getChipList().contains(tag)) {
-//                    cvSuggestions.remove(tag);
-//                }
-//                cvSuggestions.add(tag);
-//                etPrefSuggestion.setText("");
-//                lvSearchSuggestion.setVisibility(View.GONE);
-//            }
-//        });
 
         etPrefSuggestion.addTextChangedListener(new TextWatcher() {
             final android.os.Handler handler = new android.os.Handler();
@@ -312,6 +326,13 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                 handler.postDelayed(runnable, 500);
             }
         });
+    }
+
+    private void searchSuggestions(Integer page) {
+        List<TagChip> tcs = DataGenerator.getSuggestionTags(page);
+        List<Chip> chipList = cvSuggestions.getChipList();
+        chipList.addAll(tcs);
+        cvSuggestions.setChipList(chipList);
     }
 
     private void doSearch(String searchString, SearchResultType type) {

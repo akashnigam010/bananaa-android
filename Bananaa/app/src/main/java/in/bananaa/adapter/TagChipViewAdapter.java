@@ -1,36 +1,35 @@
 package in.bananaa.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
 import com.plumillonforge.android.chipview.ChipViewAdapter;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import in.bananaa.R;
 import in.bananaa.object.TagChip;
 import in.bananaa.utils.Utils;
 
+import static in.bananaa.utils.Utils.chipsBackgrounds;
+
 public class TagChipViewAdapter extends ChipViewAdapter {
 
     Context context;
-    int[] rainbow;
 
     public TagChipViewAdapter(Context context) {
         super(context);
         this.context = context;
-        rainbow = context.getResources().getIntArray(R.array.rainbow);
     }
 
     @Override
     public int getLayoutRes(int position) {
-        return R.layout.chip_close;
+        return R.layout.chip;
     }
 
     @Override
     public int getBackgroundColor(int position) {
-        return R.drawable.bg_chip;
+        return R.drawable.bg_chip1;
     }
 
     @Override
@@ -48,9 +47,10 @@ public class TagChipViewAdapter extends ChipViewAdapter {
         TagChip tag = (TagChip) getChip(position);
         TextView tv = ((TextView) view.findViewById(android.R.id.text1));
         tv.setTypeface(Utils.getRegularFont(context));
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 9 + 1);
-
-        tv.setBackground(context.getResources().getDrawable(R.drawable.bg_chip));
-        tv.setBackgroundColor(rainbow[randomNum]);
+//        tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[position%10], null));
+        if (tag.isSelected()) {
+            tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[position%10], null));
+            tv.setTextColor(ContextCompat.getColor(context, R.color.white));
+        }
     }
 }
