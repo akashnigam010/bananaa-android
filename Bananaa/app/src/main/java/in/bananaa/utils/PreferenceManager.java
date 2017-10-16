@@ -5,8 +5,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import in.bananaa.utils.login.LoginResponse;
-import in.bananaa.utils.login.LoginUserDto;
+import in.bananaa.object.login.LoginResponse;
+import in.bananaa.object.login.LoginUserDto;
 
 public class PreferenceManager extends Application implements Application.ActivityLifecycleCallbacks {
     private static final String BANANAA = "Bananaa";

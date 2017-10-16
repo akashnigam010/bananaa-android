@@ -25,7 +25,7 @@ import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.Utils;
-import in.bananaa.utils.login.LoginUserDto;
+import in.bananaa.object.login.LoginUserDto;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

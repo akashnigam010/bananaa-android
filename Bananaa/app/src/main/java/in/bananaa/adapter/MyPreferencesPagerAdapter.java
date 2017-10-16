@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,7 +28,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipView;
 import com.plumillonforge.android.chipview.ChipViewAdapter;
-import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import org.json.JSONObject;
 
@@ -40,15 +38,14 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.object.DataGenerator;
 import in.bananaa.object.GlobalSearchItem;
 import in.bananaa.object.GlobalSearchResponse;
 import in.bananaa.object.SearchResultType;
-import in.bananaa.object.TagChip;
 import in.bananaa.object.myPreferences.MyPreferences;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.OnTagChipClickListener;
+import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.TagChipView;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
@@ -57,7 +54,6 @@ import static in.bananaa.utils.Utils.chipsBackgrounds;
 
 public class MyPreferencesPagerAdapter extends PagerAdapter {
     private MyPreferences myPreferences;
-    private Boolean isNewPreference = false;
 
     private LayoutInflater layoutInflater;
     private Activity mContext;
@@ -83,6 +79,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private ProgressBar pbSuggestionLoader;
     private ImageView ivSuggestionSearchCancel;
     private int pageSuggestions = 1;
+    private boolean noMoreSuggestions = false;
+    private boolean canSearchSuggestions = true;
     private TagSearchAdapter suggestionSearchAdapter;
     private ScrollView svSearchSuggestions;
     private TagChipView cvSuggestions;
@@ -93,9 +91,6 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         this.mContext = mContext;
         this.layouts = layouts;
         this.myPreferences = myPreferences;
-        if (myPreferences == null) {
-            isNewPreference = true;
-        }
     }
 
     @Override
@@ -131,15 +126,15 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         rbVeg = (RadioButton) view.findViewById(R.id.rbVeg);
         rbNonVeg = (RadioButton) view.findViewById(R.id.rbNonVeg);
         rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
-        if (!isNewPreference) {
+        if (myPreferences.getType() != null) {
             switch (myPreferences.getType()) {
-                case 0 :
+                case 1 :
                     rgVegNonVeg.check(R.id.rbVeg);
                     break;
-                case 1 :
+                case 2 :
                     rgVegNonVeg.check(R.id.rbNonVeg);
                     break;
-                case 2 :
+                case 3 :
                     rgVegNonVeg.check(R.id.rbAnything);
                     break;
                 default : break;
@@ -175,74 +170,74 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void customizePage2(View view) {
-        tvPref2Title = (TextView) view.findViewById(R.id.tvPref2Title);
-        etPrefCuisine = (EditText) view.findViewById(R.id.etPrefCuisine);
-        pbCuisineLoader = (ProgressBar) view.findViewById(R.id.pbCuisineLoader);
-        ivCuisineSearchCancel = (ImageView) view.findViewById(R.id.ivCuisineSearchCancel);
-        cvCuisines = (ChipView) view.findViewById(R.id.cvCuisines);
-        lvSearchCuisine = (ListView) view.findViewById(R.id.lvSearchCuisine);
-        cuisineSearchAdapter = new TagSearchAdapter(mContext);
-        lvSearchCuisine.setAdapter(cuisineSearchAdapter);
-
-        cvCuisines.setChipLayoutRes(R.layout.chip);
-        cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
-        cvCuisines.setAdapter(cvCuisineChipViewAdapter);
-        cvCuisines.setChipList(cvCuisineChipList);
-        cvCuisines.setOnChipClickListener(new OnChipClickListener() {
-            @Override
-            public void onChipClick(Chip chip) {
-                cvCuisines.remove(chip);
-            }
-        });
-        ivCuisineSearchCancel.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                etPrefCuisine.setText("");
-                lvSearchCuisine.setVisibility(View.GONE);
-                return true;
-            }
-        });
-
-        lvSearchCuisine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GlobalSearchItem item = cuisineSearchAdapter.getItem(position);
-                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType(), false);
-                if (cvCuisines.getChipList().contains(tag)) {
-                    cvCuisines.remove(tag);
-                }
-                cvCuisines.add(tag);
-                etPrefCuisine.setText("");
-                lvSearchCuisine.setVisibility(View.GONE);
-            }
-        });
-
-        etPrefCuisine.addTextChangedListener(new TextWatcher() {
-            final android.os.Handler handler = new android.os.Handler();
-            Runnable runnable;
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                handler.removeCallbacks(runnable);
-            }
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (s.toString().length() >= 2) {
-                            doSearch(s.toString(), SearchResultType.CUISINE);
-                        }
-                    }
-                };
-                handler.postDelayed(runnable, 500);
-            }
-        });
+//        tvPref2Title = (TextView) view.findViewById(R.id.tvPref2Title);
+//        etPrefCuisine = (EditText) view.findViewById(R.id.etPrefCuisine);
+//        pbCuisineLoader = (ProgressBar) view.findViewById(R.id.pbCuisineLoader);
+//        ivCuisineSearchCancel = (ImageView) view.findViewById(R.id.ivCuisineSearchCancel);
+//        cvCuisines = (ChipView) view.findViewById(R.id.cvCuisines);
+//        lvSearchCuisine = (ListView) view.findViewById(R.id.lvSearchCuisine);
+//        cuisineSearchAdapter = new TagSearchAdapter(mContext);
+//        lvSearchCuisine.setAdapter(cuisineSearchAdapter);
+//
+//        cvCuisines.setChipLayoutRes(R.layout.chip);
+//        cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
+//        cvCuisines.setAdapter(cvCuisineChipViewAdapter);
+//        cvCuisines.setChipList(cvCuisineChipList);
+//        cvCuisines.setOnChipClickListener(new OnChipClickListener() {
+//            @Override
+//            public void onChipClick(Chip chip) {
+//                cvCuisines.remove(chip);
+//            }
+//        });
+//        ivCuisineSearchCancel.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                etPrefCuisine.setText("");
+//                lvSearchCuisine.setVisibility(View.GONE);
+//                return true;
+//            }
+//        });
+//
+//        lvSearchCuisine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                GlobalSearchItem item = cuisineSearchAdapter.getItem(position);
+//                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType(), false);
+//                if (cvCuisines.getChipList().contains(tag)) {
+//                    cvCuisines.remove(tag);
+//                }
+//                cvCuisines.add(tag);
+//                etPrefCuisine.setText("");
+//                lvSearchCuisine.setVisibility(View.GONE);
+//            }
+//        });
+//
+//        etPrefCuisine.addTextChangedListener(new TextWatcher() {
+//            final android.os.Handler handler = new android.os.Handler();
+//            Runnable runnable;
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                handler.removeCallbacks(runnable);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(final Editable s) {
+//                runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (s.toString().length() >= 2) {
+//                            //doSearch(s.toString(), SearchResultType.CUISINE);
+//                        }
+//                    }
+//                };
+//                handler.postDelayed(runnable, 500);
+//            }
+//        });
     }
 
     private void customizePage3(View view) {
@@ -261,9 +256,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         cvSuggestions.setOnChipClickListener(new OnTagChipClickListener() {
             @Override
             public void onChipClick(Chip chip, View view, int position) {
-                TagChip tc = (TagChip) chip;
+                GlobalSearchItem tc = (GlobalSearchItem) chip;
                 TextView tv = ((TextView) view.findViewById(android.R.id.text1));
-                if (tc.isSelected()) {
+                if (tc.getSelected()) {
                     tc.setSelected(false);
                     tv.setBackground(mContext.getResources().getDrawable(R.drawable.bg_chip, null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
@@ -275,17 +270,15 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             }
         });
 
-
-
         searchSuggestions(pageSuggestions);
         svSearchSuggestions.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
                 if (svSearchSuggestions != null) {
                     if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + svSearchSuggestions.getScrollY())) {
-                        searchSuggestions(++ pageSuggestions);
-                    } else {
-                        //scroll view is not at bottom
+                        if (canSearchSuggestions) {
+                            searchSuggestions(++ pageSuggestions);    
+                        }                        
                     }
                 }
             }
@@ -319,7 +312,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     @Override
                     public void run() {
                         if (s.toString().length() >= 2) {
-                            doSearch(s.toString(), SearchResultType.DISH);
+                            //doSearch(s.toString(), SearchResultType.DISH);
                         }
                     }
                 };
@@ -329,29 +322,17 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void searchSuggestions(Integer page) {
-        List<TagChip> tcs = DataGenerator.getSuggestionTags(page);
-        List<Chip> chipList = cvSuggestions.getChipList();
-        chipList.addAll(tcs);
-        cvSuggestions.setChipList(chipList);
-    }
-
-    private void doSearch(String searchString, SearchResultType type) {
-        if (!Utils.isInternetConnected(mContext)) {
-            AlertMessages.noInternet(mContext);
-            return;
-        } else {
+        if (!noMoreSuggestions) {
             try {
-                asyncStart(type);
+                asyncStart(SearchResultType.DISH);
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("searchString", searchString);
+                jsonObject.put("page", page);
                 StringEntity entity = new StringEntity(jsonObject.toString());
                 AsyncHttpClient client = new AsyncHttpClient();
+                client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
                 client.setTimeout(Constant.TIMEOUT);
-                if (type == SearchResultType.CUISINE.CUISINE) {
-                    client.post(mContext, URLs.SEARCH_CUISINES, entity, "application/json", new TagSearchResponseHandler(type));
-                } else {
-                    client.post(mContext, URLs.SEARCH_SUGGESTIONS, entity, "application/json", new TagSearchResponseHandler(type));
-                }
+                client.post(mContext, URLs.SEARCH_SUGGESTIONS, entity, "application/json", new GetSuggestionsHandler());
+                canSearchSuggestions = false;
             } catch (UnsupportedEncodingException e) {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             } catch (Exception e) {
@@ -360,29 +341,21 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         }
     }
 
-    public class TagSearchResponseHandler extends AsyncHttpResponseHandler {
-        private SearchResultType type;
-
-        public TagSearchResponseHandler(SearchResultType type) {
-            this.type = type;
-        }
+    public class GetSuggestionsHandler extends AsyncHttpResponseHandler {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            asyncEnd(type);
             GlobalSearchResponse response = new Gson().fromJson(new String(responseBody), GlobalSearchResponse.class);
             if (response.isResult()) {
-                if (response.getSearchItems() != null && response.getSearchItems().size() > 0) {
-                    if (type == SearchResultType.CUISINE) {
-                        cuisineSearchAdapter.addAll(response.getSearchItems());
-                        lvSearchCuisine.setVisibility(View.VISIBLE);
-                    } else {
-                        suggestionSearchAdapter.addAll(response.getSearchItems());
-                        //lvSearchSuggestion.setVisibility(View.VISIBLE);
-                    }
+                List<GlobalSearchItem> chips = response.getSearchItems();
+                if (chips.size() > 0) {
+                    List<Chip> chipList = cvSuggestions.getChipList();
+                    chipList.addAll(chips);
+                    cvSuggestions.setChipList(chipList);
                 } else {
-                    //messages.showCustomMessage("No results found");
+                    noMoreSuggestions = true;
                 }
+                canSearchSuggestions = true;
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
@@ -390,7 +363,6 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            asyncEnd(type);
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
@@ -420,8 +392,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void setFontPage2() {
-        tvPref2Title.setTypeface(Utils.getRegularFont(mContext));
-        etPrefCuisine.setTypeface(Utils.getRegularFont(mContext));
+//        tvPref2Title.setTypeface(Utils.getRegularFont(mContext));
+//        etPrefCuisine.setTypeface(Utils.getRegularFont(mContext));
     }
 
     private void setFontPage3() {
@@ -433,7 +405,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         if (type == SearchResultType.CUISINE) {
             ivCuisineSearchCancel.setVisibility(View.INVISIBLE);
             pbCuisineLoader.setVisibility(View.VISIBLE);
-        } else {
+        } else if (type == SearchResultType.DISH) {
             ivSuggestionSearchCancel.setVisibility(View.INVISIBLE);
             pbSuggestionLoader.setVisibility(View.VISIBLE);
         }
@@ -443,7 +415,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         if (type == SearchResultType.CUISINE) {
             ivCuisineSearchCancel.setVisibility(View.VISIBLE);
             pbCuisineLoader.setVisibility(View.GONE);
-        } else {
+        } else if (type == SearchResultType.DISH) {
             ivSuggestionSearchCancel.setVisibility(View.VISIBLE);
             pbSuggestionLoader.setVisibility(View.GONE);
         }

@@ -1,10 +1,12 @@
 package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
+import com.plumillonforge.android.chipview.Chip;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class GlobalSearchItem implements Serializable {
+public class GlobalSearchItem implements Serializable, Chip {
     @SerializedName("id")
     private Integer id;
 
@@ -22,6 +24,9 @@ public class GlobalSearchItem implements Serializable {
 
     @SerializedName("merchantUrl")
     private String merchantUrl;
+
+    @SerializedName("isSelected")
+    private Boolean isSelected;
 
     public Integer getId() {
         return id;
@@ -69,5 +74,33 @@ public class GlobalSearchItem implements Serializable {
 
     public void setMerchantUrl(String merchantUrl) {
         this.merchantUrl = merchantUrl;
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
+    }
+
+    @Override
+    public String getText() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof GlobalSearchItem)) {
+            return false;
+        }
+        GlobalSearchItem tc = (GlobalSearchItem) o;
+        return id == tc.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, type);
     }
 }

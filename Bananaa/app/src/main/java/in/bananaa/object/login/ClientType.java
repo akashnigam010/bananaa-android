@@ -1,4 +1,4 @@
-package in.bananaa.utils.login;
+package in.bananaa.object.login;
 
 public enum ClientType {
     GOOGLE("GOOGLE"),

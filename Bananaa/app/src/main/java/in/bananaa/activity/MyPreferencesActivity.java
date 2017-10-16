@@ -33,9 +33,7 @@ public class MyPreferencesActivity extends AppCompatActivity {
             launchHomeScreen();
             finish();
         }
-
         myPreferences = (MyPreferences) getIntent().getSerializableExtra(MY_PREFERENCES);
-
         setContentView(R.layout.activity_my_preferences);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
