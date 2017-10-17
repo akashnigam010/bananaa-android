@@ -483,8 +483,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void setFontPage2() {
-//        tvPref2Title.setTypeface(Utils.getRegularFont(mContext));
-//        etPrefCuisine.setTypeface(Utils.getRegularFont(mContext));
+        tvPref2Title.setTypeface(Utils.getRegularFont(mContext));
+        etPrefCuisine.setTypeface(Utils.getRegularFont(mContext));
     }
 
     private void setFontPage3() {
