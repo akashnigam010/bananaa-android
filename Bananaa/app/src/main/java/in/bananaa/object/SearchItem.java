@@ -6,7 +6,7 @@ import com.plumillonforge.android.chipview.Chip;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class GlobalSearchItem implements Serializable, Chip {
+public class SearchItem implements Serializable, Chip {
     @SerializedName("id")
     private Integer id;
 
@@ -92,10 +92,10 @@ public class GlobalSearchItem implements Serializable, Chip {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (!(o instanceof GlobalSearchItem)) {
+        if (!(o instanceof SearchItem)) {
             return false;
         }
-        GlobalSearchItem tc = (GlobalSearchItem) o;
+        SearchItem tc = (SearchItem) o;
         return id == tc.getId();
     }
 

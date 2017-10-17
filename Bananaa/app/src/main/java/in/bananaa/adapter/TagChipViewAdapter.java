@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.plumillonforge.android.chipview.ChipViewAdapter;
 
 import in.bananaa.R;
-import in.bananaa.object.GlobalSearchItem;
+import in.bananaa.object.SearchItem;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.utils.Utils.chipsBackgrounds;
@@ -44,12 +44,12 @@ public class TagChipViewAdapter extends ChipViewAdapter {
 
     @Override
     public void onLayout(View view, int position) {
-        GlobalSearchItem tag = (GlobalSearchItem) getChip(position);
+        SearchItem tag = (SearchItem) getChip(position);
         TextView tv = ((TextView) view.findViewById(android.R.id.text1));
         tv.setTypeface(Utils.getRegularFont(context));
 //        tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[position%10], null));
         if (tag.getSelected()) {
-            tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[position%10], null));
+            tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[tag.getId()%10], null));
             tv.setTextColor(ContextCompat.getColor(context, R.color.white));
         }
     }

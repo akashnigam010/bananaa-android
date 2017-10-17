@@ -30,7 +30,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.adapter.GlobalSearchAdapter;
 import in.bananaa.object.DataGenerator;
-import in.bananaa.object.GlobalSearchResponse;
+import in.bananaa.object.SearchResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.URLs;
@@ -155,7 +155,7 @@ public class SearchActivity extends AppCompatActivity {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             asyncEnd();
-            GlobalSearchResponse response = new Gson().fromJson(new String(responseBody), GlobalSearchResponse.class);
+            SearchResponse response = new Gson().fromJson(new String(responseBody), SearchResponse.class);
             if (response.isResult()) {
                 if (response.getSearchItems() != null && response.getSearchItems().size() > 0) {
                     globalSearchAdapter.addAll(response.getSearchItems());

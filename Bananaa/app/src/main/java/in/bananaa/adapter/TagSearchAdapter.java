@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.GlobalSearchItem;
+import in.bananaa.object.SearchItem;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
 public class TagSearchAdapter extends BaseAdapter {
     private static final String TAG = "TAG_SEARCH";
-    private List<GlobalSearchItem> searchTags;
+    private List<SearchItem> searchTags;
     private Activity mContext;
     private LayoutInflater infalter;
 
@@ -35,7 +35,7 @@ public class TagSearchAdapter extends BaseAdapter {
     }
 
     @Override
-    public GlobalSearchItem getItem(int position) {
+    public SearchItem getItem(int position) {
         return searchTags.get(position);
     }
 
@@ -44,12 +44,12 @@ public class TagSearchAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addAll(List<GlobalSearchItem> searchEntities) {
+    public void addAll(List<SearchItem> searchEntities) {
         this.searchTags.clear();
         appendAll(searchEntities);
     }
 
-    public void appendAll(List<GlobalSearchItem> searchEntities) {
+    public void appendAll(List<SearchItem> searchEntities) {
         try {
             this.searchTags.addAll(searchEntities);
         } catch (Exception e) {

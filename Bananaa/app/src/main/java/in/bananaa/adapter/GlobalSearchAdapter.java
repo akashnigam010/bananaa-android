@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.GlobalSearchItem;
+import in.bananaa.object.SearchItem;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
@@ -21,7 +21,7 @@ import static in.bananaa.object.SearchResultType.DISH;
 
 public class GlobalSearchAdapter extends BaseAdapter {
     private static final String TAG = "GLOBAL_SEARCH";
-    private List<GlobalSearchItem> searchEntities;
+    private List<SearchItem> searchEntities;
     private Activity mContext;
     private LayoutInflater infalter;
 
@@ -38,7 +38,7 @@ public class GlobalSearchAdapter extends BaseAdapter {
     }
 
     @Override
-    public GlobalSearchItem getItem(int position) {
+    public SearchItem getItem(int position) {
         return searchEntities.get(position);
     }
 
@@ -47,12 +47,12 @@ public class GlobalSearchAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addAll(List<GlobalSearchItem> searchEntities) {
+    public void addAll(List<SearchItem> searchEntities) {
         this.searchEntities.clear();
         appendAll(searchEntities);
     }
 
-    public void appendAll(List<GlobalSearchItem> searchEntities) {
+    public void appendAll(List<SearchItem> searchEntities) {
         try {
             this.searchEntities.addAll(searchEntities);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class GlobalSearchAdapter extends BaseAdapter {
         }
 
         holder.tvName.setText(searchEntities.get(position).getName());
-        GlobalSearchItem current = searchEntities.get(position);
+        SearchItem current = searchEntities.get(position);
         switch(current.getType()) {
             case RESTAURANT:
                 holder.tvMetaData.setText(current.getShortAddress());

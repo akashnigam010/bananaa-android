@@ -15,7 +15,6 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -26,7 +25,6 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.plumillonforge.android.chipview.Chip;
-import com.plumillonforge.android.chipview.ChipView;
 import com.plumillonforge.android.chipview.ChipViewAdapter;
 
 import org.json.JSONObject;
@@ -38,8 +36,8 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.object.GlobalSearchItem;
-import in.bananaa.object.GlobalSearchResponse;
+import in.bananaa.object.SearchItem;
+import in.bananaa.object.SearchResponse;
 import in.bananaa.object.SearchResultType;
 import in.bananaa.object.myPreferences.MyPreferences;
 import in.bananaa.utils.AlertMessages;
@@ -68,9 +66,12 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private EditText etPrefCuisine;
     private ProgressBar pbCuisineLoader;
     private ImageView ivCuisineSearchCancel;
-    private ListView lvSearchCuisine;
+    private int pageCuisines = 1;
+    private boolean noMoreCuisines = false;
+    private boolean canSearchCuisines = true;
     private TagSearchAdapter cuisineSearchAdapter;
-    private ChipView cvCuisines;
+    private ScrollView svSearchCuisines;
+    private TagChipView cvCuisines;
     private ChipViewAdapter cvCuisineChipViewAdapter;
     private List<Chip> cvCuisineChipList = new ArrayList<>();
 
@@ -170,74 +171,76 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void customizePage2(View view) {
-//        tvPref2Title = (TextView) view.findViewById(R.id.tvPref2Title);
-//        etPrefCuisine = (EditText) view.findViewById(R.id.etPrefCuisine);
-//        pbCuisineLoader = (ProgressBar) view.findViewById(R.id.pbCuisineLoader);
-//        ivCuisineSearchCancel = (ImageView) view.findViewById(R.id.ivCuisineSearchCancel);
-//        cvCuisines = (ChipView) view.findViewById(R.id.cvCuisines);
-//        lvSearchCuisine = (ListView) view.findViewById(R.id.lvSearchCuisine);
-//        cuisineSearchAdapter = new TagSearchAdapter(mContext);
-//        lvSearchCuisine.setAdapter(cuisineSearchAdapter);
-//
-//        cvCuisines.setChipLayoutRes(R.layout.chip);
-//        cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
-//        cvCuisines.setAdapter(cvCuisineChipViewAdapter);
-//        cvCuisines.setChipList(cvCuisineChipList);
-//        cvCuisines.setOnChipClickListener(new OnChipClickListener() {
-//            @Override
-//            public void onChipClick(Chip chip) {
-//                cvCuisines.remove(chip);
-//            }
-//        });
-//        ivCuisineSearchCancel.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                etPrefCuisine.setText("");
-//                lvSearchCuisine.setVisibility(View.GONE);
-//                return true;
-//            }
-//        });
-//
-//        lvSearchCuisine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                GlobalSearchItem item = cuisineSearchAdapter.getItem(position);
-//                TagChip tag = new TagChip(item.getId(), item.getName(), item.getType(), false);
-//                if (cvCuisines.getChipList().contains(tag)) {
-//                    cvCuisines.remove(tag);
-//                }
-//                cvCuisines.add(tag);
-//                etPrefCuisine.setText("");
-//                lvSearchCuisine.setVisibility(View.GONE);
-//            }
-//        });
-//
-//        etPrefCuisine.addTextChangedListener(new TextWatcher() {
-//            final android.os.Handler handler = new android.os.Handler();
-//            Runnable runnable;
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                handler.removeCallbacks(runnable);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(final Editable s) {
-//                runnable = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (s.toString().length() >= 2) {
-//                            //doSearch(s.toString(), SearchResultType.CUISINE);
-//                        }
-//                    }
-//                };
-//                handler.postDelayed(runnable, 500);
-//            }
-//        });
+        tvPref2Title = (TextView) view.findViewById(R.id.tvPref2Title);
+        etPrefCuisine = (EditText) view.findViewById(R.id.etPrefCuisine);
+        pbCuisineLoader = (ProgressBar) view.findViewById(R.id.pbCuisineLoader);
+        ivCuisineSearchCancel = (ImageView) view.findViewById(R.id.ivCuisineSearchCancel);
+        svSearchCuisines = (ScrollView) view.findViewById(R.id.svSearchCuisines);
+        cvCuisines = (TagChipView) view.findViewById(R.id.cvCuisines);
+        cuisineSearchAdapter = new TagSearchAdapter(mContext);
+
+        cvCuisines.setChipLayoutRes(R.layout.chip);
+        cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
+        cvCuisines.setAdapter(cvCuisineChipViewAdapter);
+        cvCuisines.setChipList(cvCuisineChipList);
+        cvCuisines.setOnChipClickListener(new OnTagChipClickListener() {
+            @Override
+            public void onChipClick(Chip chip, View view, int position) {
+                SearchItem tc = (SearchItem) chip;
+                TextView tv = ((TextView) view.findViewById(android.R.id.text1));
+                if (tc.getSelected()) {
+                    tc.setSelected(false);
+                    tv.setBackground(mContext.getResources().getDrawable(R.drawable.bg_chip, null));
+                    tv.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
+                } else {
+                    tc.setSelected(true);
+                    tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[position%10], null));
+                    tv.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                }
+            }
+        });
+
+        initAutoCuisinesLoad();
+
+        ivCuisineSearchCancel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                etPrefCuisine.setText("");
+                return true;
+            }
+        });
+
+        etPrefCuisine.addTextChangedListener(new TextWatcher() {
+            final android.os.Handler handler = new android.os.Handler();
+            Runnable runnable;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                handler.removeCallbacks(runnable);
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        String searchString = s.toString();
+                        if (searchString.length() >= 2) {
+                            searchCuisines(1, searchString, true);
+                        }
+                        else if (searchString.length() == 0) {
+                            pageCuisines = 1;
+                            initAutoCuisinesLoad();
+                        }
+                    }
+                };
+                handler.postDelayed(runnable, 500);
+            }
+        });
     }
 
     private void customizePage3(View view) {
@@ -256,7 +259,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         cvSuggestions.setOnChipClickListener(new OnTagChipClickListener() {
             @Override
             public void onChipClick(Chip chip, View view, int position) {
-                GlobalSearchItem tc = (GlobalSearchItem) chip;
+                SearchItem tc = (SearchItem) chip;
                 TextView tv = ((TextView) view.findViewById(android.R.id.text1));
                 if (tc.getSelected()) {
                     tc.setSelected(false);
@@ -270,25 +273,12 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             }
         });
 
-        searchSuggestions(pageSuggestions);
-        svSearchSuggestions.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged() {
-                if (svSearchSuggestions != null) {
-                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + svSearchSuggestions.getScrollY())) {
-                        if (canSearchSuggestions) {
-                            searchSuggestions(++ pageSuggestions);    
-                        }                        
-                    }
-                }
-            }
-        });
+        initAutoSuggestionsLoad();
 
         ivSuggestionSearchCancel.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 etPrefSuggestion.setText("");
-                //lvSearchSuggestion.setVisibility(View.GONE);
                 return true;
             }
         });
@@ -311,8 +301,13 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (s.toString().length() >= 2) {
-                            //doSearch(s.toString(), SearchResultType.DISH);
+                        String searchString = s.toString();
+                        if (searchString.length() >= 2) {
+                            searchSuggestions(1, searchString, true);
+                        }
+                        else if (searchString.length() == 0) {
+                            pageSuggestions = 1;
+                            initAutoSuggestionsLoad();
                         }
                     }
                 };
@@ -321,48 +316,144 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         });
     }
 
-    private void searchSuggestions(Integer page) {
-        if (!noMoreSuggestions) {
-            try {
-                asyncStart(SearchResultType.DISH);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("page", page);
-                StringEntity entity = new StringEntity(jsonObject.toString());
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
-                client.setTimeout(Constant.TIMEOUT);
-                client.post(mContext, URLs.SEARCH_SUGGESTIONS, entity, "application/json", new GetSuggestionsHandler());
-                canSearchSuggestions = false;
-            } catch (UnsupportedEncodingException e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-            } catch (Exception e) {
+    private void initAutoCuisinesLoad() {
+        searchCuisines(pageCuisines, null, true);
+        svSearchCuisines.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (svSearchCuisines != null) {
+                    if (svSearchCuisines.getChildAt(0).getBottom() <= (svSearchCuisines.getHeight() + svSearchCuisines.getScrollY())) {
+                        if (canSearchCuisines && !noMoreCuisines) {
+                            searchCuisines(++ pageCuisines, null, false);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void initAutoSuggestionsLoad() {
+        searchSuggestions(pageSuggestions, null, true);
+        svSearchSuggestions.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (svSearchSuggestions != null) {
+                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + svSearchSuggestions.getScrollY())) {
+                        if (canSearchSuggestions && !noMoreSuggestions) {
+                            searchSuggestions(++ pageSuggestions, null, false);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void searchCuisines(Integer page, String searchString, boolean replaceExistingData) {
+        try {
+            asyncStart(SearchResultType.CUISINE);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("page", page);
+            jsonObject.put("searchString", searchString);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(mContext, URLs.SEARCH_CUISINES, entity, "application/json", new GetCuisinesHandler(replaceExistingData));
+            canSearchCuisines = false;
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    private void searchSuggestions(Integer page, String searchString, boolean replaceExistingData) {
+        try {
+            asyncStart(SearchResultType.DISH);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("page", page);
+            jsonObject.put("searchString", searchString);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(mContext, URLs.SEARCH_SUGGESTIONS, entity, "application/json", new GetSuggestionsHandler(replaceExistingData));
+            canSearchSuggestions = false;
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class GetCuisinesHandler extends AsyncHttpResponseHandler {
+        private boolean replaceExistingData;
+        public GetCuisinesHandler(boolean replaceExistingData) {
+            this.replaceExistingData = replaceExistingData;
+        }
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            SearchResponse response = new Gson().fromJson(new String(responseBody), SearchResponse.class);
+            if (response.isResult()) {
+                List<SearchItem> chips = response.getSearchItems();
+                if (chips.size() > 0) {
+                    List<Chip> chipList = null;
+                    if (replaceExistingData) {
+                        chipList = new ArrayList<>();
+                    } else {
+                        chipList = cvCuisines.getChipList();
+                    }
+                    chipList.addAll(chips);
+                    cvCuisines.setChipList(chipList);
+                } else {
+                    noMoreCuisines = true;
+                }
+            } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
+            asyncEnd(SearchResultType.CUISINE);
+            canSearchCuisines = true;
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            asyncEnd(SearchResultType.CUISINE);
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
 
     public class GetSuggestionsHandler extends AsyncHttpResponseHandler {
-
+        private boolean replaceExistingData;
+        public GetSuggestionsHandler(boolean replaceExistingData) {
+            this.replaceExistingData = replaceExistingData;
+        }
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            GlobalSearchResponse response = new Gson().fromJson(new String(responseBody), GlobalSearchResponse.class);
+            SearchResponse response = new Gson().fromJson(new String(responseBody), SearchResponse.class);
             if (response.isResult()) {
-                List<GlobalSearchItem> chips = response.getSearchItems();
+                List<SearchItem> chips = response.getSearchItems();
                 if (chips.size() > 0) {
-                    List<Chip> chipList = cvSuggestions.getChipList();
+                    List<Chip> chipList = null;
+                    if (replaceExistingData) {
+                        chipList = new ArrayList<>();
+                    } else {
+                        chipList = cvSuggestions.getChipList();
+                    }
                     chipList.addAll(chips);
                     cvSuggestions.setChipList(chipList);
                 } else {
                     noMoreSuggestions = true;
                 }
-                canSearchSuggestions = true;
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
+            asyncEnd(SearchResultType.DISH);
+            canSearchSuggestions = true;
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            asyncEnd(SearchResultType.DISH);
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
