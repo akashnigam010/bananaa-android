@@ -40,7 +40,6 @@ public class PreferenceManager extends Application implements Application.Activi
         prefEditor.putString(FIRST_NAME, loginResponse.getUser().getFirstName());
         prefEditor.putString(LAST_NAME, loginResponse.getUser().getLastName());
         prefEditor.putString(IMAGE_URL, loginResponse.getUser().getImageUrl());
-        prefEditor.putBoolean(IS_PREFERENCES_SAVED, loginResponse.getUser().isPreferencesSaved());
         prefEditor.putString(ACCESS_TOKEN, loginResponse.getAccessToken());
         prefEditor.commit();
     }
@@ -55,7 +54,7 @@ public class PreferenceManager extends Application implements Application.Activi
     }
 
     public static Boolean isFirstTimeLaunch() {
-        return preferences.getBoolean(IS_FIRST_TIME_LAUNCH, false);
+        return preferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
     public static String getAccessToken() {
@@ -64,6 +63,11 @@ public class PreferenceManager extends Application implements Application.Activi
 
     public static Boolean getIsPreferencesSaved() {
         return preferences.getBoolean(IS_PREFERENCES_SAVED, false);
+    }
+
+    public static void setIsPreferencesSaved(Boolean value) {
+        prefEditor.putBoolean(IS_PREFERENCES_SAVED, value);
+        prefEditor.commit();
     }
 
     public static LoginUserDto getLoginDetails() {

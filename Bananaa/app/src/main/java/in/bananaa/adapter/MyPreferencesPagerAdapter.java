@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -39,7 +38,7 @@ import in.bananaa.R;
 import in.bananaa.object.SearchItem;
 import in.bananaa.object.SearchResponse;
 import in.bananaa.object.SearchResultType;
-import in.bananaa.object.myPreferences.MyPreferences;
+import in.bananaa.object.VegnonvegPreferenceResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.OnTagChipClickListener;
@@ -51,8 +50,6 @@ import in.bananaa.utils.Utils;
 import static in.bananaa.utils.Utils.chipsBackgrounds;
 
 public class MyPreferencesPagerAdapter extends PagerAdapter {
-    private MyPreferences myPreferences;
-
     private LayoutInflater layoutInflater;
     private Activity mContext;
     private int[] layouts;
@@ -88,10 +85,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private ChipViewAdapter cvSuggestionChipViewAdapter;
     private List<Chip> cvSuggestionChipList = new ArrayList<>();
 
-    public MyPreferencesPagerAdapter(Activity mContext, int[] layouts, MyPreferences myPreferences) {
+    public MyPreferencesPagerAdapter(Activity mContext, int[] layouts) {
         this.mContext = mContext;
         this.layouts = layouts;
-        this.myPreferences = myPreferences;
     }
 
     @Override
@@ -127,44 +123,21 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         rbVeg = (RadioButton) view.findViewById(R.id.rbVeg);
         rbNonVeg = (RadioButton) view.findViewById(R.id.rbNonVeg);
         rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
-        if (myPreferences.getType() != null) {
-            switch (myPreferences.getType()) {
-                case 1 :
-                    rgVegNonVeg.check(R.id.rbVeg);
-                    break;
-                case 2 :
-                    rgVegNonVeg.check(R.id.rbNonVeg);
-                    break;
-                case 3 :
-                    rgVegNonVeg.check(R.id.rbAnything);
-                    break;
-                default : break;
-            }
-        }
+        getVegnonvegPreferences();
         rgVegNonVeg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                @Override
                public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                    switch(i){
                        case R.id.rbVeg:
-                           myPreferences.setType(0);
+                           updateTagPreference(1, null, false, true);
                            break;
                        case R.id.rbNonVeg:
-                           myPreferences.setType(1);
+                           updateTagPreference(2, null, false, true);
                            break;
                        case R.id.rbAnything:
-                           myPreferences.setType(2);
+                           updateTagPreference(3, null, false, true);
                            break;
                    }
-                   final android.os.Handler handler = new android.os.Handler();
-                   final Button next = (Button) mContext.findViewById(R.id.btn_next);
-                   Runnable runnable;
-                   runnable = new Runnable() {
-                       @Override
-                       public void run() {
-                           next.performClick();
-                       }
-                   };
-                   handler.postDelayed(runnable, 300);
                }
            }
         );
@@ -192,10 +165,12 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     tc.setSelected(false);
                     tv.setBackground(mContext.getResources().getDrawable(R.drawable.bg_chip, null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
+                    updateTagPreference(tc.getId(), SearchResultType.CUISINE, true, false);
                 } else {
                     tc.setSelected(true);
-                    tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[position%10], null));
+                    tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[tc.getId()%10], null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                    updateTagPreference(tc.getId(), SearchResultType.CUISINE, false, false);
                 }
             }
         });
@@ -265,10 +240,12 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     tc.setSelected(false);
                     tv.setBackground(mContext.getResources().getDrawable(R.drawable.bg_chip, null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
+                    updateTagPreference(tc.getId(), SearchResultType.DISH, true, false);
                 } else {
                     tc.setSelected(true);
-                    tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[position%10], null));
+                    tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[tc.getId()%10], null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                    updateTagPreference(tc.getId(), SearchResultType.DISH, false, false);
                 }
             }
         });
@@ -315,6 +292,51 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             }
         });
     }
+    private void getVegnonvegPreferences() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(mContext, URLs.GET_VEGNONVEG_PREFERENCE, entity, "application/json", new GetPreferenceHandler());
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class GetPreferenceHandler extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            VegnonvegPreferenceResponse response = new Gson().fromJson(new String(responseBody), VegnonvegPreferenceResponse.class);
+            if (response.isResult()) {
+                if (response.getId() != null) {
+                    switch(response.getId()) {
+                        case 1 :
+                            rgVegNonVeg.check(R.id.rbVeg);
+                            break;
+                        case 2 :
+                            rgVegNonVeg.check(R.id.rbNonVeg);
+                            break;
+                        case 3 :
+                            rgVegNonVeg.check(R.id.rbAnything);
+                            break;
+                        default : break;
+                    }
+                }
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
 
     private void initAutoCuisinesLoad() {
         searchCuisines(pageCuisines, null, true);
@@ -473,6 +495,55 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         View view = (View) object;
         container.removeView(view);
+    }
+
+    private void updateTagPreference(Integer id, SearchResultType type, boolean isRemove, boolean isSaveVegnonvegPref) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", id);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            String url = null;
+            if (isSaveVegnonvegPref) {
+                url = URLs.SAVE_VEGNONVEG_PREFERENCE;
+            } else {
+                if (type == SearchResultType.CUISINE) {
+                    if (isRemove) {
+                        url = URLs.REMOVE_CUISINE_PREFERENCE;
+                    } else {
+                        url = URLs.ADD_CUISINE_PREFERENCE;
+                    }
+                } else if (type == SearchResultType.DISH) {
+                    if (isRemove) {
+                        url = URLs.REMOVE_SUGGESTION_PREFERENCE;
+                    } else {
+                        url = URLs.ADD_SUGGESTOION_PREFERENCE;
+                    }
+                } else {
+                    return;
+                }
+            }
+            client.post(mContext, url, entity, "application/json", new UpdateTagPreferenceHandler());
+            canSearchSuggestions = false;
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+    public class UpdateTagPreferenceHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            // do nothing - data is saved in the backend
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+        }
     }
 
     private void setFontPage1() {

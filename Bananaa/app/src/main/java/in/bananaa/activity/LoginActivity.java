@@ -25,10 +25,8 @@ import java.io.UnsupportedEncodingException;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.object.VegnonvegPreferenceResponse;
 import in.bananaa.object.login.ClientType;
 import in.bananaa.object.login.LoginResponse;
-import in.bananaa.object.myPreferences.MyPreferences;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.FacebookManager;
@@ -50,15 +48,13 @@ public class LoginActivity extends AppCompatActivity {
     Boolean isFbLogin = false;
     Boolean isGoogleLogin = false;
 
-    String accessToken;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if (PreferenceManager.isUserLoggedIn()) {
-            startPreferenceActivity();
+            startActivity();
         }
 
         facebookManager = new FacebookManager(this);
@@ -155,8 +151,7 @@ public class LoginActivity extends AppCompatActivity {
             LoginResponse response = new Gson().fromJson(new String(responseBody), LoginResponse.class);
             if (response.isResult()) {
                 saveLoginDetails(response);
-                accessToken = response.getAccessToken();
-                startPreferenceActivity();
+                startActivity();
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
@@ -173,55 +168,15 @@ public class LoginActivity extends AppCompatActivity {
         PreferenceManager.putLoginDetails(loginResponse);
     }
 
-    private void startPreferenceActivity() {
+    private void startActivity() {
         Intent intent = null;
-        if (!PreferenceManager.getIsPreferencesSaved()) {
-            if (accessToken == null) {
-                accessToken = PreferenceManager.getAccessToken();
-            }
-            getVegnonvegPreferences();
-        } else {
+        if (PreferenceManager.getIsPreferencesSaved()) {
             intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+        } else {
+            intent = new Intent(LoginActivity.this, MyPreferencesActivity.class);
         }
-    }
-
-    private void getVegnonvegPreferences() {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            StringEntity entity = new StringEntity(jsonObject.toString());
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.addHeader("Authorization", "Bearer " + accessToken);
-            client.setTimeout(Constant.TIMEOUT);
-            client.post(LoginActivity.this, URLs.GET_VEGNONVEG_PREFERENCES, entity, "application/json", new LoginActivity.GetPreferenceHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-        } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-        }
-    }
-
-    public class GetPreferenceHandler extends AsyncHttpResponseHandler {
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            VegnonvegPreferenceResponse response = new Gson().fromJson(new String(responseBody), VegnonvegPreferenceResponse.class);
-            if (response.isResult()) {
-                MyPreferences myPreferences = new MyPreferences();
-                myPreferences.setType(response.getId());
-                Intent intent = new Intent(LoginActivity.this, MyPreferencesActivity.class);
-                intent.putExtra(MyPreferencesActivity.MY_PREFERENCES, myPreferences);
-                startActivity(intent);
-                finish();
-            } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-            }
-        }
-
-        @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-        }
+        startActivity(intent);
+        finish();
     }
 
     private void setFont() {

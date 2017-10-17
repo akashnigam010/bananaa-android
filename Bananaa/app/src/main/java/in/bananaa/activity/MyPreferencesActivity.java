@@ -13,27 +13,20 @@ import android.widget.TextView;
 
 import in.bananaa.R;
 import in.bananaa.adapter.MyPreferencesPagerAdapter;
-import in.bananaa.object.myPreferences.MyPreferences;
 import in.bananaa.utils.PreferenceManager;
 
 public class MyPreferencesActivity extends AppCompatActivity {
-    public static final String MY_PREFERENCES = "myPreferences";
     private ViewPager viewPager;
     private MyPreferencesPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
     private TextView[] dots;
     private int[] layouts;
     private Button btnBack, btnNext;
-    MyPreferences myPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (PreferenceManager.getIsPreferencesSaved()) {
-            launchHomeScreen();
-            finish();
-        }
-        myPreferences = (MyPreferences) getIntent().getSerializableExtra(MY_PREFERENCES);
+
         setContentView(R.layout.activity_my_preferences);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
@@ -47,7 +40,7 @@ public class MyPreferencesActivity extends AppCompatActivity {
                 R.layout.my_pref_slide3};
 
         addBottomDots(0);
-        myViewPagerAdapter = new MyPreferencesPagerAdapter(this, layouts, myPreferences);
+        myViewPagerAdapter = new MyPreferencesPagerAdapter(this, layouts);
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
@@ -96,7 +89,7 @@ public class MyPreferencesActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        PreferenceManager.setFirstTimeLaunch(false);
+        PreferenceManager.setIsPreferencesSaved(true);
         startActivity(new Intent(MyPreferencesActivity.this, MainActivity.class));
         finish();
     }
