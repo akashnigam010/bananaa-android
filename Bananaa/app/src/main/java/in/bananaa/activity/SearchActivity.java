@@ -29,7 +29,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.adapter.GlobalSearchAdapter;
-import in.bananaa.object.DataGenerator;
+import in.bananaa.object.SearchItem;
 import in.bananaa.object.SearchResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
@@ -121,8 +121,9 @@ public class SearchActivity extends AppCompatActivity {
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SearchItem merchant = globalSearchAdapter.getItem(position);
                 Intent i = new Intent(SearchActivity.this, MerchantDetailsActivity.class);
-                i.putExtra("merchantDetails", DataGenerator.getMerchantDetails());
+                i.putExtra(MerchantDetailsActivity.MERCHANT_ID, merchant.getId());
                 startActivity(i);
                 finish();
             }

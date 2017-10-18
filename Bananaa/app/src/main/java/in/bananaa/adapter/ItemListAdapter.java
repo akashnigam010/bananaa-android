@@ -25,7 +25,6 @@ import java.util.List;
 
 import in.bananaa.R;
 import in.bananaa.activity.ItemDetailsActivity;
-import in.bananaa.object.DataGenerator;
 import in.bananaa.object.Item;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.Debug;
@@ -192,8 +191,7 @@ public class ItemListAdapter extends BaseAdapter {
         public void onClick(View v) {
             dialog.cancel();
             Intent i = new Intent(mContext, ItemDetailsActivity.class);
-            i.putExtra("id", this.itemId);
-            i.putExtra("itemDetails", DataGenerator.getItemDetailsResponse());
+            i.putExtra(ItemDetailsActivity.ITEM_ID, this.itemId);
             mContext.startActivity(i);
         }
     }

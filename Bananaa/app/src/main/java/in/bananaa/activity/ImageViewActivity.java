@@ -11,6 +11,7 @@ import in.bananaa.R;
 import static com.bumptech.glide.Glide.with;
 
 public class ImageViewActivity extends AppCompatActivity {
+    public static final String IMAGE_URL = "imageUrl";
     private ImageView ivImage;
     private ImageButton ivBack;
 
@@ -18,9 +19,10 @@ public class ImageViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
+        String imageUrl = (String) getIntent().getSerializableExtra(IMAGE_URL);
         ivImage = (ImageView)findViewById(R.id.ivImage);
         with(ImageViewActivity.this)
-                .load("https://bna-s3.s3.amazonaws.com/d/12/pasta-donatella.jpg")
+                .load(imageUrl)
                 .centerCrop()
                 .placeholder(R.color.grey)
                 .crossFade()

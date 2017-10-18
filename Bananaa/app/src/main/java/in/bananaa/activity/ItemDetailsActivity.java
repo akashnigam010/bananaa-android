@@ -3,7 +3,6 @@ package in.bananaa.activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -14,19 +13,33 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.adapter.FoodviewsListAdapter;
 import in.bananaa.object.ItemDetailsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.AlertMessages;
+import in.bananaa.utils.Constant;
+import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static com.bumptech.glide.Glide.with;
 
 public class ItemDetailsActivity extends AppCompatActivity {
+    public static final String ITEM_ID = "itemId";
+    Integer itemId;
     AppCompatActivity mContext;
-    AlertMessages messages;
     ScrollView itemDetailsView;
     ProgressBar activityLoader;
     ItemDetailsResponse itemDetails;
@@ -54,30 +67,57 @@ public class ItemDetailsActivity extends AppCompatActivity {
         mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
-        messages = new AlertMessages(this);
-        foodviewsListAdapter = new FoodviewsListAdapter(this);
-        itemDetails = (ItemDetailsResponse) getIntent().getSerializableExtra("itemDetails");
-        initializeView();
+        itemId = (Integer) getIntent().getSerializableExtra(ITEM_ID);
+        if (itemId == null) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            return;
+        }
+        itemDetailsView = (ScrollView) findViewById(R.id.itemDetailsView);
+        activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
+        getItemDetails();
+    }
+
+    private void getItemDetails() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            asyncStart();
+            jsonObject.put("id", itemId);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(ItemDetailsActivity.this, URLs.ITEM_DETAILS, entity, "application/json", new DetailsResponseHandler());
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class DetailsResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            asyncEnd();
+            itemDetails = new Gson().fromJson(new String(responseBody), ItemDetailsResponse.class);
+            if (itemDetails.isResult()) {
+                initializeView();
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            asyncEnd();
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
     }
 
     private void initializeView() {
-        itemDetailsView = (ScrollView) findViewById(R.id.itemDetailsView);
-        activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
-
-        startAsync();
-        new CountDownTimer(500, 500) {
-            public void onTick(long millisUntilFinished) {
-                //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                endAsync();
-                setComponents();
-                setFonts();
-                setItemDetails();
-                setFoodviews();
-            }
-        }.start();
+        setComponents();
+        setFonts();
+        setItemDetails();
     }
 
     private void setComponents() {
@@ -98,6 +138,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         ivImage.setOnClickListener(onImageClickListener);
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onAddFoodviewClickListener);
+
+        foodviewsListAdapter = new FoodviewsListAdapter(this);
     }
 
     View.OnClickListener onClickBackListener = new View.OnClickListener() {
@@ -111,6 +153,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent i = new Intent(ItemDetailsActivity.this, ImageViewActivity.class);
+            i.putExtra(ImageViewActivity.IMAGE_URL, itemDetails.getImageUrl());
             startActivity(i);
         }
     };
@@ -128,6 +171,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
             colorType = RatingColorType.R25;
         }
         background.setColor(this.getResources().getColor(colorType.getColor()));
+
+        //async setFoodviews();
     }
 
     private void setImage() {
@@ -167,12 +212,12 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvNoFoodviews.setTypeface(Utils.getRegularFont(this));
     }
 
-    private void startAsync() {
+    private void asyncStart() {
         itemDetailsView.setVisibility(View.GONE);
         activityLoader.setVisibility(View.VISIBLE);
     }
 
-    private void endAsync() {
+    private void asyncEnd() {
         itemDetailsView.setVisibility(View.VISIBLE);
         activityLoader.setVisibility(View.GONE);
     }

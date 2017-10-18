@@ -2,7 +2,6 @@ package in.bananaa.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.MotionEvent;
@@ -15,21 +14,35 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.adapter.ItemListAdapter;
 import in.bananaa.adapter.MyFoodviewsListAdapter;
 import in.bananaa.adapter.TagListAdapter;
-import in.bananaa.object.DataGenerator;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetailsResponse;
+import in.bananaa.object.MyFoodviewsResponse;
 import in.bananaa.utils.AlertMessages;
+import in.bananaa.utils.Constant;
 import in.bananaa.utils.CustomListView;
+import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static com.bumptech.glide.Glide.with;
 
 public class MerchantDetailsActivity extends AppCompatActivity {
-
+    public static final String MERCHANT_ID = "merchantId";
+    Integer merchantId;
     MerchantDetailsResponse merchantDetails;
     AlertMessages messages;
 
@@ -76,27 +89,57 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         mContext = this;
         setContentView(R.layout.activity_merchant_details);
         messages = new AlertMessages(this);
-        merchantDetails = (MerchantDetailsResponse) getIntent().getSerializableExtra("merchantDetails");
-        initializeView();
+        merchantId = (Integer) getIntent().getSerializableExtra(MERCHANT_ID);
+        if (merchantId == null) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            return;
+        }
+        merchantDetailsView = (ScrollView) findViewById(R.id.merchantDetailsView);
+        activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
+        getMerchantDetails();
+    }
+
+    private void getMerchantDetails() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            asyncStart();
+            jsonObject.put("id", merchantId);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(MerchantDetailsActivity.this, URLs.MERCHANT_DETAILS, entity, "application/json", new DetailsResponseHandler());
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class DetailsResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            asyncEnd();
+            merchantDetails = new Gson().fromJson(new String(responseBody), MerchantDetailsResponse.class);
+            if (merchantDetails.isResult()) {
+                initializeView();
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            asyncEnd();
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
     }
 
     private void initializeView() {
-        merchantDetailsView = (ScrollView) findViewById(R.id.merchantDetailsView);
-        activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
-
-        startAsync();
-        new CountDownTimer(500, 500) {
-            public void onTick(long millisUntilFinished) {
-                //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                endAsync();
-                setComponents();
-                setFont();
-                setMerchantDetails();
-            }
-        }.start();
+        setComponents();
+        setFont();
+        setMerchantDetails();
     }
 
     private void setComponents() {
@@ -131,16 +174,27 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         cuisinesListAdapter = new TagListAdapter(this);
         cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());
         myFoodviewsListAdapter = new MyFoodviewsListAdapter(this, merchantDetails.getName(), merchantDetails.getShortAddress());
-        myFoodviewsListAdapter.addAll(DataGenerator.getMyRecommendations());
 
         lvCuisinesAndSpread.setAdapter(cuisinesListAdapter);
         lvDelectableDishes.setAdapter(itemListAdapter);
         lvMyFoodViews.setAdapter(myFoodviewsListAdapter);
+
+        ivImage.setOnClickListener(onImageClickListener);
         btnSeeMore.setOnClickListener(onClickSeeMoreListner);
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onClickRateAndFoodViewListener);
         setToastMessages();
+        getmyFoodviews(1);
     }
+
+    View.OnClickListener onImageClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(MerchantDetailsActivity.this, ImageViewActivity.class);
+            i.putExtra(ImageViewActivity.IMAGE_URL, merchantDetails.getImageUrl());
+            startActivity(i);
+        }
+    };
 
     View.OnClickListener onClickSeeMoreListner = new View.OnClickListener() {
         @Override
@@ -214,12 +268,12 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         btnAddFoodview.setTypeface(Utils.getRegularFont(this));
     }
 
-    private void startAsync() {
+    private void asyncStart() {
         merchantDetailsView.setVisibility(View.GONE);
         activityLoader.setVisibility(View.VISIBLE);
     }
 
-    private void endAsync() {
+    private void asyncEnd() {
         merchantDetailsView.setVisibility(View.VISIBLE);
         activityLoader.setVisibility(View.GONE);
     }
@@ -258,6 +312,41 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             Toast.makeText(this,
                     "Rated b" +
                             "ased on weighted average of most recent ratings, user credibility and number of times people have tried a dish.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getmyFoodviews(Integer page) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("merchantId", merchantId);
+            jsonObject.put("page", page);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(MerchantDetailsActivity.this, URLs.GET_MY_FOODVIEWS, entity, "application/json", new FoodviewResponseHandler());
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class FoodviewResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            MyFoodviewsResponse response = new Gson().fromJson(new String(responseBody), MyFoodviewsResponse.class);
+            if (response.isResult()) {
+                myFoodviewsListAdapter.addAll(response.getRecommendations());
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
 }

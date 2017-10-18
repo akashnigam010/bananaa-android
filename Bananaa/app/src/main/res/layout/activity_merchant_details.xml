@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.MerchantDetailsActivity">
+    tools:context=".activity.MerchantDetailsActivity"
+    android:descendantFocusability="blocksDescendants">
 
     <ProgressBar
         android:id="@+id/activityLoader"
