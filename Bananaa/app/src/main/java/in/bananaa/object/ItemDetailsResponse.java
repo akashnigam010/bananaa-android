@@ -3,8 +3,6 @@ package in.bananaa.object;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemDetailsResponse extends GenericResponse implements Serializable {
     @SerializedName("id")
@@ -15,9 +13,6 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
 
     @SerializedName("name")
     private String name;
-
-    @SerializedName("nameId")
-    private String nameId;
 
     @SerializedName("merchantName")
     private String merchantName;
@@ -36,9 +31,6 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
 
     @SerializedName("totalRatings")
     private Integer totalRatings;
-
-    @SerializedName("foodviews")
-    private List<Foodview> foodviews;
 
     public Integer getId() {
         return id;
@@ -62,14 +54,6 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getNameId() {
-        return nameId;
-    }
-
-    public void setNameId(String nameId) {
-        this.nameId = nameId;
     }
 
     public String getMerchantName() {
@@ -118,16 +102,5 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
 
     public void setTotalRatings(Integer totalRatings) {
         this.totalRatings = totalRatings;
-    }
-
-    public List<Foodview> getFoodviews() {
-        if (this.foodviews == null) {
-            this.foodviews = new ArrayList<>();
-        }
-        return foodviews;
-    }
-
-    public void setFoodviews(List<Foodview> foodviews) {
-        this.foodviews = foodviews;
     }
 }

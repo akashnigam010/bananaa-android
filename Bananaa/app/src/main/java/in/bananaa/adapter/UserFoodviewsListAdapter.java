@@ -20,35 +20,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.Foodview;
+import in.bananaa.object.UserFoodview;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.R.layout.foodview;
 
-public class FoodviewsListAdapter extends BaseAdapter {
-
+public class UserFoodviewsListAdapter extends BaseAdapter {
     private static final String TAG = "FOODVIEW_LIST_ADAPTER";
-    List<Foodview> foodviews;
+    List<UserFoodview> userFoodviews;
     private AppCompatActivity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
 
-    public FoodviewsListAdapter(AppCompatActivity activity) {
+    public UserFoodviewsListAdapter(AppCompatActivity activity) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
-        foodviews = new ArrayList<>();
+        userFoodviews = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return foodviews.size();
+        return userFoodviews.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return foodviews.get(position);
+        return userFoodviews.get(position);
     }
 
     @Override
@@ -56,14 +55,14 @@ public class FoodviewsListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addAll(List<Foodview> myFoodviews) {
-        this.foodviews.clear();
-        appendAll(myFoodviews);
+    public void addAll(List<UserFoodview> myUserFoodviews) {
+        this.userFoodviews.clear();
+        appendAll(myUserFoodviews);
     }
 
-    public void appendAll(List<Foodview> myFoodviews) {
+    public void appendAll(List<UserFoodview> myUserFoodviews) {
         try {
-            this.foodviews.addAll(myFoodviews);
+            this.userFoodviews.addAll(myUserFoodviews);
         } catch (Exception e) {
             Debug.e(TAG, e.getMessage());
         }
@@ -94,26 +93,26 @@ public class FoodviewsListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tvName.setText(foodviews.get(position).getUserName());
-        setSubheading(holder, foodviews.get(position).getUserRatingCount(), foodviews.get(position).getUserFoodviewCount());
-        holder.tvRating.setText(foodviews.get(position).getRating());
+        holder.tvName.setText(userFoodviews.get(position).getUserName());
+        setSubheading(holder, userFoodviews.get(position).getUserRatingCount(), userFoodviews.get(position).getUserFoodviewCount());
+        holder.tvRating.setText(userFoodviews.get(position).getRating());
         holder.tvYouRated.setVisibility(View.GONE);
         background = (GradientDrawable) holder.tvRating.getBackground();
-        RatingColorType colorType = RatingColorType.getCodeByCssClass(foodviews.get(position).getRatingClass());
+        RatingColorType colorType = RatingColorType.getCodeByCssClass(userFoodviews.get(position).getRatingClass());
         if (colorType == null) {
             colorType = RatingColorType.R25;
         }
         background.setColor(mContext.getResources().getColor(colorType.getColor()));
-        if (Utils.isEmpty(foodviews.get(position).getDesc())) {
+        if (Utils.isEmpty(userFoodviews.get(position).getDesc())) {
             holder.tvDescription.setVisibility(View.GONE);
         } else {
             holder.tvDescription.setVisibility(View.VISIBLE);
-            holder.tvDescription.setText(foodviews.get(position).getDesc());
+            holder.tvDescription.setText(userFoodviews.get(position).getDesc());
         }
-        holder.tvTimeDiff.setText(foodviews.get(position).getTimeDiff());
+        holder.tvTimeDiff.setText(userFoodviews.get(position).getTimeDiff());
 
-        if (Utils.isNotEmpty(foodviews.get(position).getUserImageUrl())) {
-            Glide.with(mContext).load(foodviews.get(position).getUserImageUrl()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
+        if (Utils.isNotEmpty(userFoodviews.get(position).getUserImageUrl())) {
+            Glide.with(mContext).load(userFoodviews.get(position).getUserImageUrl()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =
@@ -122,13 +121,13 @@ public class FoodviewsListAdapter extends BaseAdapter {
                     holder.ivThumbnail.setImageDrawable(circularBitmapDrawable);
                 }
             });
-            convertView.setOnClickListener(new CustomUserClickListener(mContext, foodviews.get(position).getUserId()));
+            convertView.setOnClickListener(new CustomUserClickListener(mContext, userFoodviews.get(position).getUserId()));
         } else {
             holder.ivThumbnail.setImageResource(R.color.lightColor);
         }
 
-        holder.tvName.setOnClickListener(new CustomUserClickListener(mContext, foodviews.get(position).getUserId()));
-        holder.tvSubString.setOnClickListener(new CustomUserClickListener(mContext, foodviews.get(position).getUserId()));
+        holder.tvName.setOnClickListener(new CustomUserClickListener(mContext, userFoodviews.get(position).getUserId()));
+        holder.tvSubString.setOnClickListener(new CustomUserClickListener(mContext, userFoodviews.get(position).getUserId()));
         setFont(holder);
         return convertView;
     }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.bananaa.activity.ItemDetailsActivity">
+    tools:context="in.bananaa.activity.ItemDetailsActivity"
+    android:descendantFocusability="blocksDescendants">
 
     <ProgressBar
         android:id="@+id/activityLoader"
@@ -187,6 +188,50 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:orientation="vertical">
+
+                            <RatingBar
+                                android:id="@+id/rbMyRatings"
+                                style="@style/DishRatingbar"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:numStars="5"
+                                android:stepSize="0.5"
+                                android:scaleX="1.2"
+                                android:scaleY="1.2"/>
+
+                            <TextView
+                                android:id="@+id/tvMyFoodview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20dp"
+                                android:layout_marginLeft="25dp"
+                                android:layout_marginRight="25dp"
+                                android:text="Bhot hi badhiya pizza hai bhai. Too good."
+                                android:textColor="@color/darkGrey"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvMyFoodviewTimeDiff"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4 months ago"
+                                android:layout_marginLeft="25dp"
+                                android:layout_marginTop="15dp"
+                                android:textColor="@color/grey"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/btnAddFoodview"
                             android:layout_width="match_parent"
@@ -209,13 +254,15 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:gravity="center"
+                    android:background="@color/white"
+
                     android:orientation="vertical">
 
                     <TextView
@@ -241,7 +288,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:paddingLeft="20dp"
-                        android:paddingBottom="10dp"
+                        android:paddingBottom="20dp"
                         android:textColor="@color/grey"
                         android:text="@string/noFoodviews"
                         android:textSize="@dimen/subHeading" />
@@ -254,7 +301,9 @@
                         android:clipToPadding="false"
                         android:divider="@null"
                         android:layout_marginBottom="20dp"
-                        android:dividerHeight="0dp"></in.bananaa.utils.CustomListView>
+                        android:dividerHeight="0dp">
+
+                    </in.bananaa.utils.CustomListView>
 
                 </LinearLayout>
 

@@ -2,7 +2,7 @@ package in.bananaa.object;
 
 import java.util.List;
 
-public class MyFoodviewsResponse extends GenericResponse {
+public class FoodviewsResponse extends GenericResponse {
     List<MyFoodview> recommendations;
 
     public List<MyFoodview> getRecommendations() {

@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -24,10 +25,12 @@ import java.io.UnsupportedEncodingException;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.adapter.FoodviewsListAdapter;
+import in.bananaa.adapter.UserFoodviewsListAdapter;
 import in.bananaa.object.ItemDetailsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
+import in.bananaa.object.MyItemFoodviewResponse;
 import in.bananaa.object.RatingColorType;
+import in.bananaa.object.UserFoodviewsResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.PreferenceManager;
@@ -54,13 +57,16 @@ public class ItemDetailsActivity extends AppCompatActivity {
     TextView tvTotalRatings;
 
     TextView tvMyFoodViewsTxt;
+    RatingBar rbMyRatings;
+    TextView tvMyFoodview;
+    TextView tvMyFoodviewTimeDiff;
     Button btnAddFoodview;
     TextView tvFoodviewsTxt;
 
     TextView tvNoFoodviews;
     ListView lvFoodviews;
 
-    FoodviewsListAdapter foodviewsListAdapter;
+    UserFoodviewsListAdapter userFoodviewsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +124,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         setComponents();
         setFonts();
         setItemDetails();
+        setMyFoodview();
+        setUserFoodviews();
     }
 
     private void setComponents() {
@@ -130,6 +138,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvRating = (TextView) findViewById(R.id.tvRating);
         tvTotalRatings = (TextView) findViewById(R.id.tvTotalRatings);
         tvMyFoodViewsTxt = (TextView) findViewById(R.id.tvMyFoodViewsTxt);
+        rbMyRatings = (RatingBar) findViewById(R.id.rbMyRatings);
+        tvMyFoodview = (TextView) findViewById(R.id.tvMyFoodview);
+        tvMyFoodviewTimeDiff = (TextView) findViewById(R.id.tvMyFoodviewTimeDiff);
         btnAddFoodview = (Button) findViewById(R.id.btnAddFoodview);
         tvFoodviewsTxt = (TextView) findViewById(R.id.tvFoodviewsTxt);
         tvNoFoodviews = (TextView) findViewById(R.id.tvNoFoodviews);
@@ -139,7 +150,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onAddFoodviewClickListener);
 
-        foodviewsListAdapter = new FoodviewsListAdapter(this);
+        userFoodviewsListAdapter = new UserFoodviewsListAdapter(this);
     }
 
     View.OnClickListener onClickBackListener = new View.OnClickListener() {
@@ -171,8 +182,6 @@ public class ItemDetailsActivity extends AppCompatActivity {
             colorType = RatingColorType.R25;
         }
         background.setColor(this.getResources().getColor(colorType.getColor()));
-
-        //async setFoodviews();
     }
 
     private void setImage() {
@@ -188,15 +197,97 @@ public class ItemDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void setFoodviews() {
-        if (itemDetails.getFoodviews().size() == 0) {
-            tvNoFoodviews.setVisibility(View.VISIBLE);
-            lvFoodviews.setVisibility(View.GONE);
-        } else {
-            tvNoFoodviews.setVisibility(View.GONE);
-            lvFoodviews.setVisibility(View.VISIBLE);
-            foodviewsListAdapter.addAll(itemDetails.getFoodviews());
-            lvFoodviews.setAdapter(foodviewsListAdapter);
+    private void setMyFoodview() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("itemId", itemId);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(ItemDetailsActivity.this, URLs.GET_MY_ITEM_FOODVIEW, entity, "application/json", new MyItemFoodviewResponseHandler());
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class MyItemFoodviewResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            MyItemFoodviewResponse response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
+            if (response.isResult()) {
+                if (response.isRecommended()) {
+                    rbMyRatings.setRating(Float.parseFloat(response.getRecommendation().getRating()));
+                    tvMyFoodviewTimeDiff.setText(response.getRecommendation().getTimeDiff());
+                    tvMyFoodviewTimeDiff.setVisibility(View.VISIBLE);
+                    if (!Utils.isEmpty(response.getRecommendation().getDescription())) {
+                        tvMyFoodview.setText(response.getRecommendation().getDescription());
+                        tvMyFoodview.setVisibility(View.VISIBLE);
+                        btnAddFoodview.setText(R.string.editFoodview);
+                    } else {
+                        tvMyFoodview.setVisibility(View.GONE);
+                        btnAddFoodview.setText(R.string.addFoodview);
+                    }
+                } else {
+                    rbMyRatings.setRating(0.0f);
+                    tvMyFoodview.setVisibility(View.GONE);
+                    tvMyFoodviewTimeDiff.setVisibility(View.GONE);
+                    btnAddFoodview.setText(R.string.addFoodview);
+                }
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    private void setUserFoodviews() {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("itemId", itemId);
+            jsonObject.put("page", 1);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(ItemDetailsActivity.this, URLs.GET_OTHER_USER_FOODVIEWS, entity, "application/json", new UserFoodviewsResponseHandler());
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    public class UserFoodviewsResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            UserFoodviewsResponse response = new Gson().fromJson(new String(responseBody), UserFoodviewsResponse.class);
+            if (response.isResult()) {
+                if (response.getFoodviews().size() == 0) {
+                    tvNoFoodviews.setVisibility(View.VISIBLE);
+                    lvFoodviews.setVisibility(View.GONE);
+                } else {
+                    tvNoFoodviews.setVisibility(View.GONE);
+                    lvFoodviews.setVisibility(View.VISIBLE);
+                    userFoodviewsListAdapter.addAll(response.getFoodviews());
+                    lvFoodviews.setAdapter(userFoodviewsListAdapter);
+                }
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
 
@@ -207,6 +298,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvRating.setTypeface(Utils.getRegularFont(this));
         tvTotalRatings.setTypeface(Utils.getRegularFont(this));
         tvMyFoodViewsTxt.setTypeface(Utils.getBold(this));
+        tvMyFoodview.setTypeface(Utils.getRegularFont(this));
+        tvMyFoodviewTimeDiff.setTypeface(Utils.getRegularFont(this));
         btnAddFoodview.setTypeface(Utils.getRegularFont(this));
         tvFoodviewsTxt.setTypeface(Utils.getBold(this));
         tvNoFoodviews.setTypeface(Utils.getRegularFont(this));

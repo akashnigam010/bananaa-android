@@ -62,7 +62,8 @@
     <string name="delectableDishes">Delectable Dishes</string>
     <string name="seeMore">See More</string>
     <string name="myFoodviews">My Foodviews</string>
-    <string name="addFoodview">Rate and Foodview</string>
+    <string name="addFoodview">Add Foodview</string>
+    <string name="editFoodview">Edit Foodview</string>
     <string name="foodViewSubHeading">My ratings and foodviews at\u0020</string>
     <string name="peopleRated">%1d people rated</string>
     <string name="youRated">You rated</string>
@@ -72,13 +73,13 @@
     <!--Foodview Modal-->
     <string name="foodviewModalTitle">Add Foodview</string>
     <string name="search_dish">Search for a dish name</string>
-    <string name="foodview_hint">Share a foodview ! A tiny review about this dish to help others know how it tastes and if they should give it a try. Just remember to keep it short, a minimum of 50 and a maximum of 200 characters only :)</string>
+    <string name="foodview_hint">Share a Foodview ! A tiny review about this dish to help others know how it tastes and if they should give it a try. Just remember to keep it short, a minimum of 50 and a maximum of 200 characters only :)</string>
     <string name="save">Save</string>
 
     <!--Item Details Screen-->
     <string name="myRatingAndFoodviews">My Rating and Foodview</string>
     <string name="foodviews">Foodviews</string>
-    <string name="noFoodviews">No one has added a foodview yet</string>
+    <string name="noFoodviews">No foodview yet</string>
     <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
 
     <!--Alert Modals-->

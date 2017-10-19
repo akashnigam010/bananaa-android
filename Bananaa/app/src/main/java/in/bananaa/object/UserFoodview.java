@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Foodview implements Serializable {
+public class UserFoodview implements Serializable {
     @SerializedName("id")
     private Integer id;
 

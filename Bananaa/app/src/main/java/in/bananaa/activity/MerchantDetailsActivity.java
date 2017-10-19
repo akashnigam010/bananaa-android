@@ -30,7 +30,7 @@ import in.bananaa.adapter.MyFoodviewsListAdapter;
 import in.bananaa.adapter.TagListAdapter;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetailsResponse;
-import in.bananaa.object.MyFoodviewsResponse;
+import in.bananaa.object.FoodviewsResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.CustomListView;
@@ -336,7 +336,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            MyFoodviewsResponse response = new Gson().fromJson(new String(responseBody), MyFoodviewsResponse.class);
+            FoodviewsResponse response = new Gson().fromJson(new String(responseBody), FoodviewsResponse.class);
             if (response.isResult()) {
                 myFoodviewsListAdapter.addAll(response.getRecommendations());
             } else {
