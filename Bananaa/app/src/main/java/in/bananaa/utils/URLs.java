@@ -5,12 +5,18 @@ public class URLs {
     public static String BASE_URL = "http://dev.bananaa.in/bna/";
 
     public static String LOGIN = BASE_URL + "login/login";
+
     public static String GET_LOCATIONS = BASE_URL + "location/getPopularLocations";
+
     public static String GLOBAL_SEARCH = BASE_URL + "search/gSearch";
-    public static String DISH_SEARCH = BASE_URL + "search/items";
+    public static String DISH_SEARCH = BASE_URL + "search/dishes";
 
     public static String MERCHANT_DETAILS = BASE_URL + "merchant/getDetails";
+
     public static String ITEM_DETAILS = BASE_URL + "item/getDetails";
+
+    public static String SAVE_RATING = BASE_URL + "foodview/saveRating";
+    public static String SAVE_FOODVIEW = BASE_URL + "foodview/saveFoodview";
     public static String GET_MY_FOODVIEWS = BASE_URL + "foodview/getMyFoodviews";
     public static String GET_MY_ITEM_FOODVIEW = BASE_URL + "foodview/getMyFoodview";
     public static String GET_OTHER_USER_FOODVIEWS = BASE_URL + "foodview/getOtherUsersFoodviews";

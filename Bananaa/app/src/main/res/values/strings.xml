@@ -36,9 +36,6 @@
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
 
-    <!--Error messages-->
-    <string name="genericError">Something seems fishy. Please try again</string>
-
     <!--Across App-->
     <string name="name">Bananaa</string>
     <string name="default_location">Hyderabad</string>
@@ -81,9 +78,12 @@
     <string name="foodviews">Foodviews</string>
     <string name="noFoodviews">No foodview yet</string>
     <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
+    <string name="justNow">just now</string>
 
     <!--Alert Modals-->
     <string name="defaultErrorTitle">Uh-oh!</string>
     <string name="noInternet">No internet connection</string>
     <string name="defaultDismissText">DISMISS</string>
+    <string name="genericError">Something seems fishy. Please try again</string>
+    <string name="noResultsFound">No results found</string>
 </resources>

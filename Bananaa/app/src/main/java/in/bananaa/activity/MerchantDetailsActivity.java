@@ -1,6 +1,7 @@
 package in.bananaa.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -28,9 +29,9 @@ import in.bananaa.R;
 import in.bananaa.adapter.ItemListAdapter;
 import in.bananaa.adapter.MyFoodviewsListAdapter;
 import in.bananaa.adapter.TagListAdapter;
+import in.bananaa.object.FoodviewsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetailsResponse;
-import in.bananaa.object.FoodviewsResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.CustomListView;
@@ -173,19 +174,29 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         itemListAdapter.addAll(merchantDetails.getItems());
         cuisinesListAdapter = new TagListAdapter(this);
         cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());
-        myFoodviewsListAdapter = new MyFoodviewsListAdapter(this, merchantDetails.getName(), merchantDetails.getShortAddress());
+        myFoodviewsListAdapter = new MyFoodviewsListAdapter(this, merchantId, merchantDetails.getName(), merchantDetails.getShortAddress());
 
         lvCuisinesAndSpread.setAdapter(cuisinesListAdapter);
         lvDelectableDishes.setAdapter(itemListAdapter);
         lvMyFoodViews.setAdapter(myFoodviewsListAdapter);
 
         ivImage.setOnClickListener(onImageClickListener);
+        tvPhone.setOnClickListener(onPhoneNumberClickListener);
         btnSeeMore.setOnClickListener(onClickSeeMoreListner);
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onClickRateAndFoodViewListener);
         setToastMessages();
         getmyFoodviews(1);
     }
+
+    View.OnClickListener onPhoneNumberClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + tvPhone.getText()));
+            startActivity(intent);
+        }
+    };
 
     View.OnClickListener onImageClickListener = new View.OnClickListener() {
         @Override
@@ -214,13 +225,22 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             ItemFoodViewDetails itemFoodViewDetails =
-                    new ItemFoodViewDetails(null,null, merchantDetails.getName(),
-                            merchantDetails.getShortAddress(), null, null, 0.0f, true);
+                    new ItemFoodViewDetails(null, merchantId, merchantDetails.getName(),
+                            merchantDetails.getShortAddress(), null, true);
             Intent i = new Intent(MerchantDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-            startActivity(i);
+            startActivityForResult(i, 1);
         }
     };
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        //write logic to update foodviews if data was changed in the foodview activity
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            boolean value = data.getBooleanExtra(FoodviewActivity.RELOAD_FOODVIEWS, Boolean.FALSE);
+        }
+    }
 
     private void setMerchantDetails() {
         setImage();

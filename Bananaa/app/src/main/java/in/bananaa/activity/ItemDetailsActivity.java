@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -30,6 +31,7 @@ import in.bananaa.object.ItemDetailsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MyItemFoodviewResponse;
 import in.bananaa.object.RatingColorType;
+import in.bananaa.object.StatusResponse;
 import in.bananaa.object.UserFoodviewsResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
@@ -220,6 +222,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             MyItemFoodviewResponse response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
             if (response.isResult()) {
                 if (response.isRecommended()) {
+                    rbMyRatings.setOnRatingBarChangeListener(null);
                     rbMyRatings.setRating(Float.parseFloat(response.getRecommendation().getRating()));
                     tvMyFoodviewTimeDiff.setText(response.getRecommendation().getTimeDiff());
                     tvMyFoodviewTimeDiff.setVisibility(View.VISIBLE);
@@ -237,6 +240,56 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     tvMyFoodviewTimeDiff.setVisibility(View.GONE);
                     btnAddFoodview.setText(R.string.addFoodview);
                 }
+                rbMyRatings.setOnRatingBarChangeListener(onRatingBarChangeListener);
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    RatingBar.OnRatingBarChangeListener onRatingBarChangeListener = new RatingBar.OnRatingBarChangeListener() {
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+            if (v == 0.0f) {
+                return;
+            }
+            if (!Utils.isInternetConnected(mContext)) {
+                AlertMessages.noInternet(mContext);
+                return;
+            } else {
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("id", itemId);
+                    jsonObject.put("rating", v);
+                    StringEntity entity = new StringEntity(jsonObject.toString());
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+                    client.setTimeout(Constant.TIMEOUT);
+                    client.post(mContext, URLs.SAVE_RATING, entity, "application/json", new SaveRatingResponseHandler());
+                } catch (UnsupportedEncodingException e) {
+                    AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    private class SaveRatingResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            StatusResponse response = new Gson().fromJson(new String(responseBody), StatusResponse.class);
+            if (response.isResult()) {
+                Toast.makeText(mContext, "Your rating has been saved. Thank you!", Toast.LENGTH_SHORT).show();
+                tvMyFoodviewTimeDiff.setText(mContext.getString(R.string.justNow));
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
@@ -318,8 +371,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
     View.OnClickListener onAddFoodviewClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(null, itemDetails.getId(), itemDetails.getMerchantName(),
-                    itemDetails.getShortAddress(), itemDetails.getName(), null, 0.0f, false);
+            ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(itemDetails.getId(), itemDetails.getMerchantId(), itemDetails.getMerchantName(),
+                    itemDetails.getShortAddress(), itemDetails.getName(), false);
             Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
             startActivity(i);

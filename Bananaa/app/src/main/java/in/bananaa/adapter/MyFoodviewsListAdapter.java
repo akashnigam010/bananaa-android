@@ -37,13 +37,15 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
     private AppCompatActivity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
+    Integer merchantId;
     String merchantName;
     String locality;
 
-    public MyFoodviewsListAdapter(AppCompatActivity activity, String merchantName, String locality) {
+    public MyFoodviewsListAdapter(AppCompatActivity activity, Integer merchantId, String merchantName, String locality) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
         myFoodviews = new ArrayList<>();
+        this.merchantId = merchantId;
         this.merchantName = merchantName;
         this.locality = locality;
     }
@@ -170,9 +172,9 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
 
     private void openRecommendationModal(MyFoodview myFoodview) {
         ItemFoodViewDetails itemFoodViewDetails =
-                new ItemFoodViewDetails(myFoodview.getId(), myFoodview.getItemId(),
-                        merchantName, locality, myFoodview.getName(),
-                        myFoodview.getDescription(), Float.parseFloat(myFoodview.getRating()), false);
+                new ItemFoodViewDetails(myFoodview.getItemId(),
+                        merchantId, merchantName, locality, myFoodview.getName(),
+                        false);
         Intent i = new Intent(mContext, FoodviewActivity.class);
         i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
         mContext.startActivity(i);

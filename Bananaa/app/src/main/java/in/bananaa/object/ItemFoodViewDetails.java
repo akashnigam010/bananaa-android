@@ -1,46 +1,32 @@
 package in.bananaa.object;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 public class ItemFoodViewDetails implements Serializable {
-    @SerializedName("id")
-    private Integer id;
-
-    @SerializedName("itemId")
     private Integer itemId;
-
-    @SerializedName("restName")
+    private Integer merchantId;
     private String restName;
-
-    @SerializedName("locality")
     private String locality;
-
-    @SerializedName("itemName")
     private String itemName;
+    private boolean isNewFoodview;
 
-    @SerializedName("desc")
-    private String desc;
-
-    @SerializedName("rating")
-    private float rating;
-
-    @SerializedName("isBlankFoodview")
-    private Boolean isBlankFoodview;
-
-    public ItemFoodViewDetails(Integer id, Integer itemId, String restName, String locality,
-                               String itemName, String desc, float rating, Boolean isBlankFoodview) {
-        this.id = id;
+    public ItemFoodViewDetails(Integer itemId, Integer merchantId, String restName, String locality,
+                               String itemName, boolean isNewFoodview) {
         this.itemId = itemId;
+        this.merchantId = merchantId;
         this.restName = restName;
         this.itemName = itemName;
         this.locality = locality;
-        this.desc = desc;
-        this.rating = rating;
-        this.isBlankFoodview = isBlankFoodview;
+        this.isNewFoodview = isNewFoodview;
     }
 
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
+    }
 
     public String getRestName() {
         return restName;
@@ -66,43 +52,19 @@ public class ItemFoodViewDetails implements Serializable {
         this.itemName = itemName;
     }
 
-    public String getDesc() {
-        return desc;
+    public Integer getMerchantId() {
+        return merchantId;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
     }
 
-    public Integer getId() {
-        return id;
+    public boolean isNewFoodview() {
+        return isNewFoodview;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public Boolean isBlankFoodview() {
-        return isBlankFoodview;
-    }
-
-    public void setBlankFoodview(Boolean blankFoodview) {
-        isBlankFoodview = blankFoodview;
+    public void setNewFoodview(boolean newFoodview) {
+        isNewFoodview = newFoodview;
     }
 }
