@@ -4,6 +4,11 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 
 import java.util.List;
 
@@ -22,6 +27,26 @@ public class Utils {
             R.drawable.bg_chip9,
             R.drawable.bg_chip10
     };
+
+    public static void setMenuItemsFont(Menu menu, Typeface font, Context mContext) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem mi = menu.getItem(i);
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu != null && subMenu.size() > 0) {
+                for (int j = 0; j < subMenu.size(); j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem, font);
+                }
+            }
+            applyFontToMenuItem(mi, font);
+        }
+    }
+
+    private static void applyFontToMenuItem(MenuItem mi, Typeface font) {
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
+    }
 
     public static Typeface getRegularFont(Context mContext) {
         return Typeface.createFromAsset(mContext.getAssets(), "bna-regular.ttf");

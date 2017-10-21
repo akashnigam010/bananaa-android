@@ -171,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
     private void startActivity() {
         Intent intent = null;
         if (PreferenceManager.getIsPreferencesSaved()) {
-            intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent = new Intent(LoginActivity.this, HomeActivity.class);
         } else {
             intent = new Intent(LoginActivity.this, MyPreferencesActivity.class);
         }

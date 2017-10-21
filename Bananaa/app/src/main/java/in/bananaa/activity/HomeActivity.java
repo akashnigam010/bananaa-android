@@ -21,13 +21,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import in.bananaa.R;
+import in.bananaa.object.login.LoginUserDto;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.Utils;
-import in.bananaa.object.login.LoginUserDto;
 
-public class MainActivity extends AppCompatActivity
+public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FacebookManager facebookManager;
@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity
         homeSearch.setHint("Search for Restaurant, Cuisine or Dish");
         homeSearch.setOnClickListener(onHomeSearchClickListener);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-
+        Menu menu = navigationView.getMenu();
+        Utils.setMenuItemsFont(menu, Utils.getBold(this), this);
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
         ivUserImage = (ImageView) headerLayout.findViewById(R.id.ivUserImage);
@@ -119,19 +120,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-       // noinspection SimplifiableIfStatement
         if (id == R.id.action_location) {
             redirectToLocation();
         }
@@ -142,11 +137,10 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.myPreferences) {
-            Intent intent = new Intent(MainActivity.this, MyPreferencesActivity.class);
+            Intent intent = new Intent(HomeActivity.this, MyPreferencesActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_gallery) {
@@ -172,18 +166,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void redirectToLogin() {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void redirectToLocation() {
-        Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+        Intent intent = new Intent(HomeActivity.this, LocationActivity.class);
         startActivity(intent);
     }
 
     private void redirectToSearch() {
-        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
         startActivity(intent);
     }
 

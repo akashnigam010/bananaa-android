@@ -90,7 +90,7 @@ public class MyPreferencesActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         PreferenceManager.setIsPreferencesSaved(true);
-        startActivity(new Intent(MyPreferencesActivity.this, MainActivity.class));
+        startActivity(new Intent(MyPreferencesActivity.this, HomeActivity.class));
         finish();
     }
 

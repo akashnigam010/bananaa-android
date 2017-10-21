@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import static com.bumptech.glide.Glide.with;
 
 public class MerchantDetailsActivity extends AppCompatActivity {
     public static final String MERCHANT_ID = "merchantId";
+    public static final Integer REQUEST_CODE_MERCHANT_DETAILS = 1000;
     Integer merchantId;
     MerchantDetailsResponse merchantDetails;
     AlertMessages messages;
@@ -121,7 +123,6 @@ public class MerchantDetailsActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            asyncEnd();
             merchantDetails = new Gson().fromJson(new String(responseBody), MerchantDetailsResponse.class);
             if (merchantDetails.isResult()) {
                 initializeView();
@@ -141,6 +142,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         setComponents();
         setFont();
         setMerchantDetails();
+        asyncEnd();
     }
 
     private void setComponents() {
@@ -229,17 +231,19 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                             merchantDetails.getShortAddress(), null, true);
             Intent i = new Intent(MerchantDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-            startActivityForResult(i, 1);
+            startActivityForResult(i, REQUEST_CODE_MERCHANT_DETAILS);
         }
     };
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-        //write logic to update foodviews if data was changed in the foodview activity
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 1) {
+        if (requestCode == REQUEST_CODE_MERCHANT_DETAILS && resultCode == Activity.RESULT_OK) {
             boolean value = data.getBooleanExtra(FoodviewActivity.RELOAD_FOODVIEWS, Boolean.FALSE);
+            if (value) {
+                getmyFoodviews(1);
+            }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setMerchantDetails() {

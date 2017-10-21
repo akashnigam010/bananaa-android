@@ -29,6 +29,7 @@ import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.R.layout.foodview;
+import static in.bananaa.activity.MerchantDetailsActivity.REQUEST_CODE_MERCHANT_DETAILS;
 
 public class MyFoodviewsListAdapter extends BaseAdapter {
 
@@ -177,6 +178,6 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
                         false);
         Intent i = new Intent(mContext, FoodviewActivity.class);
         i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-        mContext.startActivity(i);
+        mContext.startActivityForResult(i, REQUEST_CODE_MERCHANT_DETAILS);
     }
 }

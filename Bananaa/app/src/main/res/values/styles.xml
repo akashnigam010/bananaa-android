@@ -10,6 +10,11 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_clear</item>
         <item name="buttonStyle">@style/MyButton</item>
         <item name="android:actionMenuTextColor">@color/bnaColor</item>
+        <item name="android:actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
+    </style>
+
+    <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="MyButton" parent="Widget.AppCompat.Button">

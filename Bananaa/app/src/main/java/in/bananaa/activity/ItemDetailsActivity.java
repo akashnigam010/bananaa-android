@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ import static com.bumptech.glide.Glide.with;
 
 public class ItemDetailsActivity extends AppCompatActivity {
     public static final String ITEM_ID = "itemId";
+    public static final Integer REQUEST_CODE_ITEM_DETAILS = 1001;
+
     Integer itemId;
     AppCompatActivity mContext;
     ScrollView itemDetailsView;
@@ -351,7 +354,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvRating.setTypeface(Utils.getRegularFont(this));
         tvTotalRatings.setTypeface(Utils.getRegularFont(this));
         tvMyFoodViewsTxt.setTypeface(Utils.getBold(this));
-        tvMyFoodview.setTypeface(Utils.getRegularFont(this));
+        tvMyFoodview.setTypeface(Utils.getBold(this));
         tvMyFoodviewTimeDiff.setTypeface(Utils.getRegularFont(this));
         btnAddFoodview.setTypeface(Utils.getRegularFont(this));
         tvFoodviewsTxt.setTypeface(Utils.getBold(this));
@@ -375,7 +378,15 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     itemDetails.getShortAddress(), itemDetails.getName(), false);
             Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-            startActivity(i);
+            startActivityForResult(i, REQUEST_CODE_ITEM_DETAILS);
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ITEM_DETAILS && resultCode == Activity.RESULT_OK) {
+            setMyFoodview();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

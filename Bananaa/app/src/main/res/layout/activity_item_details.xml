@@ -216,7 +216,6 @@
                                 android:paddingTop="20dp"
                                 android:layout_marginLeft="25dp"
                                 android:layout_marginRight="25dp"
-                                android:text="Bhot hi badhiya pizza hai bhai. Too good."
                                 android:textColor="@color/darkGrey"
                                 android:textSize="14sp" />
 
@@ -224,7 +223,6 @@
                                 android:id="@+id/tvMyFoodviewTimeDiff"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4 months ago"
                                 android:layout_marginLeft="25dp"
                                 android:layout_marginTop="15dp"
                                 android:textColor="@color/grey"

@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,24 +49,27 @@ import in.bananaa.utils.Utils;
 public class FoodviewActivity extends AppCompatActivity {
     public final static String FOODVIEW_DETAILS = "foodviewDetails";
     public static final String RELOAD_FOODVIEWS = "reloadFoodviews";
-    ItemFoodViewDetails itemFoodViewDetails;
-    Integer currentItemId;
-    AppCompatActivity mContext;
+    private ItemFoodViewDetails itemFoodViewDetails;
+    private Integer currentItemId;
+    private AppCompatActivity mContext;
 
-    TextView foodViewModalTitle;
-    TextView tvRestName;
-    EditText etDishSearch;
-    EditText etFoodView;
-    TextView tvTextCount;
-    ProgressBar progress;
-    ImageView cancelIcon;
+    private TextView foodViewModalTitle;
+    private TextView tvRestName;
+    private EditText etDishSearch;
+    private EditText etFoodView;
+    private TextView tvTextCount;
+    private ProgressBar progress;
+    private ImageView cancelIcon;
 
-    ListView lvDishSearchResults;
-    LinearLayout rateAndReviewLayout;
-    RatingBar dishRatingBar;
-    DishSearchAdapter dishSearchAdapter;
+    private ListView lvDishSearchResults;
+    private LinearLayout rateAndReviewLayout;
+    private RatingBar dishRatingBar;
+    private DishSearchAdapter dishSearchAdapter;
 
-    boolean itemNotSelected = true;
+    private Float rating;
+    private String foodview;
+    private boolean itemNotSelected = true;
+    private boolean isRatingOrFoodviewChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +111,8 @@ public class FoodviewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.foodview_modal_menu, menu);
-        return true;
+        Utils.setMenuItemsFont(menu, Utils.getBold(this), this);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -117,6 +122,10 @@ public class FoodviewActivity extends AppCompatActivity {
             finish();
         }
         if (id == R.id.action_save) {
+            if (Utils.isEmpty(etDishSearch.getText().toString())) {
+                Toast.makeText(mContext, "Please search for a dish", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             if (dishRatingBar.getRating() == 0.0f) {
                 Toast.makeText(mContext, "Please provide a rating.", Toast.LENGTH_SHORT).show();
                 return false;
@@ -125,7 +134,10 @@ public class FoodviewActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "Foodview must be minimum 50 characters long.", Toast.LENGTH_SHORT).show();
                 return false;
             }
-
+            if (etFoodView.getText().toString().equals(foodview)) {
+                finishActivity();
+                return false;
+            }
             if (!Utils.isInternetConnected(mContext)) {
                 AlertMessages.noInternet(mContext);
                 return false;
@@ -160,10 +172,8 @@ public class FoodviewActivity extends AppCompatActivity {
             StatusResponse response = new Gson().fromJson(new String(responseBody), StatusResponse.class);
             if (response.isResult()) {
                 Toast.makeText(mContext, "Your foodview has been saved.", Toast.LENGTH_SHORT).show();
-                Intent intent = getIntent();
-                intent.putExtra(RELOAD_FOODVIEWS, true);
-                setResult(1, intent);
-                finish();
+                isRatingOrFoodviewChanged = true;
+                finishActivity();
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
@@ -176,11 +186,20 @@ public class FoodviewActivity extends AppCompatActivity {
         }
     }
 
+    private void finishActivity() {
+        if (isRatingOrFoodviewChanged) {
+            Intent intent = getIntent();
+            intent.putExtra(RELOAD_FOODVIEWS, true);
+            setResult(Activity.RESULT_OK, intent);
+        }
+        finish();
+    }
+
     private void setItemDetails() {
         if (!itemFoodViewDetails.isNewFoodview()) {
             itemNotSelected = false;
             etDishSearch.setText(itemFoodViewDetails.getItemName());
-            etDishSearch.setSelection(etDishSearch.getText().length());
+            //etDishSearch.setSelection(etDishSearch.getText().length());
             getMyFoodviewDetails();
         }
     }
@@ -266,6 +285,7 @@ public class FoodviewActivity extends AppCompatActivity {
             asyncEnd();
             StatusResponse response = new Gson().fromJson(new String(responseBody), StatusResponse.class);
             if (response.isResult()) {
+                isRatingOrFoodviewChanged = true;
                 Toast.makeText(mContext, "Your rating has been saved. Thank you!", Toast.LENGTH_SHORT).show();
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
@@ -400,14 +420,19 @@ public class FoodviewActivity extends AppCompatActivity {
             if (response.isResult()) {
                 dishRatingBar.setOnRatingBarChangeListener(null);
                 if (response.isRecommended()) {
-                    dishRatingBar.setRating(Float.parseFloat(response.getRecommendation().getRating()));
+                    rating = Float.parseFloat(response.getRecommendation().getRating());
+                    dishRatingBar.setRating(rating);
                     if (!Utils.isEmpty(response.getRecommendation().getDescription())) {
-                        etFoodView.setText(response.getRecommendation().getDescription());
+                        foodview = response.getRecommendation().getDescription();
+                        etFoodView.setText(foodview);
                     } else {
+                        foodview = "";
                         etFoodView.setText("");
                     }
                 } else {
+                    rating = 0.0f;
                     dishRatingBar.setRating(0.0f);
+                    foodview = "";
                     etFoodView.setText("");
                 }
                 dishRatingBar.setOnRatingBarChangeListener(onRatingBarChangeListener);
