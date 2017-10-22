@@ -41,10 +41,10 @@ import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static com.bumptech.glide.Glide.with;
+import static in.bananaa.utils.Constant.ITEM_DETAILS_TO_FOODVIEW_REQ_CODE;
 
 public class ItemDetailsActivity extends AppCompatActivity {
     public static final String ITEM_ID = "itemId";
-    public static final Integer REQUEST_CODE_ITEM_DETAILS = 1001;
 
     Integer itemId;
     AppCompatActivity mContext;
@@ -378,13 +378,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     itemDetails.getShortAddress(), itemDetails.getName(), false);
             Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-            startActivityForResult(i, REQUEST_CODE_ITEM_DETAILS);
+            startActivityForResult(i, ITEM_DETAILS_TO_FOODVIEW_REQ_CODE);
         }
     };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_ITEM_DETAILS && resultCode == Activity.RESULT_OK) {
+        if (requestCode == ITEM_DETAILS_TO_FOODVIEW_REQ_CODE && resultCode == Activity.RESULT_OK) {
             setMyFoodview();
         }
         super.onActivityResult(requestCode, resultCode, data);

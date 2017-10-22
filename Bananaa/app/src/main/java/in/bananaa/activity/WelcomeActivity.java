@@ -34,12 +34,6 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Checking for first time launch - before calling setContentView()
-        if (!PreferenceManager.isFirstTimeLaunch()) {
-            launchLoginScreen();
-            finish();
-        }
-
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -74,7 +68,7 @@ public class WelcomeActivity extends AppCompatActivity {
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchLoginScreen();
+                finishActivity();
             }
         });
 
@@ -88,7 +82,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchLoginScreen();
+                    finishActivity();
                 }
             }
         });
@@ -117,10 +111,15 @@ public class WelcomeActivity extends AppCompatActivity {
         return viewPager.getCurrentItem() + i;
     }
 
-    private void launchLoginScreen() {
-        PreferenceManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-        finish();
+    private void finishActivity() {
+        if (PreferenceManager.isFirstTimeLaunch()) {
+            PreferenceManager.setFirstTimeLaunch(false);
+            startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+            finish();
+        } else {
+            PreferenceManager.setFirstTimeLaunch(false);
+            finish();
+        }
     }
 
     //  viewpager change listener

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class MyFoodview implements Serializable {
+public class Foodview implements Serializable {
     @SerializedName("id")
     private Integer id;
 
@@ -13,6 +13,12 @@ public class MyFoodview implements Serializable {
 
     @SerializedName("name")
     private String name;
+
+    @SerializedName("merchantId")
+    private Integer merchantId;
+
+    @SerializedName("merchantName")
+    private String merchantName;
 
     @SerializedName("thumbnail")
     private String thumbnail;
@@ -102,5 +108,21 @@ public class MyFoodview implements Serializable {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public Integer getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
     }
 }

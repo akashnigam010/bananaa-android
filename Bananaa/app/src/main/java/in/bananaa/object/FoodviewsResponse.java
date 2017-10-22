@@ -3,13 +3,13 @@ package in.bananaa.object;
 import java.util.List;
 
 public class FoodviewsResponse extends GenericResponse {
-    List<MyFoodview> recommendations;
+    List<Foodview> recommendations;
 
-    public List<MyFoodview> getRecommendations() {
+    public List<Foodview> getRecommendations() {
         return recommendations;
     }
 
-    public void setRecommendations(List<MyFoodview> recommendations) {
+    public void setRecommendations(List<Foodview> recommendations) {
         this.recommendations = recommendations;
     }
 }

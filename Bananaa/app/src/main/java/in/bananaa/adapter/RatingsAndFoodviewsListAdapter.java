@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -21,32 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.activity.FoodviewActivity;
+import in.bananaa.activity.ItemDetailsActivity;
+import in.bananaa.activity.MerchantDetailsActivity;
 import in.bananaa.object.Foodview;
-import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
-import static in.bananaa.utils.Constant.MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE;
+import static in.bananaa.R.id.tvName;
+import static in.bananaa.R.layout.foodview;
 
-public class MyFoodviewsListAdapter extends BaseAdapter {
-    private static final String TAG = "MY_FOODVIEW_LIST_ADAPTER";
+public class RatingsAndFoodviewsListAdapter extends BaseAdapter {
+    private static final String TAG = "RATING_AND_FOODVIEWS_LIST_ADAPTER";
     List<Foodview> foodviews;
     private AppCompatActivity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
-    Integer merchantId;
-    String merchantName;
-    String locality;
 
-    public MyFoodviewsListAdapter(AppCompatActivity activity, Integer merchantId, String merchantName, String locality) {
+    public RatingsAndFoodviewsListAdapter(AppCompatActivity activity) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
         foodviews = new ArrayList<>();
-        this.merchantId = merchantId;
-        this.merchantName = merchantName;
-        this.locality = locality;
     }
 
     @Override
@@ -85,32 +81,33 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = infalter.inflate(R.layout.foodview, null);
+            convertView = infalter.inflate(foodview, null);
             holder = new ViewHolder();
             holder.ivThumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
-            holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
+            holder.tvName = (TextView) convertView.findViewById(tvName);
             holder.tvSubString = (TextView) convertView.findViewById(R.id.tvSubString);
             holder.tvRating = (TextView) convertView.findViewById(R.id.tvRating);
             holder.tvYouRated = (TextView) convertView.findViewById(R.id.tvYouRated);
             holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             holder.tvTimeDiff = (TextView) convertView.findViewById(R.id.tvTimeDiff);
+            holder.tvYouRated.setVisibility(View.GONE);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.tvName.setText(foodviews.get(position).getName());
-        setSubheading(holder, foodviews.get(position).getTotalRcmdns());
+        holder.tvSubString.setText("@ " + foodviews.get(position).getMerchantName());
         holder.tvRating.setText(foodviews.get(position).getRating());
         background = (GradientDrawable) holder.tvRating.getBackground();
         RatingColorType colorType = RatingColorType.getCodeByCssClass(foodviews.get(position).getRatingClass());
         if (colorType == null) {
             colorType = RatingColorType.R25;
         }
-        background.setColor(mContext.getResources().getColor(colorType.getColor()));
+        background.setColor(ContextCompat.getColor(mContext, colorType.getColor()));
         if (Utils.isEmpty(foodviews.get(position).getDescription())) {
             holder.tvDescription.setVisibility(View.GONE);
         } else {
@@ -118,7 +115,7 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
             holder.tvDescription.setText(foodviews.get(position).getDescription());
         }
         holder.tvTimeDiff.setText(foodviews.get(position).getTimeDiff());
-
+        CustomImageClickListener listener = new CustomImageClickListener(mContext, foodviews.get(position));
         if (Utils.isNotEmpty(foodviews.get(position).getThumbnail())) {
             Glide.with(mContext).load(foodviews.get(position).getThumbnail()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
                 @Override
@@ -129,10 +126,19 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
                     holder.ivThumbnail.setImageDrawable(circularBitmapDrawable);
                 }
             });
-            convertView.setOnClickListener(new CustomImageClickListener(mContext, foodviews.get(position)));
+            convertView.setOnClickListener(listener);
         } else {
             holder.ivThumbnail.setImageResource(R.color.lightColor);
         }
+        holder.tvName.setOnClickListener(listener);
+        holder.tvSubString.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mContext, MerchantDetailsActivity.class);
+                i.putExtra(MerchantDetailsActivity.MERCHANT_ID, foodviews.get(position).getMerchantId());
+                mContext.startActivity(i);
+            }
+        });
         setFont(holder);
         return convertView;
     }
@@ -148,15 +154,9 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v){
-            openRecommendationModal(this.foodview);
-        }
-    }
-
-    private void setSubheading(ViewHolder holder, Integer totalRcmds) {
-        if (totalRcmds == 1) {
-            holder.tvSubString.setText(mContext.getResources().getString(R.string.foodviewCountStr1));
-        } else {
-            holder.tvSubString.setText(mContext.getResources().getString(R.string.foodviewCountStr2, (totalRcmds-1)));
+            Intent i = new Intent(mContext, ItemDetailsActivity.class);
+            i.putExtra(ItemDetailsActivity.ITEM_ID, foodview.getItemId());
+            mContext.startActivity(i);
         }
     }
 
@@ -167,15 +167,5 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
         holder.tvYouRated.setTypeface(Utils.getRegularFont(mContext));
         holder.tvDescription.setTypeface(Utils.getRegularFont(mContext));
         holder.tvTimeDiff.setTypeface(Utils.getRegularFont(mContext));
-    }
-
-    private void openRecommendationModal(Foodview foodview) {
-        ItemFoodViewDetails itemFoodViewDetails =
-                new ItemFoodViewDetails(foodview.getItemId(),
-                        merchantId, merchantName, locality, foodview.getName(),
-                        false);
-        Intent i = new Intent(mContext, FoodviewActivity.class);
-        i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-        mContext.startActivityForResult(i, MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE);
     }
 }

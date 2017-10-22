@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.SplashScreenActivity"
+            android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,11 +58,14 @@
         <activity android:name=".activity.MerchantDetailsActivity" />
         <activity android:name=".activity.ItemDetailsActivity" />
         <activity android:name=".activity.ImageViewActivity" />
-        <activity android:name=".activity.FoodviewActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activity.FoodviewActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activity.WelcomeActivity" />
-        <activity android:name=".activity.MyPreferencesActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
+            android:name=".activity.MyPreferencesActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activity.UserActivity"></activity>
     </application>
 
 </manifest>

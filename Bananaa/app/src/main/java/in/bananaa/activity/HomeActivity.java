@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,9 +29,10 @@ import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.Utils;
 
+import static in.bananaa.utils.Constant.HOME_TO_PREF_REQ_CODE;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     FacebookManager facebookManager;
     GoogleManager googleManager;
     TextView title;
@@ -40,11 +43,26 @@ public class HomeActivity extends AppCompatActivity
     NavigationView navigationView;
     ImageView ivUserImage;
     TextView tvUserName;
+    LinearLayout llFoodbookLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (PreferenceManager.isFirstTimeLaunch()) {
+            Intent i = new Intent(HomeActivity.this, WelcomeActivity.class);
+            startActivity(i);
+            finish();
+        } else if (!PreferenceManager.isUserLoggedIn()) {
+            Intent i = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        } else if (!PreferenceManager.getIsPreferencesSaved()) {
+            Intent i = new Intent(HomeActivity.this, MyPreferencesActivity.class);
+            startActivity(i);
+            finish();
+        }
 
         facebookManager = new FacebookManager(this);
         googleManager = new GoogleManager(this);
@@ -69,6 +87,7 @@ public class HomeActivity extends AppCompatActivity
 
         ivUserImage = (ImageView) headerLayout.findViewById(R.id.ivUserImage);
         tvUserName = (TextView) headerLayout.findViewById(R.id.tvUserName);
+        llFoodbookLink = (LinearLayout) headerLayout.findViewById(R.id.llFoodbookLink);
         Glide.with(this).load(user.getImageUrl()).asBitmap().centerCrop().into(new BitmapImageViewTarget(ivUserImage) {
             @Override
             protected void setResource(Bitmap resource) {
@@ -79,7 +98,17 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         tvUserName.setText(user.getFirstName() + " " + user.getLastName());
+        llFoodbookLink.setOnClickListener(onFoodbookLinkListener);
     }
+
+    View.OnClickListener onFoodbookLinkListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent i = new Intent(HomeActivity.this, UserActivity.class);
+            i.putExtra(UserActivity.USER_ID, PreferenceManager.getLoginDetails().getId());
+            startActivity(i);
+        }
+    };
 
     private Toolbar customizeToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -138,13 +167,12 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.myPreferences) {
             Intent intent = new Intent(HomeActivity.this, MyPreferencesActivity.class);
+            startActivityForResult(intent, HOME_TO_PREF_REQ_CODE);
+        } else if (id == R.id.howItWorks) {
+            Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
             startActivity(intent);
-            finish();
-        } else if (id == R.id.nav_gallery) {
-
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -163,6 +191,14 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == HOME_TO_PREF_REQ_CODE && resultCode == Activity.RESULT_OK) {
+            // reload preferences
+        }
     }
 
     private void redirectToLogin() {

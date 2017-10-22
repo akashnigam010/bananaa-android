@@ -7,9 +7,9 @@
             android:icon="@drawable/ic_my_prefs"
             android:title="My Preferences" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/howItWorks"
+            android:icon="@drawable/ic_bubble_chart"
+            android:title="How it works ?" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"

@@ -1,6 +1,7 @@
 package in.bananaa.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -20,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.UserFoodview;
+import in.bananaa.activity.UserActivity;
 import in.bananaa.object.RatingColorType;
+import in.bananaa.object.UserFoodview;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
@@ -143,7 +145,9 @@ public class UserFoodviewsListAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v){
-            // open user profile using user id
+            Intent i = new Intent(mContext, UserActivity.class);
+            i.putExtra(UserActivity.USER_ID, this.userId);
+            mContext.startActivity(i);
         }
     }
 

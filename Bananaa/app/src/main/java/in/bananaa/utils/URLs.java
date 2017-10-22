@@ -22,6 +22,9 @@ public class URLs {
     public static String GET_OTHER_USER_FOODVIEWS = BASE_URL + "foodview/getOtherUsersFoodviews";
 
 
+    public static String GET_PROFILE = BASE_URL + "user/getProfile";
+    public static String SAVE_STATUS = BASE_URL + "user/saveStatus";
+    public static String GET_ALL_RECOMMENDATIONS = BASE_URL + "user/getAllRecommendations";
     public static String SEARCH_CUISINES = BASE_URL + "user/searchCuisineWithUserPrefs";
     public static String SEARCH_SUGGESTIONS = BASE_URL + "user/searchSuggestionWithUserPrefs";
     public static String GET_VEGNONVEG_PREFERENCE = BASE_URL + "user/getVegnonvegPreference";

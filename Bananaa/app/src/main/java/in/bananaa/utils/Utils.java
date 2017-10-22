@@ -13,6 +13,7 @@ import android.view.SubMenu;
 import java.util.List;
 
 import in.bananaa.R;
+import in.bananaa.object.Tag;
 
 public class Utils {
     public static int[] chipsBackgrounds = new int[]{
@@ -88,5 +89,41 @@ public class Utils {
 
         finalStr += list.get(i);
         return finalStr;
+    }
+
+    public static String getVegnonvegString(Integer id) {
+        switch(id) {
+            case 1 : return "Vegan by heart";
+            case 2 : return "Non Vegan - cus I love plants way too much";
+            case 3 : return "Veg or non veg? Duh, give me anything";
+            default : return "";
+        }
+    }
+
+    public static String getUserLevel(Float level) {
+        if (level <= 2.5) {
+            return "Beginner";
+        } else if (level > 2.5 && level <= 3.0) {
+            return "Advance User";
+        } else if (level > 3.0 && level <= 4.0) {
+            return "Super Foodviewer";
+        } else {
+            return "Expert Foodviewer";
+        }
+    }
+
+    public static String getTagsString(List<Tag> tags) {
+        String str = "";
+        switch(tags.size()) {
+            case 0: return "";
+            case 1: return tags.get(0).getName();
+            case 2: return tags.get(0).getName() + " and " + tags.get(1).getName();
+            default: int i=0;
+                for (i=0; i<tags.size()-2; i++) {
+                    str += tags.get(i).getName() + ", ";
+                }
+                str += tags.get(i).getName() + " and " + tags.get(i+1).getName();
+                return str;
+        }
     }
 }

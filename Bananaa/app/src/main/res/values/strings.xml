@@ -58,7 +58,7 @@
     <string name="cuisinesAndSpread">Cuisines and Spread</string>
     <string name="delectableDishes">Delectable Dishes</string>
     <string name="seeMore">See More</string>
-    <string name="myFoodviews">My Foodviews</string>
+    <string name="foodviews">My Foodviews</string>
     <string name="addFoodview">Add Foodview</string>
     <string name="editFoodview">Edit Foodview</string>
     <string name="foodViewSubHeading">My ratings and foodviews at\u0020</string>
@@ -75,10 +75,15 @@
 
     <!--Item Details Screen-->
     <string name="myRatingAndFoodviews">My Rating and Foodview</string>
-    <string name="foodviews">Foodviews</string>
+    <string name="itemFoodviews">Foodviews</string>
     <string name="noFoodviews">No foodview yet</string>
     <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
     <string name="justNow">just now</string>
+
+    <!--User Details Screen-->
+    <string name="foodbook">Foodbook</string>
+    <string name="editPreferences">Edit Preferences</string>
+    <string name="ratingsAndFoodviews">Ratings and Foodviews</string>
 
     <!--Alert Modals-->
     <string name="defaultErrorTitle">Uh-oh!</string>

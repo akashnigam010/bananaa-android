@@ -172,11 +172,13 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = null;
         if (PreferenceManager.getIsPreferencesSaved()) {
             intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
         } else {
             intent = new Intent(LoginActivity.this, MyPreferencesActivity.class);
+            startActivity(intent);
+            finish();
         }
-        startActivity(intent);
-        finish();
     }
 
     private void setFont() {

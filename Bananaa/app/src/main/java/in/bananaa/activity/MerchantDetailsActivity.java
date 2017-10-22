@@ -41,10 +41,10 @@ import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static com.bumptech.glide.Glide.with;
+import static in.bananaa.utils.Constant.MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE;
 
 public class MerchantDetailsActivity extends AppCompatActivity {
     public static final String MERCHANT_ID = "merchantId";
-    public static final Integer REQUEST_CODE_MERCHANT_DETAILS = 1000;
     Integer merchantId;
     MerchantDetailsResponse merchantDetails;
     AlertMessages messages;
@@ -231,13 +231,13 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                             merchantDetails.getShortAddress(), null, true);
             Intent i = new Intent(MerchantDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-            startActivityForResult(i, REQUEST_CODE_MERCHANT_DETAILS);
+            startActivityForResult(i, MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE);
         }
     };
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_MERCHANT_DETAILS && resultCode == Activity.RESULT_OK) {
+        if (requestCode == MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE && resultCode == Activity.RESULT_OK) {
             boolean value = data.getBooleanExtra(FoodviewActivity.RELOAD_FOODVIEWS, Boolean.FALSE);
             if (value) {
                 getmyFoodviews(1);

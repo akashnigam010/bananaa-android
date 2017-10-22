@@ -1,14 +1,14 @@
 package in.bananaa.object;
 
 public class MyItemFoodviewResponse extends GenericResponse {
-    MyFoodview recommendation;
+    Foodview recommendation;
     private boolean recommended;
 
-    public MyFoodview getRecommendation() {
+    public Foodview getRecommendation() {
         return recommendation;
     }
 
-    public void setRecommendation(MyFoodview recommendation) {
+    public void setRecommendation(Foodview recommendation) {
         this.recommendation = recommendation;
     }
 

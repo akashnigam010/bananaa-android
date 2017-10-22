@@ -75,7 +75,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="20dp"
-                            android:text="Chinese Pavilionsss"
                             android:textColor="@color/darkGrey"
                             android:textSize="@dimen/restaurant_title" />
 
@@ -86,7 +85,6 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Gachibowli, Hyderabad"
                             android:textColor="@color/grey" />
 
                         <View
@@ -391,7 +389,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="20dp"
-                        android:text="@string/myFoodviews"
+                        android:text="@string/foodviews"
                         android:textColor="@color/bnaColor"
                         android:textSize="@dimen/heading" />
 

@@ -86,7 +86,6 @@ public class PreferenceManager extends Application implements Application.Activi
         prefEditor.putString(FIRST_NAME, null);
         prefEditor.putString(LAST_NAME, null);
         prefEditor.putString(IMAGE_URL, null);
-        prefEditor.putString(IS_PREFERENCES_SAVED, null);
         prefEditor.putString(ACCESS_TOKEN, null);
         prefEditor.commit();
     }

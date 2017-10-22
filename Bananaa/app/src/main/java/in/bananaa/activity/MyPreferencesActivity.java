@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -59,7 +60,19 @@ public class MyPreferencesActivity extends AppCompatActivity {
                 if (current < layouts.length) {
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchHomeScreen();
+                    if (!PreferenceManager.getIsPreferencesSaved()) {
+                        // first time launch - launch home screen
+                        PreferenceManager.setIsPreferencesSaved(true);
+                        Intent i = new Intent(MyPreferencesActivity.this, HomeActivity.class);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        // called from some activity, simply close this activity
+                        PreferenceManager.setIsPreferencesSaved(true);
+                        Intent i = getIntent();
+                        setResult(Activity.RESULT_OK, i);
+                        finish();
+                    }
                 }
             }
         });
@@ -86,12 +99,6 @@ public class MyPreferencesActivity extends AppCompatActivity {
 
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
-    }
-
-    private void launchHomeScreen() {
-        PreferenceManager.setIsPreferencesSaved(true);
-        startActivity(new Intent(MyPreferencesActivity.this, HomeActivity.class));
-        finish();
     }
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {

@@ -50,7 +50,6 @@ import in.bananaa.utils.Utils;
 import static in.bananaa.utils.Utils.chipsBackgrounds;
 
 public class MyPreferencesPagerAdapter extends PagerAdapter {
-    private LayoutInflater layoutInflater;
     private Activity mContext;
     private int[] layouts;
     private TextView tvPref1Title;
@@ -66,10 +65,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private int pageCuisines = 1;
     private boolean noMoreCuisines = false;
     private boolean canSearchCuisines = true;
-    private TagSearchAdapter cuisineSearchAdapter;
     private ScrollView svSearchCuisines;
     private TagChipView cvCuisines;
-    private ChipViewAdapter cvCuisineChipViewAdapter;
     private List<Chip> cvCuisineChipList = new ArrayList<>();
 
     private TextView tvPref3Title;
@@ -79,10 +76,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private int pageSuggestions = 1;
     private boolean noMoreSuggestions = false;
     private boolean canSearchSuggestions = true;
-    private TagSearchAdapter suggestionSearchAdapter;
     private ScrollView svSearchSuggestions;
     private TagChipView cvSuggestions;
-    private ChipViewAdapter cvSuggestionChipViewAdapter;
     private List<Chip> cvSuggestionChipList = new ArrayList<>();
 
     public MyPreferencesPagerAdapter(Activity mContext, int[] layouts) {
@@ -92,7 +87,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(layouts[position], container, false);
         container.addView(view);
         selectPageAndCustomize(view, position);
@@ -150,10 +145,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         ivCuisineSearchCancel = (ImageView) view.findViewById(R.id.ivCuisineSearchCancel);
         svSearchCuisines = (ScrollView) view.findViewById(R.id.svSearchCuisines);
         cvCuisines = (TagChipView) view.findViewById(R.id.cvCuisines);
-        cuisineSearchAdapter = new TagSearchAdapter(mContext);
 
         cvCuisines.setChipLayoutRes(R.layout.chip);
-        cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
+        ChipViewAdapter cvCuisineChipViewAdapter = new TagChipViewAdapter(mContext);
         cvCuisines.setAdapter(cvCuisineChipViewAdapter);
         cvCuisines.setChipList(cvCuisineChipList);
         cvCuisines.setOnChipClickListener(new OnTagChipClickListener() {
@@ -225,10 +219,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         ivSuggestionSearchCancel = (ImageView) view.findViewById(R.id.ivSuggestionSearchCancel);
         svSearchSuggestions = (ScrollView) view.findViewById(R.id.svSearchSuggestions);
         cvSuggestions = (TagChipView) view.findViewById(R.id.cvSuggestions);
-        suggestionSearchAdapter = new TagSearchAdapter(mContext);
 
         cvSuggestions.setChipLayoutRes(R.layout.chip);
-        cvSuggestionChipViewAdapter = new TagChipViewAdapter(mContext);
+        ChipViewAdapter cvSuggestionChipViewAdapter = new TagChipViewAdapter(mContext);
         cvSuggestions.setAdapter(cvSuggestionChipViewAdapter);
         cvSuggestions.setChipList(cvSuggestionChipList);
         cvSuggestions.setOnChipClickListener(new OnTagChipClickListener() {
