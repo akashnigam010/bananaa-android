@@ -15,11 +15,11 @@
             android:id="@+id/tvPref1Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Veg or NonVeg ?"
+            android:text="Vegan or NonVegan ?"
             android:textColor="@color/bnaColor"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:textSize="40dp" />
+            android:textSize="25dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                     android:buttonTint="@color/bnaColor"
                     android:drawableEnd="@drawable/ic_veg"
                     android:drawablePadding="10dp"
-                    android:textSize="20dp"/>
+                    android:textSize="18dp"/>
                 <RadioButton android:id="@+id/rbNonVeg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                     android:buttonTint="@color/bnaColor"
                     android:drawableEnd="@drawable/ic_nonveg"
                     android:drawablePadding="10dp"
-                    android:textSize="20dp"/>
+                    android:textSize="18dp"/>
                 <RadioButton android:id="@+id/rbAnything"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                     android:buttonTint="@color/bnaColor"
                     android:drawableEnd="@drawable/ic_anything"
                     android:drawablePadding="10dp"
-                    android:textSize="20dp"/>
+                    android:textSize="18dp"/>
             </RadioGroup>
 
         </LinearLayout>

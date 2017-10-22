@@ -8,6 +8,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -52,6 +53,7 @@ public class UserActivity extends AppCompatActivity {
     private TextView tvRatingCount;
     private TextView tvFoodviewCount;
     private TextView tvStatus;
+    CardView cvCuisinesAndDishesPrefs;
     private TextView tvFavouriteCuisinesTxt;
     private TextView tvFavouriteCuisines;
     private TextView tvFavouriteDishesTxt;
@@ -144,13 +146,18 @@ public class UserActivity extends AppCompatActivity {
             }
         });
 
-        editPreferences.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserActivity.this, MyPreferencesActivity.class);
-                startActivityForResult(intent, USER_TO_PREF_REQ_CODE);
-            }
-        });
+        if (userId.equals(PreferenceManager.getLoginDetails().getId())) {
+            editPreferences.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(UserActivity.this, MyPreferencesActivity.class);
+                    startActivityForResult(intent, USER_TO_PREF_REQ_CODE);
+                }
+            });
+        } else {
+            editPreferences.setVisibility(View.GONE);
+        }
+
         ivImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,8 +191,26 @@ public class UserActivity extends AppCompatActivity {
             tvStatus.setVisibility(View.GONE);
         }
 
-        tvFavouriteCuisines.setText(Utils.getTagsString(userProfile.getCuisines()));
-        tvFavouriteDishes.setText(Utils.getTagsString(userProfile.getDishes()));
+        int cuisinesSize = userProfile.getCuisines().size();
+        int dishesSize = userProfile.getDishes().size();
+        if (cuisinesSize == 0 && dishesSize == 0 && !userId.equals(PreferenceManager.getLoginDetails().getId())) {
+            cvCuisinesAndDishesPrefs = (CardView) findViewById(R.id.cvCuisinesAndDishesPrefs);
+            cvCuisinesAndDishesPrefs.setVisibility(View.GONE);
+        } else {
+            if (cuisinesSize == 0) {
+                tvFavouriteCuisinesTxt.setVisibility(View.GONE);
+                tvFavouriteCuisines.setVisibility(View.GONE);
+            } else {
+                tvFavouriteCuisines.setText(Utils.getTagsString(userProfile.getCuisines()));
+            }
+
+            if (dishesSize == 0) {
+                tvFavouriteDishesTxt.setVisibility(View.GONE);
+                tvFavouriteDishes.setVisibility(View.GONE);
+            } else {
+                tvFavouriteDishes.setText(Utils.getTagsString(userProfile.getDishes()));
+            }
+        }
     }
 
     private void getRatingsAndFoodviews(Integer page) {

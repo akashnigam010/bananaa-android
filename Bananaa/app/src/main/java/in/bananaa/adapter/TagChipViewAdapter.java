@@ -46,8 +46,7 @@ public class TagChipViewAdapter extends ChipViewAdapter {
     public void onLayout(View view, int position) {
         SearchItem tag = (SearchItem) getChip(position);
         TextView tv = ((TextView) view.findViewById(android.R.id.text1));
-        tv.setTypeface(Utils.getRegularFont(context));
-//        tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[position%10], null));
+        tv.setTypeface(Utils.getBold(context));
         if (tag.getSelected()) {
             tv.setBackground(context.getResources().getDrawable(chipsBackgrounds[tag.getId()%10], null));
             tv.setTextColor(ContextCompat.getColor(context, R.color.white));

@@ -540,19 +540,19 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void setFontPage1() {
-        tvPref1Title.setTypeface(Utils.getRegularFont(mContext));
+        tvPref1Title.setTypeface(Utils.getBold(mContext));
         rbVeg.setTypeface(Utils.getRegularFont(mContext));
         rbNonVeg.setTypeface(Utils.getRegularFont(mContext));
         rbAnything.setTypeface(Utils.getRegularFont(mContext));
     }
 
     private void setFontPage2() {
-        tvPref2Title.setTypeface(Utils.getRegularFont(mContext));
+        tvPref2Title.setTypeface(Utils.getBold(mContext));
         etPrefCuisine.setTypeface(Utils.getRegularFont(mContext));
     }
 
     private void setFontPage3() {
-        tvPref3Title.setTypeface(Utils.getRegularFont(mContext));
+        tvPref3Title.setTypeface(Utils.getBold(mContext));
         etPrefSuggestion.setTypeface(Utils.getRegularFont(mContext));
     }
 

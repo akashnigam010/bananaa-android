@@ -15,11 +15,13 @@
             android:id="@+id/tvPref3Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Things you sometimes prefer over people ?"
+            android:text="And dishes you crave ?"
+            android:drawableEnd="@drawable/ic_dish"
+            android:drawablePadding="10dp"
             android:textColor="@color/bnaColor"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:textSize="14dp" />
+            android:textSize="18dp" />
 
         <RelativeLayout
             android:layout_width="300dp"

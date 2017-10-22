@@ -15,11 +15,13 @@
             android:id="@+id/tvPref2Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cuisines you'd kill for ?"
+            android:text="Cuisines you heart ?"
             android:textColor="@color/bnaColor"
+            android:drawableEnd="@drawable/ic_heart"
+            android:drawablePadding="10dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:textSize="14dp" />
+            android:textSize="18dp" />
 
         <RelativeLayout
             android:layout_width="300dp"

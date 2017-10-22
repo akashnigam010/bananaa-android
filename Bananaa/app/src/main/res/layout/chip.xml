@@ -10,5 +10,5 @@
         android:background="@drawable/bg_chip"
         android:padding="18dp"
         android:textColor="@color/darkGrey"
-        android:textSize="18dp" />
+        android:textSize="14dp" />
 </LinearLayout>
