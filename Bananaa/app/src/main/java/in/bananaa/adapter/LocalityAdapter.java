@@ -2,6 +2,7 @@ package in.bananaa.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.SearchItem;
+import in.bananaa.object.location.Locality;
+import in.bananaa.object.location.LocationStore;
+import in.bananaa.object.location.LocationType;
 import in.bananaa.utils.Debug;
+import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.Utils;
 
-public class TagSearchAdapter extends BaseAdapter {
-    private static final String TAG = "TAG_SEARCH";
-    private List<SearchItem> searchTags;
+public class LocalityAdapter extends BaseAdapter {
+    private static final String TAG = "GLOBAL_SEARCH";
+    private List<Locality> localities;
     private Activity mContext;
     private LayoutInflater infalter;
 
-    public TagSearchAdapter(Activity activity) {
-        searchTags = new ArrayList<>();
+    public LocalityAdapter(Activity activity) {
+        localities = new ArrayList<>();
         infalter = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = activity;
@@ -31,12 +35,12 @@ public class TagSearchAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return searchTags.size();
+        return localities.size();
     }
 
     @Override
-    public SearchItem getItem(int position) {
-        return searchTags.get(position);
+    public Locality getItem(int position) {
+        return localities.get(position);
     }
 
     @Override
@@ -44,14 +48,14 @@ public class TagSearchAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addAll(List<SearchItem> searchEntities) {
-        this.searchTags.clear();
-        appendAll(searchEntities);
+    public void addAll(List<Locality> localities) {
+        this.localities.clear();
+        appendAll(localities);
     }
 
-    public void appendAll(List<SearchItem> searchEntities) {
+    public void appendAll(List<Locality> localities) {
         try {
-            this.searchTags.addAll(searchEntities);
+            this.localities.addAll(localities);
         } catch (Exception e) {
             Debug.e(TAG, e.getMessage());
         }
@@ -72,19 +76,33 @@ public class TagSearchAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             holder.tvMetaData = (TextView) convertView.findViewById(R.id.tvMetaData);
-            holder.tvMetaData.setVisibility(View.GONE);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tvName.setText(searchTags.get(position).getName());
+        final Locality locality = localities.get(position);
+        holder.tvName.setText(locality.getName());
+        holder.tvMetaData.setVisibility(View.GONE);
+        holder.tvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationStore locationStore = new LocationStore(locality.getId(), locality.getName(), LocationType.LOCALITY);
+                PreferenceManager.setStoredLocation(locationStore);
+                finishActivityWithResult();
+            }
+        });
         setFont(holder);
         return convertView;
     }
 
+    private void finishActivityWithResult() {
+        Intent i = mContext.getIntent();
+        mContext.setResult(Activity.RESULT_OK, i);
+        mContext.finish();
+    }
+
     private void setFont(ViewHolder holder) {
         holder.tvName.setTypeface(Utils.getRegularFont(mContext));
-        holder.tvMetaData.setTypeface(Utils.getRegularFont(mContext));
     }
 }

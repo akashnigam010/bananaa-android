@@ -23,12 +23,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import in.bananaa.R;
+import in.bananaa.object.location.LocationStore;
+import in.bananaa.object.location.LocationType;
 import in.bananaa.object.login.LoginUserDto;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.Utils;
 
+import static in.bananaa.utils.Constant.HOME_TO_LOCATION;
 import static in.bananaa.utils.Constant.HOME_TO_PREF_REQ_CODE;
 
 public class HomeActivity extends AppCompatActivity
@@ -116,6 +119,14 @@ public class HomeActivity extends AppCompatActivity
 
         getSupportActionBar().setTitle("");
         title = (TextView) findViewById(R.id.home_toolbar_title);
+        LocationStore location = PreferenceManager.getStoredLocation();
+        if (location != null) {
+            title.setText(location.getName());
+        } else {
+            LocationStore locationStore = new LocationStore(1, "Hyderabad", LocationType.CITY);
+            PreferenceManager.setStoredLocation(locationStore);
+            title.setText(locationStore.getName());
+        }
         return toolbar;
     }
 
@@ -198,6 +209,9 @@ public class HomeActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == HOME_TO_PREF_REQ_CODE && resultCode == Activity.RESULT_OK) {
             // reload preferences
+        } else if (requestCode == HOME_TO_LOCATION && resultCode == Activity.RESULT_OK) {
+            LocationStore location = PreferenceManager.getStoredLocation();
+            title.setText(location.getName());
         }
     }
 
@@ -209,7 +223,7 @@ public class HomeActivity extends AppCompatActivity
 
     private void redirectToLocation() {
         Intent intent = new Intent(HomeActivity.this, LocationActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, HOME_TO_LOCATION);
     }
 
     private void redirectToSearch() {

@@ -68,7 +68,7 @@ public class DishSearchAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = infalter.inflate(R.layout.row_global_search_result, null);
+            convertView = infalter.inflate(R.layout.row_search_result, null);
             holder = new ViewHolder();
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             holder.tvMetaData = (TextView) convertView.findViewById(R.id.tvMetaData);

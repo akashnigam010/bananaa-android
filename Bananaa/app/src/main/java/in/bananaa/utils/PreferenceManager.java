@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
+
+import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.login.LoginResponse;
 import in.bananaa.object.login.LoginUserDto;
 
@@ -18,6 +21,7 @@ public class PreferenceManager extends Application implements Application.Activi
     private static final String IS_PREFERENCES_SAVED = "isPreferencesSaved";
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String IS_FIRST_TIME_LAUNCH = "isFirstLaunch";
+    private static final String LOCATION = "location";
 
     private static SharedPreferences preferences;
     private static SharedPreferences.Editor prefEditor;
@@ -68,6 +72,18 @@ public class PreferenceManager extends Application implements Application.Activi
     public static void setIsPreferencesSaved(Boolean value) {
         prefEditor.putBoolean(IS_PREFERENCES_SAVED, value);
         prefEditor.commit();
+    }
+
+    public static void setStoredLocation(LocationStore location) {
+        Gson gson = new Gson();
+        prefEditor.putString(LOCATION, gson.toJson(location));
+        prefEditor.commit();
+    }
+
+    public static LocationStore getStoredLocation() {
+        Gson gson = new Gson();
+        LocationStore location = gson.fromJson(preferences.getString(LOCATION, null), LocationStore.class);
+        return location;
     }
 
     public static LoginUserDto getLoginDetails() {
