@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -158,9 +159,9 @@ public class ItemListAdapter extends BaseAdapter {
             colorType = RatingColorType.R25;
         }
         background.setColor(mContext.getResources().getColor(colorType.getColor()));
-
+        LinearLayout llItemImageViewer = (LinearLayout) imageDialog.findViewById(R.id.llItemImageViewer);
         TextView tvSeeMore = (TextView) imageDialog.findViewById(R.id.tvSeeMore);
-        tvSeeMore.setOnClickListener(new OnSeeMoreClickListener(item.getId(), imageDialog));
+        llItemImageViewer.setOnClickListener(new OnSeeMoreClickListener(item.getId(), imageDialog));
 
         tvName.setText(item.getName());
         tvRating.setText(item.getRating());
@@ -171,7 +172,6 @@ public class ItemListAdapter extends BaseAdapter {
         tvRating.setTypeface(Utils.getRegularFont(mContext));
         tvSeeMore.setTypeface(Utils.getRegularFont(mContext));
 
-        //Glide.with(mContext).load(item.getThumbnail()).placeholder(R.drawable.ic_top_feedback).into(image);
         Glide.with(mContext).load(item.getImageUrl()).into(image);
         imageDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         imageDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
