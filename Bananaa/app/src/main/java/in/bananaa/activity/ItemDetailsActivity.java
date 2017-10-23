@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -73,6 +74,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
     UserFoodviewsListAdapter userFoodviewsListAdapter;
 
+    int pageFoodviews = 1;
+    private boolean moreResultsAvailable = true;
+    private boolean canLoadFoodviews = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
@@ -130,7 +135,23 @@ public class ItemDetailsActivity extends AppCompatActivity {
         setFonts();
         setItemDetails();
         setMyFoodview();
-        setUserFoodviews();
+        setUserFoodviews(1);
+        initAutoFoodviewsLoad();
+    }
+
+    private void initAutoFoodviewsLoad() {
+        itemDetailsView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (itemDetailsView != null) {
+                    if (itemDetailsView.getChildAt(0).getBottom() <= (itemDetailsView.getHeight() + itemDetailsView.getScrollY())) {
+                        if (moreResultsAvailable && canLoadFoodviews) {
+                            setUserFoodviews(++pageFoodviews);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void setComponents() {
@@ -156,6 +177,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         btnAddFoodview.setOnClickListener(onAddFoodviewClickListener);
 
         userFoodviewsListAdapter = new UserFoodviewsListAdapter(this);
+        lvFoodviews.setAdapter(userFoodviewsListAdapter);
     }
 
     View.OnClickListener onClickBackListener = new View.OnClickListener() {
@@ -304,16 +326,17 @@ public class ItemDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void setUserFoodviews() {
+    private void setUserFoodviews(Integer page) {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("itemId", itemId);
-            jsonObject.put("page", 1);
+            jsonObject.put("page", page);
             StringEntity entity = new StringEntity(jsonObject.toString());
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(ItemDetailsActivity.this, URLs.GET_OTHER_USER_FOODVIEWS, entity, "application/json", new UserFoodviewsResponseHandler());
+            canLoadFoodviews = false;
         } catch (UnsupportedEncodingException e) {
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
@@ -328,13 +351,17 @@ public class ItemDetailsActivity extends AppCompatActivity {
             UserFoodviewsResponse response = new Gson().fromJson(new String(responseBody), UserFoodviewsResponse.class);
             if (response.isResult()) {
                 if (response.getFoodviews().size() == 0) {
-                    tvNoFoodviews.setVisibility(View.VISIBLE);
-                    lvFoodviews.setVisibility(View.GONE);
+                    if (pageFoodviews == 1) {
+                        tvNoFoodviews.setVisibility(View.VISIBLE);
+                        lvFoodviews.setVisibility(View.GONE);
+                    }
+                    moreResultsAvailable = false;
                 } else {
                     tvNoFoodviews.setVisibility(View.GONE);
                     lvFoodviews.setVisibility(View.VISIBLE);
-                    userFoodviewsListAdapter.addAll(response.getFoodviews());
-                    lvFoodviews.setAdapter(userFoodviewsListAdapter);
+                    userFoodviewsListAdapter.appendAll(response.getFoodviews());
+                    canLoadFoodviews = true;
+                    moreResultsAvailable = true;
                 }
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));

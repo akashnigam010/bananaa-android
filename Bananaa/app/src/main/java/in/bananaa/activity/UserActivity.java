@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -67,6 +68,10 @@ public class UserActivity extends AppCompatActivity {
     private Profile userProfile;
 
     private RatingsAndFoodviewsListAdapter ratingsAndFoodviewsListAdapter;
+
+    int pageFoodviews = 1;
+    private boolean moreResultsAvailable = true;
+    private boolean canLoadFoodviews = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +174,22 @@ public class UserActivity extends AppCompatActivity {
         setUserDetails();
         setFont();
         getRatingsAndFoodviews(1);
+        initAutoFoodviewsLoad();
+    }
+
+    private void initAutoFoodviewsLoad() {
+        svUserProfile.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (svUserProfile != null) {
+                    if (svUserProfile.getChildAt(0).getBottom() <= (svUserProfile.getHeight() + svUserProfile.getScrollY())) {
+                        if (moreResultsAvailable && canLoadFoodviews) {
+                            getRatingsAndFoodviews(++pageFoodviews);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void setUserDetails() {
@@ -223,6 +244,7 @@ public class UserActivity extends AppCompatActivity {
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(UserActivity.this, URLs.GET_ALL_RECOMMENDATIONS, entity, "application/json", new FoodviewResponseHandler());
+            canLoadFoodviews = false;
         } catch (UnsupportedEncodingException e) {
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
@@ -236,7 +258,13 @@ public class UserActivity extends AppCompatActivity {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             FoodviewsResponse response = new Gson().fromJson(new String(responseBody), FoodviewsResponse.class);
             if (response.isResult()) {
-                ratingsAndFoodviewsListAdapter.addAll(response.getRecommendations());
+                if (response.getRecommendations().size() > 0) {
+                    ratingsAndFoodviewsListAdapter.appendAll(response.getRecommendations());
+                    canLoadFoodviews = true;
+                    moreResultsAvailable = true;
+                } else {
+                    moreResultsAvailable = false;
+                }
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }

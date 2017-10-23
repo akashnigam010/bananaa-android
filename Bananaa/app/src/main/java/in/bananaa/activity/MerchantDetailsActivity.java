@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,6 +86,10 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     MyFoodviewsListAdapter myFoodviewsListAdapter;
 
     AppCompatActivity mContext;
+
+    int pageFoodviews = 1;
+    private boolean moreResultsAvailable = true;
+    private boolean canLoadFoodviews = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +193,23 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onClickRateAndFoodViewListener);
         setToastMessages();
-        getmyFoodviews(1);
+        getMyFoodviews(pageFoodviews, true);
+        initAutoFoodviewsLoad();
+    }
+
+    private void initAutoFoodviewsLoad() {
+        merchantDetailsView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (merchantDetailsView != null) {
+                    if (merchantDetailsView.getChildAt(0).getBottom() <= (merchantDetailsView.getHeight() + merchantDetailsView.getScrollY())) {
+                        if (moreResultsAvailable && canLoadFoodviews) {
+                            getMyFoodviews(++pageFoodviews, false);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     View.OnClickListener onPhoneNumberClickListener = new View.OnClickListener() {
@@ -240,7 +261,8 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         if (requestCode == MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE && resultCode == Activity.RESULT_OK) {
             boolean value = data.getBooleanExtra(FoodviewActivity.RELOAD_FOODVIEWS, Boolean.FALSE);
             if (value) {
-                getmyFoodviews(1);
+                pageFoodviews = 1;
+                getMyFoodviews(pageFoodviews, true);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -339,7 +361,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void getmyFoodviews(Integer page) {
+    private void getMyFoodviews(Integer page, boolean replaceResults) {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("merchantId", merchantId);
@@ -348,7 +370,8 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
-            client.post(MerchantDetailsActivity.this, URLs.GET_MY_FOODVIEWS, entity, "application/json", new FoodviewResponseHandler());
+            client.post(MerchantDetailsActivity.this, URLs.GET_MY_FOODVIEWS, entity, "application/json", new FoodviewResponseHandler(replaceResults));
+            canLoadFoodviews = false;
         } catch (UnsupportedEncodingException e) {
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
@@ -357,12 +380,27 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     }
 
     public class FoodviewResponseHandler extends AsyncHttpResponseHandler {
+        private boolean replaceResults;
+
+        public FoodviewResponseHandler(boolean replaceResults) {
+            this.replaceResults = replaceResults;
+        }
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             FoodviewsResponse response = new Gson().fromJson(new String(responseBody), FoodviewsResponse.class);
             if (response.isResult()) {
-                myFoodviewsListAdapter.addAll(response.getRecommendations());
+                if (response.getRecommendations().size() > 0) {
+                    if (replaceResults) {
+                        myFoodviewsListAdapter.addAll(response.getRecommendations());
+                    } else {
+                        myFoodviewsListAdapter.appendAll(response.getRecommendations());
+                    }
+                    canLoadFoodviews = true;
+                    moreResultsAvailable = true;
+                } else {
+                    moreResultsAvailable = false;
+                }
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
