@@ -172,7 +172,7 @@ public class ItemListAdapter extends BaseAdapter {
         tvSeeMore.setTypeface(Utils.getRegularFont(mContext));
 
         //Glide.with(mContext).load(item.getThumbnail()).placeholder(R.drawable.ic_top_feedback).into(image);
-        Glide.with(mContext).load(item.getThumbnail()).into(image);
+        Glide.with(mContext).load(item.getImageUrl()).into(image);
         imageDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         imageDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         imageDialog.show();

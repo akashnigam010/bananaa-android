@@ -14,6 +14,9 @@ public class Item implements Serializable {
     @SerializedName("thumbnail")
     private String thumbnail;
 
+    @SerializedName("imageUrl")
+    private String imageUrl;
+
     @SerializedName("recommendations")
     private Integer recommendations;
 
@@ -69,5 +72,13 @@ public class Item implements Serializable {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

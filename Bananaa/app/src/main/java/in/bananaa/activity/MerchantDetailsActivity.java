@@ -34,6 +34,7 @@ import in.bananaa.adapter.TagListAdapter;
 import in.bananaa.object.FoodviewsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetailsResponse;
+import in.bananaa.object.PopularItemsResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.CustomListView;
@@ -233,10 +234,42 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     View.OnClickListener onClickSeeMoreListner = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            itemListAdapter.appendAll(merchantDetails.getItems());
-            seeMoreSection.setVisibility(View.GONE);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", merchantId);
+                jsonObject.put("page", 2);
+                StringEntity entity = new StringEntity(jsonObject.toString());
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.setTimeout(Constant.TIMEOUT);
+                client.post(MerchantDetailsActivity.this, URLs.GET_POPULAR_ITEMS, entity, "application/json", new PopularItemsResponseHandler());
+                canLoadFoodviews = false;
+            } catch (UnsupportedEncodingException e) {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            } catch (Exception e) {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
         }
     };
+
+    private class PopularItemsResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            PopularItemsResponse response = new Gson().fromJson(new String(responseBody), PopularItemsResponse.class);
+            if (response.isResult()) {
+                itemListAdapter.appendAll(response.getItems());
+                seeMoreSection.setVisibility(View.GONE);
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
     View.OnClickListener onClickBackListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
