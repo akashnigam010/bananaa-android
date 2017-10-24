@@ -237,7 +237,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", merchantId);
-                jsonObject.put("page", 2);
+                jsonObject.put("page", 1);
                 StringEntity entity = new StringEntity(jsonObject.toString());
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.setTimeout(Constant.TIMEOUT);
@@ -257,7 +257,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             PopularItemsResponse response = new Gson().fromJson(new String(responseBody), PopularItemsResponse.class);
             if (response.isResult()) {
-                itemListAdapter.appendAll(response.getItems());
+                itemListAdapter.addAll(response.getItems());
                 seeMoreSection.setVisibility(View.GONE);
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
