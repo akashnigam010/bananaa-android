@@ -1,12 +1,11 @@
 package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
-import com.plumillonforge.android.chipview.Chip;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class SearchItem implements Serializable, Chip {
+public class SearchItem implements Serializable {
     @SerializedName("id")
     private Integer id;
 
@@ -84,10 +83,6 @@ public class SearchItem implements Serializable, Chip {
         isSelected = selected;
     }
 
-    @Override
-    public String getText() {
-        return name;
-    }
 
     @Override
     public boolean equals(Object o) {

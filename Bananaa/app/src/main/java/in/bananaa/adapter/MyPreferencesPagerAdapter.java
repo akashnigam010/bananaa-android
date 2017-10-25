@@ -35,9 +35,9 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.object.SearchItem;
-import in.bananaa.object.SearchResponse;
 import in.bananaa.object.SearchResultType;
+import in.bananaa.object.TagsPreference;
+import in.bananaa.object.TagsPreferencesResponse;
 import in.bananaa.object.VegnonvegPreferenceResponse;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
@@ -153,7 +153,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         cvCuisines.setOnChipClickListener(new OnTagChipClickListener() {
             @Override
             public void onChipClick(Chip chip, View view, int position) {
-                SearchItem tc = (SearchItem) chip;
+                TagsPreference tc = (TagsPreference) chip;
                 TextView tv = ((TextView) view.findViewById(android.R.id.text1));
                 if (tc.getSelected()) {
                     tc.setSelected(false);
@@ -227,7 +227,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         cvSuggestions.setOnChipClickListener(new OnTagChipClickListener() {
             @Override
             public void onChipClick(Chip chip, View view, int position) {
-                SearchItem tc = (SearchItem) chip;
+                TagsPreference tc = (TagsPreference) chip;
                 TextView tv = ((TextView) view.findViewById(android.R.id.text1));
                 if (tc.getSelected()) {
                     tc.setSelected(false);
@@ -408,9 +408,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         }
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            SearchResponse response = new Gson().fromJson(new String(responseBody), SearchResponse.class);
+            TagsPreferencesResponse response = new Gson().fromJson(new String(responseBody), TagsPreferencesResponse.class);
             if (response.isResult()) {
-                List<SearchItem> chips = response.getSearchItems();
+                List<TagsPreference> chips = response.getSearchItems();
                 if (chips.size() > 0) {
                     List<Chip> chipList = null;
                     if (replaceExistingData) {
@@ -444,9 +444,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         }
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            SearchResponse response = new Gson().fromJson(new String(responseBody), SearchResponse.class);
+            TagsPreferencesResponse response = new Gson().fromJson(new String(responseBody), TagsPreferencesResponse.class);
             if (response.isResult()) {
-                List<SearchItem> chips = response.getSearchItems();
+                List<TagsPreference> chips = response.getSearchItems();
                 if (chips.size() > 0) {
                     List<Chip> chipList = null;
                     if (replaceExistingData) {
