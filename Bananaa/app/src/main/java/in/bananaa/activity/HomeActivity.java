@@ -1,6 +1,7 @@
 package in.bananaa.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,20 +16,37 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
+import in.bananaa.adapter.FoodSuggestionsAdapter;
+import in.bananaa.object.FoodSuggestions.FoodSuggestionsResponse;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
 import in.bananaa.object.login.LoginUserDto;
+import in.bananaa.utils.AlertMessages;
+import in.bananaa.utils.Constant;
+import in.bananaa.utils.CustomListView;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.utils.Constant.HOME_TO_LOCATION;
@@ -36,8 +54,10 @@ import static in.bananaa.utils.Constant.HOME_TO_PREF_REQ_CODE;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    Context mContext;
     FacebookManager facebookManager;
     GoogleManager googleManager;
+    ScrollView svHome;
     TextView title;
     TextView homeBnaText;
     TextView homeSearch;
@@ -48,8 +68,16 @@ public class HomeActivity extends AppCompatActivity
     TextView tvUserName;
     LinearLayout llFoodbookLink;
 
+    CustomListView lvFoodSuggestions;
+    FoodSuggestionsAdapter foodSuggestionsAdapter;
+
+    Integer page = 1;
+    private boolean moreResultsAvailable = true;
+    private boolean canLoadFoodSuggestions = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -77,6 +105,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void customizeMainContent() {
+        svHome = (ScrollView) findViewById(R.id.svHome);
         homeBnaText = (TextView) findViewById(R.id.homeBnaText);
         homeBnaText.setText("Bananaa");
         homeSearch = (TextView) findViewById(R.id.homeSearch);
@@ -87,6 +116,9 @@ public class HomeActivity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
         Utils.setMenuItemsFont(menu, Utils.getBold(this), this);
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        lvFoodSuggestions = (CustomListView) findViewById(R.id.lvFoodSuggestions);
+        foodSuggestionsAdapter = new FoodSuggestionsAdapter(this);
+        lvFoodSuggestions.setAdapter(foodSuggestionsAdapter);
 
         ivUserImage = (ImageView) headerLayout.findViewById(R.id.ivUserImage);
         tvUserName = (TextView) headerLayout.findViewById(R.id.tvUserName);
@@ -102,6 +134,23 @@ public class HomeActivity extends AppCompatActivity
         });
         tvUserName.setText(user.getFirstName() + " " + user.getLastName());
         llFoodbookLink.setOnClickListener(onFoodbookLinkListener);
+        loadFoodSuggestions(page);
+        initAutoFoodSuggestionsLoad();
+    }
+
+    private void initAutoFoodSuggestionsLoad() {
+        svHome.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (svHome != null) {
+                    if (svHome.getChildAt(0).getBottom() <= (svHome.getHeight() + svHome.getScrollY())) {
+                        if (moreResultsAvailable && canLoadFoodSuggestions) {
+                            loadFoodSuggestions(++page);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     View.OnClickListener onFoodbookLinkListener = new View.OnClickListener() {
@@ -134,7 +183,7 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -229,6 +278,50 @@ public class HomeActivity extends AppCompatActivity
     private void redirectToSearch() {
         Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    private void loadFoodSuggestions(Integer page) {
+        try {
+            LocationStore location = PreferenceManager.getStoredLocation();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("locationId", location.getId());
+            jsonObject.put("isCity", location.getLocationType() == LocationType.CITY ? true : false);
+            jsonObject.put("page", page);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(HomeActivity.this, URLs.GET_FOOD_SUGGESTIONS, entity, "application/json", new FoodSuggestionsHandler());
+            canLoadFoodSuggestions = false;
+        } catch (UnsupportedEncodingException e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        } catch (Exception e) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
+    }
+
+    private class FoodSuggestionsHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            FoodSuggestionsResponse response = new Gson().fromJson(new String(responseBody), FoodSuggestionsResponse.class);
+            if (response.isResult()) {
+                if (response.getDishes().size() > 0) {
+                    foodSuggestionsAdapter.appendAll(response.getDishes());
+                    canLoadFoodSuggestions = true;
+                    moreResultsAvailable = true;
+                } else {
+                    moreResultsAvailable = false;
+                }
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
     }
 
     private void setFont() {

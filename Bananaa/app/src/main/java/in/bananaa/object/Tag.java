@@ -1,10 +1,11 @@
 package in.bananaa.object;
 
 import com.google.gson.annotations.SerializedName;
+import com.plumillonforge.android.chipview.Chip;
 
 import java.io.Serializable;
 
-public class Tag implements Serializable {
+public class Tag implements Serializable, Chip {
     @SerializedName("id")
     private Integer id;
 
@@ -69,5 +70,10 @@ public class Tag implements Serializable {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    @Override
+    public String getText() {
+        return "#" + this.name.replace(" ", "").toLowerCase() + "  ";
     }
 }

@@ -9,44 +9,66 @@
     tools:context="in.bananaa.activity.HomeActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/svHome"
         android:layout_width="match_parent"
-        android:layout_height="280dp">
+        android:layout_height="match_parent"
+        android:background="@color/lightColor">
 
-        <ImageView
-            android:id="@+id/homeImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@color/bnaColor" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/homeBnaText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="64dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/name"
-            android:textColor="@color/white"
-            android:textSize="50sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:background="@color/bnaColor">
 
-        <TextView
-            android:id="@+id/homeSearch"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/homeBnaText"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="55dp"
-            android:background="@drawable/search_bar_home"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_search"
-            android:gravity="center_vertical"
-            android:padding="10dp"
-            android:hint="@string/search_rest_cuisine_dish"
-            android:textColor="@color/grey"
-            android:textSize="13sp"/>
+                    <TextView
+                        android:id="@+id/homeBnaText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="64dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/name"
+                        android:textColor="@color/white"
+                        android:textSize="50sp" />
 
-    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/homeSearch"
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/homeBnaText"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="55dp"
+                        android:background="@drawable/search_bar_home"
+                        android:drawablePadding="10dp"
+                        android:drawableStart="@drawable/ic_search"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:hint="@string/search_rest_cuisine_dish"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp"/>
+
+                </RelativeLayout>
+
+                <in.bananaa.utils.CustomListView
+                    android:id="@+id/lvFoodSuggestions"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:layout_marginTop="50dp">
+
+                </in.bananaa.utils.CustomListView>
+
+            </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

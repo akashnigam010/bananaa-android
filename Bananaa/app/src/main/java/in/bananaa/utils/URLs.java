@@ -2,7 +2,7 @@ package in.bananaa.utils;
 
 public class URLs {
 
-    public static String BASE_URL = "http://www.bananaa.in/bna/";
+    public static String BASE_URL = "https://www.bananaa.in/bna/";
 
     public static String LOGIN = BASE_URL + "login/login";
 
@@ -22,6 +22,7 @@ public class URLs {
     public static String GET_OTHER_USER_FOODVIEWS = BASE_URL + "foodview/getOtherUsersFoodviews";
 
 
+    public static String GET_FOOD_SUGGESTIONS = BASE_URL + "user/getSuggestions";
     public static String GET_PROFILE = BASE_URL + "user/getProfile";
     public static String SAVE_STATUS = BASE_URL + "user/saveStatus";
     public static String GET_ALL_RECOMMENDATIONS = BASE_URL + "user/getAllRecommendations";
