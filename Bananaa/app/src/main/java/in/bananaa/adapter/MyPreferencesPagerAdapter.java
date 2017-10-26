@@ -512,7 +512,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     if (isRemove) {
                         url = URLs.REMOVE_SUGGESTION_PREFERENCE;
                     } else {
-                        url = URLs.ADD_SUGGESTOION_PREFERENCE;
+                        url = URLs.ADD_SUGGESTION_PREFERENCE;
                     }
                 } else {
                     return;
