@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.plumillonforge.android.chipview.ChipViewAdapter;
 
 import in.bananaa.R;
-import in.bananaa.object.SearchItem;
+import in.bananaa.object.TagsPreference;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.utils.Utils.chipsBackgrounds;
@@ -44,7 +44,7 @@ public class TagChipViewAdapter extends ChipViewAdapter {
 
     @Override
     public void onLayout(View view, int position) {
-        SearchItem tag = (SearchItem) getChip(position);
+        TagsPreference tag = (TagsPreference) getChip(position);
         TextView tv = ((TextView) view.findViewById(android.R.id.text1));
         tv.setTypeface(Utils.getBold(context));
         if (tag.getSelected()) {
