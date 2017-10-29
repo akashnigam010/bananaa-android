@@ -17,6 +17,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -55,6 +58,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     ProgressBar activityLoader;
 
     ImageView ivImage;
+    ProgressBar pbImageLoader;
     ImageButton ivShare;
     ImageButton ivBack;
     TextView tvName;
@@ -155,6 +159,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         ivBack = (ImageButton) findViewById(R.id.ivBack);
         ivShare = (ImageButton) findViewById(R.id.ivShare);
         ivImage = (ImageView) findViewById(R.id.ivImage);
+        pbImageLoader = (ProgressBar) findViewById(R.id.pbImageLoader);
         tvName = (TextView) findViewById(R.id.tvName);
         tvShortAddress = (TextView) findViewById(R.id.tvShortAddress);
         tvHours = (TextView) findViewById(R.id.tvHours);
@@ -318,8 +323,19 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             with(MerchantDetailsActivity.this)
                     .load(merchantDetails.getImageUrl())
                     .centerCrop()
-                    .placeholder(R.color.grey)
-                    .crossFade()
+                    .placeholder(R.color.lightColor)
+                    .crossFade().listener(new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    pbImageLoader.setVisibility(View.GONE);
+                    return false;
+                }
+            })
                     .into(ivImage);
         } else {
             ivImage.setImageResource(R.color.lightColor);

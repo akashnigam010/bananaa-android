@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -17,6 +18,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -56,6 +60,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     ImageView ivBack;
     ImageView ivShare;
     ImageView ivImage;
+    ProgressBar pbImageLoader;
     TextView tvName;
     TextView tvRestName;
     TextView tvShortAddress;
@@ -63,6 +68,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
     TextView tvTotalRatings;
 
     TextView tvMyFoodViewsTxt;
+    ProgressBar pbFoodviewLoader;
+    LinearLayout llMyFoodview;
     RatingBar rbMyRatings;
     TextView tvMyFoodview;
     TextView tvMyFoodviewTimeDiff;
@@ -158,12 +165,15 @@ public class ItemDetailsActivity extends AppCompatActivity {
         ivBack = (ImageButton) findViewById(R.id.ivBack);
         ivShare = (ImageButton) findViewById(R.id.ivShare);
         ivImage = (ImageView) findViewById(R.id.ivImage);
+        pbImageLoader = (ProgressBar) findViewById(R.id.pbImageLoader);
         tvName = (TextView) findViewById(R.id.tvName);
         tvRestName = (TextView) findViewById(R.id.tvRestName);
         tvShortAddress = (TextView) findViewById(R.id.tvShortAddress);
         tvRating = (TextView) findViewById(R.id.tvRating);
         tvTotalRatings = (TextView) findViewById(R.id.tvTotalRatings);
         tvMyFoodViewsTxt = (TextView) findViewById(R.id.tvMyFoodViewsTxt);
+        pbFoodviewLoader = (ProgressBar) findViewById(R.id.pbFoodviewLoader);
+        llMyFoodview = (LinearLayout) findViewById(R.id.llMyFoodview);
         rbMyRatings = (RatingBar) findViewById(R.id.rbMyRatings);
         tvMyFoodview = (TextView) findViewById(R.id.tvMyFoodview);
         tvMyFoodviewTimeDiff = (TextView) findViewById(R.id.tvMyFoodviewTimeDiff);
@@ -219,8 +229,19 @@ public class ItemDetailsActivity extends AppCompatActivity {
             with(ItemDetailsActivity.this)
                     .load(itemDetails.getImageUrl())
                     .centerCrop()
-                    .placeholder(R.color.grey)
-                    .crossFade()
+                    .placeholder(R.color.lightColor)
+                    .crossFade().listener(new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    pbImageLoader.setVisibility(View.GONE);
+                    return false;
+                }
+            })
                     .into(ivImage);
         } else {
             ivImage.setImageResource(R.color.lightColor);
@@ -249,6 +270,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             MyItemFoodviewResponse response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
             if (response.isResult()) {
+                pbFoodviewLoader.setVisibility(View.GONE);
+                llMyFoodview.setVisibility(View.VISIBLE);
                 if (response.isRecommended()) {
                     rbMyRatings.setOnRatingBarChangeListener(null);
                     rbMyRatings.setRating(Float.parseFloat(response.getRecommendation().getRating()));

@@ -55,8 +55,9 @@
 
     <ImageView
         android:id="@+id/dialog_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:src="@color/lightColor"
         android:adjustViewBounds="true"/>
 
     <RelativeLayout

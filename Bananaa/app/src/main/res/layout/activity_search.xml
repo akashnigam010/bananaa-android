@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/search"
                 android:layout_gravity="center"
-                android:textColor="@color/bnaColor"
+                android:textColor="@color/darkGrey"
                 android:id="@+id/search_toolbar_title"/>
 
         </android.support.v7.widget.Toolbar>

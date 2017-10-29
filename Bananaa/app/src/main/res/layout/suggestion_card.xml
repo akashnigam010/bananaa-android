@@ -32,7 +32,7 @@
                     android:layout_height="80dp"/>
 
                 <RelativeLayout
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     android:layout_width="0dp"
                     android:layout_marginLeft="10dp"
                     android:layout_height="match_parent">
@@ -45,14 +45,14 @@
 
                         <TextView
                             android:id="@+id/tvName"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Top Hats"
                             android:textSize="18dp"/>
 
                         <TextView
                             android:id="@+id/tvRestName"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="At Malaka Spice, Jubilee Hills"/>
 

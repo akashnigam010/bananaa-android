@@ -210,6 +210,12 @@ public class HomeActivity extends AppCompatActivity
 
         getSupportActionBar().setTitle("");
         title = (TextView) findViewById(R.id.home_toolbar_title);
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectToLocation();
+            }
+        });
         LocationStore location = PreferenceManager.getStoredLocation();
         if (location != null) {
             title.setText(location.getName());
