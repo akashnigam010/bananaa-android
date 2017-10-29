@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import in.bananaa.R;
 import in.bananaa.activity.ItemDetailsActivity;
@@ -63,9 +61,9 @@ public class CustomImageClickListener implements View.OnClickListener {
 
         imageDialog.setCancelable(true);
         imageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        imageDialog.setContentView(R.layout.dummy_image_viewer);
+        imageDialog.setContentView(R.layout.image_viewer);
         ImageView image = (ImageView) imageDialog.findViewById(R.id.dialog_imageView);
-        RelativeLayout rlItemView = (RelativeLayout) imageDialog.findViewById(R.id.rlItemView);
+        LinearLayout rlItemView = (LinearLayout) imageDialog.findViewById(R.id.llItemView);
         RelativeLayout rlMerchantView = (RelativeLayout) imageDialog.findViewById(R.id.rlMerchantView);
         TextView tvName = (TextView) imageDialog.findViewById(R.id.tvName);
         TextView tvRating = (TextView) imageDialog.findViewById(R.id.tvRating);
@@ -106,75 +104,14 @@ public class CustomImageClickListener implements View.OnClickListener {
         tvRestName.setTypeface(Utils.getRegularFont(mContext));
         tvSeeMore.setTypeface(Utils.getRegularFont(mContext));
 
-        loadImage(imageUrl, imageDialog);
-        if (!isImageLoaded) {
-            imageDialog.show();
-        }
+        loadImage(imageUrl, image);
+        imageDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        imageDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        imageDialog.show();
     }
 
-    private void loadImage(String imageUrl, final Dialog dummyDialog) {
-        final Dialog imageDialog = new Dialog(mContext);
-        imageDialog.setCancelable(true);
-        imageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        imageDialog.setContentView(R.layout.image_viewer);
-        final ImageView image = (ImageView) imageDialog.findViewById(R.id.dialog_imageView);
-        Glide.with(mContext).load(imageUrl).listener(new RequestListener<String, GlideDrawable>() {
-            @Override
-            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                isImageLoaded = true;
-                RelativeLayout rlItemView = (RelativeLayout) imageDialog.findViewById(R.id.rlItemView);
-                RelativeLayout rlMerchantView = (RelativeLayout) imageDialog.findViewById(R.id.rlMerchantView);
-                TextView tvName = (TextView) imageDialog.findViewById(R.id.tvName);
-                TextView tvRating = (TextView) imageDialog.findViewById(R.id.tvRating);
-                TextView tvSubString = (TextView) imageDialog.findViewById(R.id.tvSubString);
-                TextView tvRestName = (TextView) imageDialog.findViewById(R.id.tvRestName);
-
-                GradientDrawable background = (GradientDrawable) tvRating.getBackground();
-                RatingColorType colorType = RatingColorType.getCodeByCssClass(ratingClass);
-                if (colorType == null) {
-                    colorType = RatingColorType.R25;
-                }
-                background.setColor(mContext.getResources().getColor(colorType.getColor()));
-                TextView tvSeeMore = (TextView) imageDialog.findViewById(R.id.tvSeeMore);
-
-                OnClickShowDetailsListener onItemDetailsListener = new OnClickShowDetailsListener(id, null, false, imageDialog);
-                OnClickShowDetailsListener onMerchantDetailsListener = new OnClickShowDetailsListener(null, merchantId, true, imageDialog);
-
-                image.setOnClickListener(onItemDetailsListener);
-                rlItemView.setOnClickListener(onItemDetailsListener);
-                if (navigateToMerchantDetails) {
-                    rlMerchantView.setOnClickListener(onMerchantDetailsListener);
-                } else {
-                    rlMerchantView.setOnClickListener(onItemDetailsListener);
-                }
-
-                tvName.setText(name);
-                tvRating.setText(rating);
-                tvSubString.setText(mContext.getResources().getString(R.string.peopleRated, recommendationCount));
-                if (locality != null) {
-                    tvRestName.setText("At " + merchantName + ", " + locality);
-                } else {
-                    tvRestName.setText("At " + merchantName);
-                }
-
-                tvName.setTypeface(Utils.getBold(mContext));
-                tvSubString.setTypeface(Utils.getRegularFont(mContext));
-                tvRating.setTypeface(Utils.getRegularFont(mContext));
-                tvRestName.setTypeface(Utils.getRegularFont(mContext));
-                tvSeeMore.setTypeface(Utils.getRegularFont(mContext));
-
-                imageDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
-                imageDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                imageDialog.show();
-                dummyDialog.dismiss();
-                return false;
-            }
-        }).into(image);
+    private void loadImage(String imageUrl, ImageView image) {
+        Glide.with(mContext).load(imageUrl).into(image);
     }
 
     private class OnClickShowDetailsListener implements View.OnClickListener {

@@ -23,8 +23,8 @@ import in.bananaa.R;
 import in.bananaa.object.Item;
 import in.bananaa.object.MerchantDetailsResponse;
 import in.bananaa.object.RatingColorType;
-import in.bananaa.utils.CustomImageClickListener;
 import in.bananaa.utils.Debug;
+import in.bananaa.utils.CustomImageClickListener;
 import in.bananaa.utils.Utils;
 
 public class ItemListAdapter extends BaseAdapter {
