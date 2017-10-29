@@ -50,6 +50,7 @@
             android:background="@color/white"
             android:drawableLeft="@drawable/ic_search"
             android:elevation="3dp"
+            android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
             android:hint="@string/search_rest_cuisine_dish"

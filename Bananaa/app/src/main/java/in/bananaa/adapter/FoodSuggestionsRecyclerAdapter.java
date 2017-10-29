@@ -1,14 +1,13 @@
 package in.bananaa.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,33 +29,30 @@ import in.bananaa.utils.OnTagChipClickListener;
 import in.bananaa.utils.TagChipView;
 import in.bananaa.utils.Utils;
 
-public class FoodSuggestionsAdapter extends BaseAdapter {
-    private static final String TAG = "GLOBAL_SEARCH";
+public class FoodSuggestionsRecyclerAdapter extends RecyclerView.Adapter<FoodSuggestionsRecyclerAdapter.SuggestionsViewHolder> {
+    private static final String TAG = "FOOD_SUGGESTIONS";
     private List<FoodSuggestion> foodSuggestions;
     private Activity mContext;
-    private LayoutInflater infalter;
     private List<Chip> cvHashtagsChipList;
 
-    public FoodSuggestionsAdapter(Activity activity) {
-        foodSuggestions = new ArrayList<>();
-        infalter = (LayoutInflater) activity
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = activity;
+    public class SuggestionsViewHolder extends RecyclerView.ViewHolder {
+        private ImageView ivThumbnail;
+        private TextView tvName;
+        private TextView tvRestName;
+        private TagChipView cvHashtags;
+
+        public SuggestionsViewHolder(View itemView) {
+            super(itemView);
+            this.ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
+            this.tvName = (TextView) itemView.findViewById(R.id.tvName);
+            this.tvRestName = (TextView) itemView.findViewById(R.id.tvRestName);
+            this.cvHashtags = (TagChipView) itemView.findViewById(R.id.cvHashtags);
+        }
     }
 
-    @Override
-    public int getCount() {
-        return foodSuggestions.size();
-    }
-
-    @Override
-    public FoodSuggestion getItem(int position) {
-        return foodSuggestions.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    public FoodSuggestionsRecyclerAdapter(Activity activity) {
+        this.foodSuggestions = new ArrayList<>();
+        this.mContext = activity;
     }
 
     public void clearAll() {
@@ -74,36 +70,23 @@ public class FoodSuggestionsAdapter extends BaseAdapter {
         } catch (Exception e) {
             Debug.e(TAG, e.getMessage());
         }
-
         notifyDataSetChanged();
     }
 
-    public class ViewHolder {
-        ImageView ivThumbnail;
-        TextView tvName;
-        TextView tvRestName, tvHashtags;
-        TagChipView cvHashtags;
+    @Override
+    public FoodSuggestionsRecyclerAdapter.SuggestionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.suggestion_card, parent, false);
+        return new SuggestionsViewHolder(itemView);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
-        if (convertView == null) {
-            convertView = infalter.inflate(R.layout.suggestion_card, null);
-            holder = new ViewHolder();
-            holder.ivThumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
-            holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
-            holder.tvRestName = (TextView) convertView.findViewById(R.id.tvRestName);
-            holder.cvHashtags = (TagChipView) convertView.findViewById(R.id.cvHashtags);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.tvName.setText(foodSuggestions.get(position).getName());
-        holder.tvRestName.setText(foodSuggestions.get(position).getMerchant().getName() + ", " + foodSuggestions.get(position).getMerchant().getAddress().getLocality().getName());
-        if (Utils.isNotEmpty(foodSuggestions.get(position).getThumbnail())) {
-            Glide.with(mContext).load(foodSuggestions.get(position).getThumbnail()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
+    public void onBindViewHolder(final FoodSuggestionsRecyclerAdapter.SuggestionsViewHolder holder, int position) {
+        FoodSuggestion foodSuggestion = foodSuggestions.get(position);
+        holder.tvName.setText(foodSuggestion.getName());
+        holder.tvRestName.setText(foodSuggestion.getMerchant().getName() + ", " + foodSuggestion.getMerchant().getAddress().getLocality().getName());
+        if (Utils.isNotEmpty(foodSuggestion.getThumbnail())) {
+            Glide.with(mContext).load(foodSuggestion.getThumbnail()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivThumbnail) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable dr =
@@ -116,6 +99,7 @@ public class FoodSuggestionsAdapter extends BaseAdapter {
         } else {
             holder.ivThumbnail.setImageResource(R.color.lightColor);
         }
+
         holder.cvHashtags.setChipLayoutRes(R.layout.chip);
         ChipViewAdapter cvCuisineChipViewAdapter = new HashtagChipViewAdapter(mContext);
         holder.cvHashtags.setAdapter(cvCuisineChipViewAdapter);
@@ -129,19 +113,23 @@ public class FoodSuggestionsAdapter extends BaseAdapter {
                 Toast.makeText(mContext, hashtag.getName(), Toast.LENGTH_LONG).show();
             }
         });
-        setCustomImageViewerData(convertView, foodSuggestions.get(position));
+        setCustomImageViewerData(holder.itemView, foodSuggestions.get(position));
         setFont(holder);
-        return convertView;
     }
 
-    private void setCustomImageViewerData(View convertView, FoodSuggestion i) {
-        convertView.setOnClickListener(new CustomImageClickListener(mContext, i.getId(),
+    @Override
+    public int getItemCount() {
+        return foodSuggestions.size();
+    }
+
+    private void setCustomImageViewerData(View view, FoodSuggestion i) {
+        view.setOnClickListener(new CustomImageClickListener(mContext, i.getId(),
                 i.getName(), i.getRecommendationCount(), i.getRating().toString(), i.getRatingClass(),
                 i.getImageUrl(), true, i.getMerchant().getId(), i.getMerchant().getName(),
                 i.getMerchant().getAddress().getLocality().getName()));
     }
 
-    private void setFont(ViewHolder holder) {
+    private void setFont(FoodSuggestionsRecyclerAdapter.SuggestionsViewHolder holder) {
         holder.tvName.setTypeface(Utils.getBold(mContext));
         holder.tvRestName.setTypeface(Utils.getRegularFont(mContext));
     }

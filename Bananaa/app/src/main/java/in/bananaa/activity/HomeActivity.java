@@ -10,9 +10,12 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,14 +40,13 @@ import java.io.UnsupportedEncodingException;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
-import in.bananaa.adapter.FoodSuggestionsAdapter;
+import in.bananaa.adapter.FoodSuggestionsRecyclerAdapter;
 import in.bananaa.object.FoodSuggestions.FoodSuggestionsResponse;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
 import in.bananaa.object.login.LoginUserDto;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
-import in.bananaa.utils.CustomListView;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
 import in.bananaa.utils.PreferenceManager;
@@ -59,7 +61,7 @@ public class HomeActivity extends AppCompatActivity
     Context mContext;
     FacebookManager facebookManager;
     GoogleManager googleManager;
-    ScrollView svHome;
+    NestedScrollView svHome;
     TextView title;
     TextView homeBnaText;
     TextView homeSearch;
@@ -73,8 +75,8 @@ public class HomeActivity extends AppCompatActivity
     SwipeRefreshLayout homeSwipeRefresh;
     TextView tvHi;
     TextView tvYourSuggestions;
-    CustomListView lvFoodSuggestions;
-    FoodSuggestionsAdapter foodSuggestionsAdapter;
+    RecyclerView rvFoodSuggestions;
+    FoodSuggestionsRecyclerAdapter foodSuggestionsRecyclerAdapter;
     ProgressBar pbMoreResults;
     LinearLayout llNoMoreResults;
     TextView tvThatsAll;
@@ -116,7 +118,7 @@ public class HomeActivity extends AppCompatActivity
 
     private void customizeMainContent() {
         homeSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.homeSwipeRefresh);
-        svHome = (ScrollView) findViewById(R.id.svHome);
+        svHome = (NestedScrollView) findViewById(R.id.svHome);
         homeBnaText = (TextView) findViewById(R.id.homeBnaText);
         homeBnaText.setText("Bananaa");
         homeSearch = (TextView) findViewById(R.id.homeSearch);
@@ -129,9 +131,14 @@ public class HomeActivity extends AppCompatActivity
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tvHi = (TextView) findViewById(R.id.tvHi);
         tvYourSuggestions = (TextView) findViewById(R.id.tvYourSuggestions);
-        lvFoodSuggestions = (CustomListView) findViewById(R.id.lvFoodSuggestions);
-        foodSuggestionsAdapter = new FoodSuggestionsAdapter(this);
-        lvFoodSuggestions.setAdapter(foodSuggestionsAdapter);
+        rvFoodSuggestions = (RecyclerView) findViewById(R.id.rvFoodSuggestions);
+        foodSuggestionsRecyclerAdapter = new FoodSuggestionsRecyclerAdapter(this);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvFoodSuggestions.setLayoutManager(mLayoutManager);
+        rvFoodSuggestions.setNestedScrollingEnabled(false);
+        rvFoodSuggestions.setAdapter(foodSuggestionsRecyclerAdapter);
+
         pbMoreResults = (ProgressBar) findViewById(R.id.pbMoreResults);
         llNoMoreResults = (LinearLayout) findViewById(R.id.llNoMoreResults);
         tvThatsAll = (TextView) findViewById(R.id.tvThatsAll);
@@ -370,10 +377,10 @@ public class HomeActivity extends AppCompatActivity
             homeSwipeRefresh.setRefreshing(false);
             if (response.isResult()) {
                 if (page == 1) {
-                    foodSuggestionsAdapter.clearAll();
+                    foodSuggestionsRecyclerAdapter.clearAll();
                 }
                 if (response.getDishes().size() > 0) {
-                    foodSuggestionsAdapter.appendAll(response.getDishes());
+                    foodSuggestionsRecyclerAdapter.appendAll(response.getDishes());
                     canLoadFoodSuggestions = true;
                     moreResultsAvailable = true;
                 } else {

@@ -9,7 +9,7 @@
     tools:context="in.bananaa.activity.HomeActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/svHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -87,16 +87,11 @@
 
                 </LinearLayout>
 
-                <in.bananaa.utils.CustomListView
-                    android:id="@+id/lvFoodSuggestions"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvFoodSuggestions"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:divider="@null"
-                    android:dividerHeight="0dp">
-
-                </in.bananaa.utils.CustomListView>
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical" />
 
                 <ProgressBar
                     android:id="@+id/pbMoreResults"
@@ -143,6 +138,6 @@
 
             </LinearLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.v4.widget.SwipeRefreshLayout>
