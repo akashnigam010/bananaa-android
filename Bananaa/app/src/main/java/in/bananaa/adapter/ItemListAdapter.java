@@ -21,6 +21,7 @@ import java.util.List;
 
 import in.bananaa.R;
 import in.bananaa.object.Item;
+import in.bananaa.object.MerchantDetailsResponse;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.utils.CustomImageClickListener;
 import in.bananaa.utils.Debug;
@@ -29,14 +30,16 @@ import in.bananaa.utils.Utils;
 public class ItemListAdapter extends BaseAdapter {
 
     private static final String TAG = "ITEM_LIST_ADAPTER";
+    MerchantDetailsResponse merchantDetails;
     private List<Item> items;
     private Activity mContext;
     private LayoutInflater infalter;
     GradientDrawable background;
 
-    public ItemListAdapter(Activity activity) {
+    public ItemListAdapter(Activity activity, MerchantDetailsResponse merchantDetails) {
         infalter = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = activity;
+        this.merchantDetails = merchantDetails;
         items = new ArrayList<>();
     }
 
@@ -120,7 +123,8 @@ public class ItemListAdapter extends BaseAdapter {
 
     private void setCustomImageViewerData(View convertView, Item i) {
         convertView.setOnClickListener(new CustomImageClickListener(mContext, i.getId(),
-                i.getName(), i.getRecommendations(), i.getRating(), i.getRatingClass(), i.getImageUrl()));
+                i.getName(), i.getRecommendations(), i.getRating(), i.getRatingClass(), i.getImageUrl(),
+                false, null, merchantDetails.getName(), null));
     }
 
     private void setFont(ViewHolder holder) {

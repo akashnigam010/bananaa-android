@@ -178,6 +178,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
         userFoodviewsListAdapter = new UserFoodviewsListAdapter(this);
         lvFoodviews.setAdapter(userFoodviewsListAdapter);
+
+        tvRestName.setOnClickListener(onRestaurantDetailsClickListener);
+        tvShortAddress.setOnClickListener(onRestaurantDetailsClickListener);
     }
 
     View.OnClickListener onClickBackListener = new View.OnClickListener() {
@@ -406,6 +409,15 @@ public class ItemDetailsActivity extends AppCompatActivity {
             Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
             startActivityForResult(i, ITEM_DETAILS_TO_FOODVIEW_REQ_CODE);
+        }
+    };
+
+    View.OnClickListener onRestaurantDetailsClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent i = new Intent(ItemDetailsActivity.this, MerchantDetailsActivity.class);
+            i.putExtra(MerchantDetailsActivity.MERCHANT_ID, itemDetails.getMerchantId());
+            startActivity(i);
         }
     };
 

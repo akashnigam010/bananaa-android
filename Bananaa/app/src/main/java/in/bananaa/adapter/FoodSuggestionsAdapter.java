@@ -59,8 +59,12 @@ public class FoodSuggestionsAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addAll(List<FoodSuggestion> foodSuggestions) {
+    public void clearAll() {
         this.foodSuggestions.clear();
+    }
+
+    public void addAll(List<FoodSuggestion> foodSuggestions) {
+        clearAll();
         appendAll(foodSuggestions);
     }
 
@@ -132,7 +136,9 @@ public class FoodSuggestionsAdapter extends BaseAdapter {
 
     private void setCustomImageViewerData(View convertView, FoodSuggestion i) {
         convertView.setOnClickListener(new CustomImageClickListener(mContext, i.getId(),
-                i.getName(), i.getRecommendationCount(), i.getRating().toString(), i.getRatingClass(), i.getImageUrl()));
+                i.getName(), i.getRecommendationCount(), i.getRating().toString(), i.getRatingClass(),
+                i.getImageUrl(), true, i.getMerchant().getId(), i.getMerchant().getName(),
+                i.getMerchant().getAddress().getLocality().getName()));
     }
 
     private void setFont(ViewHolder holder) {

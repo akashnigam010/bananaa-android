@@ -178,7 +178,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         lvMyFoodViews = (CustomListView) findViewById(R.id.lvMyFoodviews);
         btnAddFoodview = (AppCompatButton) findViewById(R.id.btnAddFoodview);
 
-        itemListAdapter = new ItemListAdapter(this);
+        itemListAdapter = new ItemListAdapter(this, merchantDetails);
         itemListAdapter.addAll(merchantDetails.getItems());
         cuisinesListAdapter = new TagListAdapter(this);
         cuisinesListAdapter.addAll(merchantDetails.getRatedCuisines());

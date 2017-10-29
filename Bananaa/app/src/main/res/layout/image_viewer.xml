@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/llItemImageViewer">
+    android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rlItemView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -64,6 +64,7 @@
         android:adjustViewBounds="true"/>
 
     <RelativeLayout
+        android:id="@+id/rlMerchantView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -74,13 +75,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="end"
             android:drawableEnd="@drawable/ic_keyboard_arrow_right"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:text="See More"
             android:textColor="@color/bnaColor"
             android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvRestName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="At SodaBottleOpenerWala"
+            android:textSize="14dp"/>
 
     </RelativeLayout>
 

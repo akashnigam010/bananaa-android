@@ -14,6 +14,12 @@
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
 
+    <!--Home Screen-->
+    <string name="yourSuggestions">Based on your food preferences, here are some delectable dishes for you to explore around</string>
+    <string name="endText1">That\'s all for now %1$s!</string>
+    <string name="endText2">Tap to edit your food preferences</string>
+    <string name="endText3">Or change your location</string>
+
     <!--My Preferences Screen-->
     <string name="back">BACK</string>
     <string name="submit">SUBMIT</string>

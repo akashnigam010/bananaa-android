@@ -3,80 +3,85 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightColor">
+    android:background="@color/background">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/background_shadow">
+        android:layout_marginBottom="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:orientation="vertical"
+            android:padding="5dp">
 
-            <ImageView
-                android:id="@+id/ivThumbnail"
-                android:layout_width="0dp"
-                android:layout_weight="0.30"
-                android:padding="5dp"
-                android:layout_height="80dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
-            <RelativeLayout
-                android:layout_weight="0.75"
-                android:layout_width="0dp"
+                <ImageView
+                    android:id="@+id/ivThumbnail"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.30"
+                    android:padding="5dp"
+                    android:layout_height="80dp"/>
+
+                <RelativeLayout
+                    android:layout_weight="0.75"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Top Hats"
+                            android:textSize="18dp"/>
+
+                        <TextView
+                            android:id="@+id/tvRestName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="At Malaka Spice, Jubilee Hills"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:layout_marginLeft="10dp"
-                android:layout_height="match_parent">
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightColor" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Top Hats"
-                        android:textSize="18dp"/>
-
-                    <TextView
-                        android:id="@+id/tvRestName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="At Malaka Spice, Jubilee Hills"/>
-
-                </LinearLayout>
-
-            </RelativeLayout>
+            <in.bananaa.utils.TagChipView
+                android:id="@+id/cvHashtags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                chip_corner_radius="10dp"
+                chip_line_spacing="20dp"
+                chip_side_padding="5dp"
+                chip_spacing="20dp" />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/lightColor" />
-
-        <in.bananaa.utils.TagChipView
-            android:id="@+id/cvHashtags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            chip_corner_radius="10dp"
-            chip_line_spacing="20dp"
-            chip_side_padding="5dp"
-            chip_spacing="20dp" />
-
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
