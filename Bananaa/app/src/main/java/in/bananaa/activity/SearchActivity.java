@@ -33,6 +33,7 @@ import in.bananaa.R;
 import in.bananaa.adapter.GlobalSearchAdapter;
 import in.bananaa.object.SearchItem;
 import in.bananaa.object.SearchResponse;
+import in.bananaa.object.SearchResultType;
 import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.URLs;
@@ -120,7 +121,13 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    //performSearch();
+                    String searchString = etSearch.getText().toString();
+                    Intent i = new Intent(SearchActivity.this, SearchResultsActivity.class);
+                    i.putExtra(SearchResultsActivity.IS_TAG_SEARCH, false);
+                    i.putExtra(SearchResultsActivity.TAG_NAME, searchString);
+                    i.putExtra(SearchResultsActivity.SEARCH_STRING, searchString);
+                    startActivity(i);
+                    finish();
                     return true;
                 }
                 return false;
@@ -134,9 +141,18 @@ public class SearchActivity extends AppCompatActivity {
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SearchItem merchant = globalSearchAdapter.getItem(position);
-                Intent i = new Intent(SearchActivity.this, MerchantDetailsActivity.class);
-                i.putExtra(MerchantDetailsActivity.MERCHANT_ID, merchant.getId());
+                SearchItem merchantOrTag = globalSearchAdapter.getItem(position);
+                Intent i = null;
+                if (merchantOrTag.getType() == SearchResultType.RESTAURANT) {
+                    i = new Intent(SearchActivity.this, MerchantDetailsActivity.class);
+                    i.putExtra(MerchantDetailsActivity.MERCHANT_ID, merchantOrTag.getId());
+                } else {
+                    i = new Intent(SearchActivity.this, SearchResultsActivity.class);
+                    i.putExtra(SearchResultsActivity.IS_TAG_SEARCH, true);
+                    i.putExtra(SearchResultsActivity.TAG_ID, merchantOrTag.getId());
+                    i.putExtra(SearchResultsActivity.TAG_NAME, merchantOrTag.getName());
+                    i.putExtra(SearchResultsActivity.TYPE, merchantOrTag.getType());
+                }
                 startActivity(i);
                 finish();
             }

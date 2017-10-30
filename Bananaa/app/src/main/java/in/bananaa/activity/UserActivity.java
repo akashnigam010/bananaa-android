@@ -40,6 +40,7 @@ import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
+import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Constant.USER_TO_PREF_REQ_CODE;
 
 public class UserActivity extends AppCompatActivity {
@@ -182,7 +183,7 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onScrollChanged() {
                 if (svUserProfile != null) {
-                    if (svUserProfile.getChildAt(0).getBottom() <= (svUserProfile.getHeight() + svUserProfile.getScrollY())) {
+                    if (svUserProfile.getChildAt(0).getBottom() <= (svUserProfile.getHeight() + ADD_SCROLL_HEIGHT + svUserProfile.getScrollY())) {
                         if (moreResultsAvailable && canLoadFoodviews) {
                             getRatingsAndFoodviews(++pageFoodviews);
                         }

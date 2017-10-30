@@ -16,8 +16,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.SplashScreenActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +65,8 @@
         <activity
             android:name=".activity.MyPreferencesActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.UserActivity"></activity>
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.SearchResultsActivity"></activity>
     </application>
 
 </manifest>

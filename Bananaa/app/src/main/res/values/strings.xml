@@ -16,9 +16,13 @@
 
     <!--Home Screen-->
     <string name="yourSuggestions">Based on your food preferences, here are some delectable dishes for you to explore around</string>
-    <string name="endText1">That\'s all for now %1$s!</string>
-    <string name="endText2">Tap to edit your food preferences</string>
-    <string name="endText3">Or change your location</string>
+    <string name="homeEndText1">That\'s all for now %1$s!</string>
+    <string name="homeEndText2">Tap to edit your food preferences</string>
+    <string name="homeEndText3">Or change your location</string>
+
+    <!--Search Result Screen-->
+    <string name="searchEndText1">No more results available %1$s!</string>
+    <string name="searchEndText2">Please refine your search for more results</string>
 
     <!--My Preferences Screen-->
     <string name="back">BACK</string>

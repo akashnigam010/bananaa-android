@@ -46,13 +46,13 @@ import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static com.bumptech.glide.Glide.with;
+import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Constant.MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE;
 
 public class MerchantDetailsActivity extends AppCompatActivity {
     public static final String MERCHANT_ID = "merchantId";
     Integer merchantId;
     MerchantDetailsResponse merchantDetails;
-    AlertMessages messages;
 
     ScrollView merchantDetailsView;
     ProgressBar activityLoader;
@@ -101,7 +101,6 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_merchant_details);
-        messages = new AlertMessages(this);
         merchantId = (Integer) getIntent().getSerializableExtra(MERCHANT_ID);
         if (merchantId == null) {
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
@@ -208,7 +207,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             @Override
             public void onScrollChanged() {
                 if (merchantDetailsView != null) {
-                    if (merchantDetailsView.getChildAt(0).getBottom() <= (merchantDetailsView.getHeight() + merchantDetailsView.getScrollY())) {
+                    if (merchantDetailsView.getChildAt(0).getBottom() <= (merchantDetailsView.getHeight() + ADD_SCROLL_HEIGHT + merchantDetailsView.getScrollY())) {
                         if (moreResultsAvailable && canLoadFoodviews) {
                             getMyFoodviews(++pageFoodviews, false);
                         }

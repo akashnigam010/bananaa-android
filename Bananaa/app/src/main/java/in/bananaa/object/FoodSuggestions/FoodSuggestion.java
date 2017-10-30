@@ -1,4 +1,4 @@
-package in.bananaa.object.FoodSuggestions;
+package in.bananaa.object.foodSuggestions;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -9,6 +9,7 @@ public class URLs {
     public static String GET_LOCATIONS = BASE_URL + "search/getPopularLocalities";
     public static String GLOBAL_SEARCH = BASE_URL + "search/gSearch";
     public static String DISH_SEARCH = BASE_URL + "search/dishes";
+    public static String GENERIC_SEARCH = BASE_URL + "search/searchMerchants";
 
     public static String MERCHANT_DETAILS = BASE_URL + "merchant/getDetails";
 

@@ -14,6 +14,8 @@ import java.util.List;
 
 import in.bananaa.R;
 import in.bananaa.object.Tag;
+import in.bananaa.object.location.LocationStore;
+import in.bananaa.object.location.LocationType;
 
 public class Utils {
     public static int[] chipsBackgrounds = new int[]{
@@ -125,5 +127,11 @@ public class Utils {
                 str += tags.get(i).getName() + " and " + tags.get(i+1).getName();
                 return str;
         }
+    }
+
+    public static String loadDefaultLocation() {
+        LocationStore locationStore = new LocationStore(1, "Hyderabad", LocationType.CITY);
+        PreferenceManager.setStoredLocation(locationStore);
+        return locationStore.getName();
     }
 }

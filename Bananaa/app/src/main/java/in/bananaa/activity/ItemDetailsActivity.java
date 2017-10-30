@@ -46,6 +46,7 @@ import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static com.bumptech.glide.Glide.with;
+import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Constant.ITEM_DETAILS_TO_FOODVIEW_REQ_CODE;
 
 public class ItemDetailsActivity extends AppCompatActivity {
@@ -151,7 +152,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             @Override
             public void onScrollChanged() {
                 if (itemDetailsView != null) {
-                    if (itemDetailsView.getChildAt(0).getBottom() <= (itemDetailsView.getHeight() + itemDetailsView.getScrollY())) {
+                    if (itemDetailsView.getChildAt(0).getBottom() <= (itemDetailsView.getHeight() + ADD_SCROLL_HEIGHT + itemDetailsView.getScrollY())) {
                         if (moreResultsAvailable && canLoadFoodviews) {
                             setUserFoodviews(++pageFoodviews);
                         }

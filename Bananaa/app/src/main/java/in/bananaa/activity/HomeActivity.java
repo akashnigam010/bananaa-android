@@ -41,7 +41,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.adapter.FoodSuggestionsRecyclerAdapter;
-import in.bananaa.object.FoodSuggestions.FoodSuggestionsResponse;
+import in.bananaa.object.foodSuggestions.FoodSuggestionsResponse;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
 import in.bananaa.object.login.LoginUserDto;
@@ -53,6 +53,7 @@ import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
+import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Constant.HOME_TO_LOCATION;
 import static in.bananaa.utils.Constant.HOME_TO_PREF_REQ_CODE;
 
@@ -83,7 +84,7 @@ public class HomeActivity extends AppCompatActivity
     TextView tvEditPrefs;
     TextView tvEditLocation;
 
-    Integer page = 1;
+    private Integer page = 1;
     private boolean moreResultsAvailable = true;
     private boolean canLoadFoodSuggestions = true;
 
@@ -170,7 +171,7 @@ public class HomeActivity extends AppCompatActivity
         });
 
         tvHi.setText("Hi " + PreferenceManager.getLoginDetails().getFirstName() + "!");
-        tvThatsAll.setText(mContext.getResources().getString(R.string.endText1, PreferenceManager.getLoginDetails().getFirstName()));
+        tvThatsAll.setText(mContext.getResources().getString(R.string.homeEndText1, PreferenceManager.getLoginDetails().getFirstName()));
         tvEditPrefs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +193,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onScrollChanged() {
                 if (svHome != null) {
-                    if (svHome.getChildAt(0).getBottom() <= (svHome.getHeight() + svHome.getScrollY())) {
+                    if (svHome.getChildAt(0).getBottom() <= (svHome.getHeight() + ADD_SCROLL_HEIGHT + svHome.getScrollY())) {
                         if (moreResultsAvailable && canLoadFoodSuggestions) {
                             loadFoodSuggestions(++page);
                         }
@@ -227,9 +228,7 @@ public class HomeActivity extends AppCompatActivity
         if (location != null) {
             title.setText(location.getName());
         } else {
-            LocationStore locationStore = new LocationStore(1, "Hyderabad", LocationType.CITY);
-            PreferenceManager.setStoredLocation(locationStore);
-            title.setText(locationStore.getName());
+            title.setText(Utils.loadDefaultLocation());
         }
         return toolbar;
     }
@@ -264,7 +263,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.location, menu);
         return true;
     }
 

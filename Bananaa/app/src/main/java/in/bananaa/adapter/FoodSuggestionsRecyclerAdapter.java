@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.FoodSuggestions.FoodSuggestion;
+import in.bananaa.object.foodSuggestions.FoodSuggestion;
 import in.bananaa.object.Tag;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.CustomImageClickListener;
@@ -57,10 +57,11 @@ public class FoodSuggestionsRecyclerAdapter extends RecyclerView.Adapter<FoodSug
 
     public void clearAll() {
         this.foodSuggestions.clear();
+        notifyDataSetChanged();
     }
 
     public void addAll(List<FoodSuggestion> foodSuggestions) {
-        clearAll();
+        this.foodSuggestions.clear();
         appendAll(foodSuggestions);
     }
 

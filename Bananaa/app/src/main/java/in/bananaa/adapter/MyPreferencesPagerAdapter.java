@@ -47,6 +47,7 @@ import in.bananaa.utils.TagChipView;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
+import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Utils.chipsBackgrounds;
 
 public class MyPreferencesPagerAdapter extends PagerAdapter {
@@ -233,12 +234,12 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     tc.setSelected(false);
                     tv.setBackground(mContext.getResources().getDrawable(R.drawable.bg_chip, null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
-                    updateTagPreference(tc.getId(), SearchResultType.DISH, true, false);
+                    updateTagPreference(tc.getId(), SearchResultType.SUGGESTION, true, false);
                 } else {
                     tc.setSelected(true);
                     tv.setBackground(mContext.getResources().getDrawable(chipsBackgrounds[tc.getId()%10], null));
                     tv.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-                    updateTagPreference(tc.getId(), SearchResultType.DISH, false, false);
+                    updateTagPreference(tc.getId(), SearchResultType.SUGGESTION, false, false);
                 }
             }
         });
@@ -337,7 +338,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             @Override
             public void onScrollChanged() {
                 if (svSearchCuisines != null) {
-                    if (svSearchCuisines.getChildAt(0).getBottom() <= (svSearchCuisines.getHeight() + svSearchCuisines.getScrollY())) {
+                    if (svSearchCuisines.getChildAt(0).getBottom() <= (svSearchCuisines.getHeight() + ADD_SCROLL_HEIGHT + svSearchCuisines.getScrollY())) {
                         if (canSearchCuisines && !noMoreCuisines) {
                             searchCuisines(++ pageCuisines, null, false);
                         }
@@ -353,7 +354,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             @Override
             public void onScrollChanged() {
                 if (svSearchSuggestions != null) {
-                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + svSearchSuggestions.getScrollY())) {
+                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + ADD_SCROLL_HEIGHT + svSearchSuggestions.getScrollY())) {
                         if (canSearchSuggestions && !noMoreSuggestions) {
                             searchSuggestions(++ pageSuggestions, null, false);
                         }
@@ -384,7 +385,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
     private void searchSuggestions(Integer page, String searchString, boolean replaceExistingData) {
         try {
-            asyncStart(SearchResultType.DISH);
+            asyncStart(SearchResultType.SUGGESTION);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("page", page);
             jsonObject.put("searchString", searchString);
@@ -462,13 +463,13 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             }
-            asyncEnd(SearchResultType.DISH);
+            asyncEnd(SearchResultType.SUGGESTION);
             canSearchSuggestions = true;
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            asyncEnd(SearchResultType.DISH);
+            asyncEnd(SearchResultType.SUGGESTION);
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         }
     }
@@ -508,7 +509,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     } else {
                         url = URLs.ADD_CUISINE_PREFERENCE;
                     }
-                } else if (type == SearchResultType.DISH) {
+                } else if (type == SearchResultType.SUGGESTION) {
                     if (isRemove) {
                         url = URLs.REMOVE_SUGGESTION_PREFERENCE;
                     } else {
@@ -560,7 +561,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         if (type == SearchResultType.CUISINE) {
             ivCuisineSearchCancel.setVisibility(View.INVISIBLE);
             pbCuisineLoader.setVisibility(View.VISIBLE);
-        } else if (type == SearchResultType.DISH) {
+        } else if (type == SearchResultType.SUGGESTION) {
             ivSuggestionSearchCancel.setVisibility(View.INVISIBLE);
             pbSuggestionLoader.setVisibility(View.VISIBLE);
         }
@@ -570,7 +571,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         if (type == SearchResultType.CUISINE) {
             ivCuisineSearchCancel.setVisibility(View.VISIBLE);
             pbCuisineLoader.setVisibility(View.GONE);
-        } else if (type == SearchResultType.DISH) {
+        } else if (type == SearchResultType.SUGGESTION) {
             ivSuggestionSearchCancel.setVisibility(View.VISIBLE);
             pbSuggestionLoader.setVisibility(View.GONE);
         }

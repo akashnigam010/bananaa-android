@@ -17,7 +17,6 @@ import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.object.SearchResultType.CUISINE;
-import static in.bananaa.object.SearchResultType.DISH;
 
 public class GlobalSearchAdapter extends BaseAdapter {
     private static final String TAG = "GLOBAL_SEARCH";
@@ -89,8 +88,8 @@ public class GlobalSearchAdapter extends BaseAdapter {
             case CUISINE:
                 holder.tvMetaData.setText(CUISINE.name());
                 break;
-            case DISH:
-                holder.tvMetaData.setText(DISH.name());
+            case SUGGESTION:
+                holder.tvMetaData.setText("DISH");
                 break;
             default:
                 holder.tvMetaData.setText("");
