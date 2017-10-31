@@ -1,6 +1,7 @@
 package in.bananaa.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -133,5 +134,17 @@ public class Utils {
         LocationStore locationStore = new LocationStore(1, "Hyderabad", LocationType.CITY);
         PreferenceManager.setStoredLocation(locationStore);
         return locationStore.getName();
+    }
+
+    public static void shareToOtherApps(Context mContext, String url, boolean isRestaurant) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        if (isRestaurant) {
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Checkout this restaurant at Bananaa - " + URLs.BASE_URL2 + url);
+        } else {
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Checkout this awesome dish at Bananaa - " + url);
+        }
+        sendIntent.setType("text/plain");
+        mContext.startActivity(sendIntent);
     }
 }

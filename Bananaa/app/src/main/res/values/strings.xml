@@ -31,20 +31,17 @@
     <string name="nonveg">Non Veg</string>
     <string name="anything">Duh! Really Anything</string>
 
-    <string name="slide_1_title">Hello Food!</string>
-    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!</string>
+    <string name="slide_1_title">Hi There!</string>
+    <string name="slide_1_desc">Explore the most recommended dishes at restaurants. Photos, foodviews \&amp; ratings. Eat all the good food and never settle for less</string>
 
-    <string name="slide_2_title">Movie Tickets</string>
-    <string name="slide_2_desc">Book movie tickets for your family and friends!</string>
+    <string name="slide_2_title">Your Preferences</string>
+    <string name="slide_2_desc">Tell us your food preferences \&amp; we suggest you the best dishes around you that match your taste buds</string>
 
-    <string name="slide_3_title">Great Discounts</string>
-    <string name="slide_3_desc">Best discounts on every single service we offer!</string>
+    <string name="slide_3_title">Ratings and Foodviews</string>
+    <string name="slide_3_desc">Add your ratings and foodviews of dishes at restaurants and the community gets the best of Bananaa</string>
 
-    <string name="slide_4_title">World Travel</string>
-    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>
-
-    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
-    <string name="play_again">Play Again</string>
+    <string name="slide_4_title">Game of Food</string>
+    <string name="slide_4_desc">Its like that great food-fighter who once said, \"Tum mujhe preference do, main tumhe suggestions dunga\". Give me your preferences and I will give you good food suggestions</string>
 
     <!--Across App-->
     <string name="name">Bananaa</string>
@@ -52,10 +49,19 @@
     <string name="search_rest_cuisine_dish">Search for Restaurant, Cuisine or Dish</string>
 
     <!--Location Screen-->
-    <string name="select_location">Select your location</string>
+    <string name="select_location">Tap and select your location</string>
+    <string name="disclaimer1">
+        For now, you can set your location only from the list above, but you can search for
+        listed restaurants, cuisines and dishes all over town.
+    </string>
+    <string name="disclaimer2">
+        We are continuously adding more locations :)
+    </string>
 
     <!--Search Screen-->
     <string name="search">Search</string>
+    <string name="searchForAwesome">Search for the awesome</string>
+    <string name="noResults">NO RESULTS FOUND :(</string>
 
     <!--Login Screen-->
     <string name="login_fb">Continue with Facebook</string>

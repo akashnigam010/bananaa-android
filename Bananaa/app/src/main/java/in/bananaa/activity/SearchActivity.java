@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,6 +48,8 @@ public class SearchActivity extends AppCompatActivity {
     GlobalSearchAdapter globalSearchAdapter;
     ProgressBar progress;
     ImageView cancelIcon;
+    LinearLayout llSearchIntro;
+    TextView tvSearchImageTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class SearchActivity extends AppCompatActivity {
         customizeToolbar();
         customizeSearchBar();
         customizeListView();
+        llSearchIntro = (LinearLayout) findViewById(R.id.llSearchIntro);
+        tvSearchImageTxt = (TextView) findViewById(R.id.tvSearchImageTxt);
         setFont();
     }
 
@@ -86,6 +91,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 etSearch.setText("");
+                tvSearchImageTxt.setText(mContext.getString(R.string.searchForAwesome));
                 return true;
             }
         });
@@ -124,7 +130,7 @@ public class SearchActivity extends AppCompatActivity {
                     String searchString = etSearch.getText().toString();
                     Intent i = new Intent(SearchActivity.this, SearchResultsActivity.class);
                     i.putExtra(SearchResultsActivity.IS_TAG_SEARCH, false);
-                    i.putExtra(SearchResultsActivity.TAG_NAME, searchString);
+                    i.putExtra(SearchResultsActivity.TAG_NAME, "'" + searchString + "'");
                     i.putExtra(SearchResultsActivity.SEARCH_STRING, searchString);
                     startActivity(i);
                     finish();
@@ -142,7 +148,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SearchItem merchantOrTag = globalSearchAdapter.getItem(position);
-                Intent i = null;
+                Intent i;
                 if (merchantOrTag.getType() == SearchResultType.RESTAURANT) {
                     i = new Intent(SearchActivity.this, MerchantDetailsActivity.class);
                     i.putExtra(MerchantDetailsActivity.MERCHANT_ID, merchantOrTag.getId());
@@ -189,8 +195,11 @@ public class SearchActivity extends AppCompatActivity {
             if (response.isResult()) {
                 if (response.getSearchItems() != null && response.getSearchItems().size() > 0) {
                     globalSearchAdapter.addAll(response.getSearchItems());
+                    llSearchIntro.setVisibility(View.GONE);
                 } else {
-                    //messages.showCustomMessage("No results found");
+                    globalSearchAdapter.clearAll();
+                    tvSearchImageTxt.setText(mContext.getString(R.string.noResults));
+                    llSearchIntro.setVisibility(View.VISIBLE);
                 }
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
@@ -207,6 +216,7 @@ public class SearchActivity extends AppCompatActivity {
     private void setFont() {
         tvTitle.setTypeface(Utils.getRegularFont(this));
         etSearch.setTypeface(Utils.getRegularFont(this));
+        tvSearchImageTxt.setTypeface(Utils.getSimpsonFont(this));
     }
 
     private void asyncStart() {

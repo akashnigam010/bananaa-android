@@ -65,6 +65,31 @@
                 android:dividerHeight="0dp">
             </in.bananaa.utils.CustomListView>
 
+            <TextView
+                android:id="@+id/disclaimer1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="30dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="@color/grey"
+                android:text="@string/disclaimer1"/>
+
+            <TextView
+                android:id="@+id/disclaimer2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="30dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="@color/grey"
+                android:text="@string/disclaimer2"/>
+
         </LinearLayout>
     </ScrollView>
 

@@ -1,6 +1,7 @@
 package in.bananaa.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -21,10 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bananaa.R;
-import in.bananaa.object.foodSuggestions.FoodSuggestion;
+import in.bananaa.activity.SearchResultsActivity;
+import in.bananaa.object.CuisineTag;
+import in.bananaa.object.SearchResultType;
+import in.bananaa.object.SuggestionTag;
 import in.bananaa.object.Tag;
-import in.bananaa.utils.Debug;
+import in.bananaa.object.foodSuggestions.FoodSuggestion;
 import in.bananaa.utils.CustomImageClickListener;
+import in.bananaa.utils.Debug;
 import in.bananaa.utils.OnTagChipClickListener;
 import in.bananaa.utils.TagChipView;
 import in.bananaa.utils.Utils;
@@ -106,12 +110,24 @@ public class FoodSuggestionsRecyclerAdapter extends RecyclerView.Adapter<FoodSug
         holder.cvHashtags.setAdapter(cvCuisineChipViewAdapter);
         cvHashtagsChipList = new ArrayList<>();
         cvHashtagsChipList.addAll(foodSuggestions.get(position).getSuggestions());
+        cvHashtagsChipList.addAll(foodSuggestions.get(position).getCuisines());
         holder.cvHashtags.setChipList(cvHashtagsChipList);
         holder.cvHashtags.setOnChipClickListener(new OnTagChipClickListener() {
             @Override
             public void onChipClick(Chip chip, View view, int i) {
                 Tag hashtag = (Tag) chip;
-                Toast.makeText(mContext, hashtag.getName(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mContext, SearchResultsActivity.class);
+                intent.putExtra(SearchResultsActivity.IS_TAG_SEARCH, true);
+                intent.putExtra(SearchResultsActivity.TAG_ID, hashtag.getId());
+                intent.putExtra(SearchResultsActivity.TAG_NAME, hashtag.getName());
+                if (hashtag instanceof CuisineTag) {
+                    intent.putExtra(SearchResultsActivity.TYPE, SearchResultType.CUISINE);
+                } else if (hashtag instanceof SuggestionTag) {
+                    intent.putExtra(SearchResultsActivity.TYPE, SearchResultType.SUGGESTION);
+                } else {
+                    return;
+                }
+                mContext.startActivity(intent);
             }
         });
         setCustomImageViewerData(holder.itemView, foodSuggestions.get(position));

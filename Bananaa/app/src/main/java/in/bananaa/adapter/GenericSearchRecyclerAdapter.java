@@ -3,6 +3,8 @@ package in.bananaa.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import in.bananaa.R;
 import in.bananaa.activity.MerchantDetailsActivity;
+import in.bananaa.object.RatingColorType;
 import in.bananaa.object.genericSearch.MerchantDetailsDto;
 import in.bananaa.utils.Debug;
 import in.bananaa.utils.Utils;
@@ -29,6 +32,7 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
     private static final String TAG = "FOOD_SUGGESTIONS";
     private List<MerchantDetailsDto> merchants;
     private Activity mContext;
+    GradientDrawable background;
 
     public class MerchantDetailsViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivThumbnail;
@@ -36,9 +40,16 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
         private TextView tvName;
         private TextView tvAddress;
         private LinearLayout llRatingAndDishDetails;
+
+        private LinearLayout llTagDetails;
         private TextView tvRating;
         private TextView tvRatedIn;
         private TextView tvSpread;
+
+        private LinearLayout llFoodDetails;
+        private TextView tvFoodRating;
+        private TextView tvFoodTxt;
+
         private TextView tvCostTxt;
         private TextView tvCost;
         private TextView tvHoursTxt;
@@ -53,9 +64,16 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
             this.tvName = (TextView) itemView.findViewById(R.id.tvName);
             this.tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
             llRatingAndDishDetails = (LinearLayout) itemView.findViewById(R.id.llRatingAndDishDetails);
+
+            llTagDetails = (LinearLayout) itemView.findViewById(R.id.llTagDetails);
             tvRating = (TextView) itemView.findViewById(R.id.tvRating);
             tvRatedIn = (TextView) itemView.findViewById(R.id.tvRatedIn);
             tvSpread = (TextView) itemView.findViewById(R.id.tvSpread);
+
+            llFoodDetails = (LinearLayout) itemView.findViewById(R.id.llFoodDetails);
+            tvFoodRating = (TextView) itemView.findViewById(R.id.tvFoodRating);
+            tvFoodTxt = (TextView) itemView.findViewById(R.id.tvFoodTxt);
+
             tvCostTxt = (TextView) itemView.findViewById(R.id.tvCostTxt);
             tvCost = (TextView) itemView.findViewById(R.id.tvCost);
             tvHoursTxt = (TextView) itemView.findViewById(R.id.tvHoursTxt);
@@ -119,21 +137,36 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
         if (merchantDetailsDto.getSearchTag() != null) {
             holder.llRatingAndDishDetails.setVisibility(View.VISIBLE);
             if (merchantDetailsDto.getSearchTag().getRating() != null) {
-                holder.tvRating.setText(merchantDetailsDto.getSearchTag().getRating());
                 if (Utils.isNotEmpty(merchantDetailsDto.getSearchTag().getName())) {
+                    holder.tvRating.setText(merchantDetailsDto.getSearchTag().getRating());
                     holder.tvRatedIn.setText("Rated in " + merchantDetailsDto.getSearchTag().getName());
+                    background = (GradientDrawable) holder.tvRating.getBackground();
+                    RatingColorType colorType = RatingColorType.getCodeByCssClass(merchantDetailsDto.getSearchTag().getRatingClass());
+                    if (colorType == null) {
+                        colorType = RatingColorType.R25;
+                    }
+                    background.setColor(ContextCompat.getColor(mContext, colorType.getColor()));
+                    if (merchantDetailsDto.getSearchTag().getDishCount() != null) {
+                        holder.tvSpread.setText("Spread of " + merchantDetailsDto.getSearchTag().getDishCount() + "+ dishes");
+                    } else {
+                        holder.tvSpread.setVisibility(View.GONE);
+                    }
+                    holder.llFoodDetails.setVisibility(View.GONE);
                 } else {
-                    holder.tvRatedIn.setText("Rated by overall food");
+                    holder.tvFoodRating.setText(merchantDetailsDto.getSearchTag().getRating());
+                    background = (GradientDrawable) holder.tvFoodRating.getBackground();
+                    RatingColorType colorType = RatingColorType.getCodeByCssClass(merchantDetailsDto.getSearchTag().getRatingClass());
+                    if (colorType == null) {
+                        colorType = RatingColorType.R25;
+                    }
+                    background.setColor(ContextCompat.getColor(mContext, colorType.getColor()));
+                    holder.tvFoodTxt.setText("Rated by overall food");
+                    holder.llTagDetails.setVisibility(View.GONE);
                 }
             } else if (Utils.isNotEmpty(merchantDetailsDto.getSearchTag().getName())) {
-                holder.tvRating.setVisibility(View.GONE);
-                holder.tvRatedIn.setText("Dish found: " + merchantDetailsDto.getSearchTag().getName());
-            }
-            if (merchantDetailsDto.getSearchTag().getDishCount() != null) {
-                holder.tvSpread.setText("Spread of " + merchantDetailsDto.getSearchTag().getDishCount() + "+ dishes");
-                holder.tvSpread.setVisibility(View.VISIBLE);
-            } else {
-                holder.tvSpread.setVisibility(View.GONE);
+                holder.tvFoodRating.setVisibility(View.GONE);
+                holder.tvFoodTxt.setText("Dish Found  :  " + merchantDetailsDto.getSearchTag().getName());
+                holder.llTagDetails.setVisibility(View.GONE);
             }
         } else {
             holder.llRatingAndDishDetails.setVisibility(View.GONE);
@@ -169,6 +202,8 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
         holder.tvRating.setTypeface(Utils.getBold(mContext));
         holder.tvRatedIn.setTypeface(Utils.getBold(mContext));
         holder.tvSpread.setTypeface(Utils.getBold(mContext));
+        holder.tvFoodRating.setTypeface(Utils.getBold(mContext));
+        holder.tvFoodTxt.setTypeface(Utils.getBold(mContext));
         holder.tvCost.setTypeface(Utils.getRegularFont(mContext));
         holder.tvHours.setTypeface(Utils.getRegularFont(mContext));
         holder.tvHoursTxt.setTypeface(Utils.getRegularFont(mContext));

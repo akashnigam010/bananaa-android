@@ -20,9 +20,10 @@ import android.widget.TextView;
 
 import in.bananaa.R;
 import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.Utils;
 
 public class WelcomeActivity extends AppCompatActivity {
-
+    private Context mContext;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
@@ -32,8 +33,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mContext = this;
         super.onCreate(savedInstanceState);
-
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -45,7 +46,8 @@ public class WelcomeActivity extends AppCompatActivity {
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
-
+        btnNext.setTypeface(Utils.getRegularFont(mContext));
+        btnSkip.setTypeface(Utils.getRegularFont(mContext));
 
         // layouts of all welcome sliders
         // add few more layouts if you want
@@ -177,7 +179,52 @@ public class WelcomeActivity extends AppCompatActivity {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(layouts[position], container, false);
             container.addView(view);
+            selectPageAndCustomize(view, position);
             return view;
+        }
+
+        private void selectPageAndCustomize(View view, int position) {
+            switch (position) {
+                case 0:
+                    customizePage1(view);
+                    break;
+                case 1:
+                    customizePage2(view);
+                    break;
+                case 2:
+                    customizePage3(view);
+                    break;
+                case 3:
+                    customizePage4(view);
+                    break;
+                default: break;
+            }
+        }
+
+        private void customizePage1(View view) {
+            TextView tvWelcome1Heading = (TextView) view.findViewById(R.id.tvWelcome1Heading);
+            TextView tvWelcome1Desc = (TextView) view.findViewById(R.id.tvWelcome1Desc);
+            tvWelcome1Heading.setTypeface(Utils.getBold(mContext));
+            tvWelcome1Desc.setTypeface(Utils.getRegularFont(mContext));
+        }
+
+        private void customizePage2(View view) {
+            TextView tvWelcome2Heading = (TextView) view.findViewById(R.id.tvWelcome2Heading);
+            TextView tvWelcome2Desc = (TextView) view.findViewById(R.id.tvWelcome2Desc);
+            tvWelcome2Heading.setTypeface(Utils.getBold(mContext));
+            tvWelcome2Desc.setTypeface(Utils.getRegularFont(mContext));
+        }
+
+        private void customizePage3(View view) {
+            TextView tvWelcome3Heading = (TextView) view.findViewById(R.id.tvWelcome3Heading);
+            TextView tvWelcome3Desc = (TextView) view.findViewById(R.id.tvWelcome3Desc);
+            tvWelcome3Heading.setTypeface(Utils.getBold(mContext));
+            tvWelcome3Desc.setTypeface(Utils.getRegularFont(mContext));
+        }
+
+        private void customizePage4(View view) {
+            TextView tvWelcome4Desc = (TextView) view.findViewById(R.id.tvWelcome4Desc);
+            tvWelcome4Desc.setTypeface(Utils.getRegularFont(mContext));
         }
 
         @Override

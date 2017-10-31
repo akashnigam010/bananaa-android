@@ -15,6 +15,7 @@ import android.widget.TextView;
 import in.bananaa.R;
 import in.bananaa.adapter.MyPreferencesPagerAdapter;
 import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.Utils;
 
 public class MyPreferencesActivity extends AppCompatActivity {
     private ViewPager viewPager;
@@ -76,6 +77,9 @@ public class MyPreferencesActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btnBack.setTypeface(Utils.getRegularFont(this));
+        btnNext.setTypeface(Utils.getRegularFont(this));
     }
 
     private void addBottomDots(int currentPage) {

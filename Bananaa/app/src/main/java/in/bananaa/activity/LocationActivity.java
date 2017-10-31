@@ -28,6 +28,8 @@ public class LocationActivity extends AppCompatActivity {
     TextView title;
     ProgressBar pbLocation;
     ScrollView svLocation;
+    TextView disclaimer1;
+    TextView disclaimer2;
     CustomListView lvCities;
     CityAdapter cityAdapter;
     Context mContext;
@@ -41,12 +43,16 @@ public class LocationActivity extends AppCompatActivity {
         title = (TextView) findViewById(R.id.location_toolbar_title);
         pbLocation = (ProgressBar) findViewById(R.id.pbLocation);
         svLocation = (ScrollView) findViewById(R.id.svLocation);
+        disclaimer1 = (TextView) findViewById(R.id.disclaimer1);
+        disclaimer2 = (TextView) findViewById(R.id.disclaimer2);
         lvCities = (CustomListView) findViewById(R.id.lvCities);
         cityAdapter = new CityAdapter(this);
         lvCities.setAdapter(cityAdapter);
         customizeToolbar();
         getCities();
         title.setTypeface(Utils.getRegularFont(this));
+        disclaimer1.setTypeface(Utils.getRegularFont(this));
+        disclaimer2.setTypeface(Utils.getRegularFont(this));
     }
 
     @Override

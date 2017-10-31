@@ -92,7 +92,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
 
         svSearchResults = (NestedScrollView) findViewById(R.id.svSearchResults);
-        if (Utils.isEmpty(tagName)) {
+        if (Utils.isEmpty(tagName) || tagName.equals("''")) {
             tvTitle.setText(ALL_PLACES);
         } else {
             tvTitle.setText("Places serving " + tagName);
@@ -244,7 +244,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             GenericSearchResponse response = new Gson().fromJson(new String(responseBody), GenericSearchResponse.class);
             if (response.isResult()) {
                 if (response.getMerchants().size() > 0) {
-                    searchResultsAdapter.addAll(response.getMerchants());
+                    searchResultsAdapter.appendAll(response.getMerchants());
                     canLoadMoreResults = true;
                     moreResultsAvailable = true;
                 } else {

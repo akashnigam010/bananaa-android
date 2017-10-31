@@ -183,6 +183,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvNoFoodviews = (TextView) findViewById(R.id.tvNoFoodviews);
         lvFoodviews = (ListView) findViewById(R.id.lvFoodviews);
 
+        ivShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.shareToOtherApps(mContext, itemDetails.getItemUrl(), true);
+            }
+        });
+
         ivImage.setOnClickListener(onImageClickListener);
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onAddFoodviewClickListener);

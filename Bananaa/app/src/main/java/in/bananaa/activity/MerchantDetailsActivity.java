@@ -79,6 +79,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     CustomListView lvCuisinesAndSpread;
     CustomListView lvMyFoodViews;
 
+    ProgressBar pbSeeMore;
     AppCompatButton btnSeeMore;
     LinearLayout seeMoreSection;
 
@@ -176,6 +177,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         lvCuisinesAndSpread = (CustomListView) findViewById(R.id.lvCuisinesAndSpread);
         lvDelectableDishes = (CustomListView) findViewById(R.id.lvDelectableDishes);
         seeMoreSection = (LinearLayout) findViewById(R.id.seeMoreSection);
+        pbSeeMore = (ProgressBar) findViewById(R.id.pbSeeMore);
         btnSeeMore = (AppCompatButton) findViewById(R.id.btnSeeMore);
         tvMyFoodViewsTxt = (TextView) findViewById(R.id.tvMyFoodViewsTxt);
         tvFoodviewSubHeading = (TextView) findViewById(R.id.tvFoodviewSubHeading);
@@ -195,6 +197,12 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         ivImage.setOnClickListener(onImageClickListener);
         tvPhone.setOnClickListener(onPhoneNumberClickListener);
         btnSeeMore.setOnClickListener(onClickSeeMoreListner);
+        ivShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.shareToOtherApps(mContext, merchantDetails.getMerchantUrl(), true);
+            }
+        });
         ivBack.setOnClickListener(onClickBackListener);
         btnAddFoodview.setOnClickListener(onClickRateAndFoodViewListener);
         setToastMessages();
@@ -239,6 +247,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             try {
+                pbSeeMore.setVisibility(View.VISIBLE);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", merchantId);
                 jsonObject.put("page", 1);

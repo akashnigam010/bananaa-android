@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import in.bananaa.object.Tag;
+import in.bananaa.object.CuisineTag;
+import in.bananaa.object.SuggestionTag;
 
 public class FoodSuggestion {
     @SerializedName("id")
@@ -35,7 +36,10 @@ public class FoodSuggestion {
     private MerchantDetails merchant;
 
     @SerializedName("suggestions")
-    private List<Tag> suggestions;
+    private List<SuggestionTag> suggestions;
+
+    @SerializedName("cuisines")
+    private List<CuisineTag> cuisines;
 
     public Integer getId() {
         return id;
@@ -109,11 +113,19 @@ public class FoodSuggestion {
         this.merchant = merchant;
     }
 
-    public List<Tag> getSuggestions() {
+    public List<SuggestionTag> getSuggestions() {
         return suggestions;
     }
 
-    public void setSuggestions(List<Tag> suggestions) {
+    public void setSuggestions(List<SuggestionTag> suggestions) {
         this.suggestions = suggestions;
+    }
+
+    public List<CuisineTag> getCuisines() {
+        return cuisines;
+    }
+
+    public void setCuisines(List<CuisineTag> cuisines) {
+        this.cuisines = cuisines;
     }
 }

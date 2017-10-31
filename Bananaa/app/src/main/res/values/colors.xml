@@ -11,6 +11,7 @@
     <color name="lightGrey">#E0E1E2</color>
     <color name="darkGrey">#595959</color>
     <color name="background">#f8fbfd</color>
+    <color name="dishColor">#3F7E00</color>
 
     <!--Rating Colors-->
     <color name="r10">#CD1C26</color>

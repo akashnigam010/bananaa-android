@@ -2,6 +2,7 @@ package in.bananaa.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,11 @@ public class GlobalSearchAdapter extends BaseAdapter {
         return position;
     }
 
+    public void clearAll() {
+        this.searchEntities.clear();
+        notifyDataSetChanged();
+    }
+
     public void addAll(List<SearchItem> searchEntities) {
         this.searchEntities.clear();
         appendAll(searchEntities);
@@ -84,12 +90,15 @@ public class GlobalSearchAdapter extends BaseAdapter {
         switch(current.getType()) {
             case RESTAURANT:
                 holder.tvMetaData.setText(current.getShortAddress());
+                holder.tvName.setTextColor(ContextCompat.getColor(mContext, R.color.bnaColor));
                 break;
             case CUISINE:
                 holder.tvMetaData.setText(CUISINE.name());
+                holder.tvName.setTextColor(ContextCompat.getColor(mContext, R.color.dishColor));
                 break;
             case SUGGESTION:
                 holder.tvMetaData.setText("DISH");
+                holder.tvName.setTextColor(ContextCompat.getColor(mContext, R.color.darkGrey));
                 break;
             default:
                 holder.tvMetaData.setText("");
@@ -100,7 +109,7 @@ public class GlobalSearchAdapter extends BaseAdapter {
     }
 
     private void setFont(ViewHolder holder) {
-        holder.tvName.setTypeface(Utils.getRegularFont(mContext));
+        holder.tvName.setTypeface(Utils.getBold(mContext));
         holder.tvMetaData.setTypeface(Utils.getRegularFont(mContext));
     }
 }
