@@ -186,7 +186,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.shareToOtherApps(mContext, itemDetails.getItemUrl(), true);
+                Utils.shareToOtherApps(mContext, itemDetails.getItemUrlAbsolute(), true);
             }
         });
 

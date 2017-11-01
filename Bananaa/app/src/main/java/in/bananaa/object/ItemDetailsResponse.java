@@ -26,8 +26,8 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
     @SerializedName("imageUrl")
     private String imageUrl;
 
-    @SerializedName("itemUrl")
-    private String itemUrl;
+    @SerializedName("itemUrlAbsolute")
+    private String itemUrlAbsolute;
 
     @SerializedName("ratingClass")
     private String ratingClass;
@@ -107,11 +107,11 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
         this.totalRatings = totalRatings;
     }
 
-    public String getItemUrl() {
-        return itemUrl;
+    public String getItemUrlAbsolute() {
+        return itemUrlAbsolute;
     }
 
-    public void setItemUrl(String itemUrl) {
-        this.itemUrl = itemUrl;
+    public void setItemUrlAbsolute(String itemUrlAbsolute) {
+        this.itemUrlAbsolute = itemUrlAbsolute;
     }
 }

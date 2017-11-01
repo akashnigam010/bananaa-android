@@ -200,7 +200,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.shareToOtherApps(mContext, merchantDetails.getMerchantUrl(), true);
+                Utils.shareToOtherApps(mContext, merchantDetails.getMerchantUrlAbsolute(), true);
             }
         });
         ivBack.setOnClickListener(onClickBackListener);

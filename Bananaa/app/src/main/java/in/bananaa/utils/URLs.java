@@ -3,7 +3,6 @@ package in.bananaa.utils;
 public class URLs {
 
     public static String BASE_URL = "https://www.bananaa.in/bna/";
-    public static String BASE_URL2 = "https://www.bananaa.in";
 
     public static String LOGIN = BASE_URL + "login/login";
 

@@ -140,7 +140,7 @@ public class Utils {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         if (isRestaurant) {
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "Checkout this restaurant at Bananaa - " + URLs.BASE_URL2 + url);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Checkout this restaurant at Bananaa - " + url);
         } else {
             sendIntent.putExtra(Intent.EXTRA_TEXT, "Checkout this awesome dish at Bananaa - " + url);
         }

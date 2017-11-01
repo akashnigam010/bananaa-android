@@ -22,8 +22,8 @@ public class MerchantDetailsResponse extends GenericResponse implements Serializ
     @SerializedName("imageUrl")
     private String imageUrl;
 
-    @SerializedName("merchantUrl")
-    private String merchantUrl;
+    @SerializedName("merchantUrlAbsolute")
+    private String merchantUrlAbsolute;
 
     @SerializedName("thumbnail")
     private String thumbnail;
@@ -153,11 +153,11 @@ public class MerchantDetailsResponse extends GenericResponse implements Serializ
         this.items = items;
     }
 
-    public String getMerchantUrl() {
-        return merchantUrl;
+    public String getMerchantUrlAbsolute() {
+        return merchantUrlAbsolute;
     }
 
-    public void setMerchantUrl(String merchantUrl) {
-        this.merchantUrl = merchantUrl;
+    public void setMerchantUrlAbsolute(String merchantUrlAbsolute) {
+        this.merchantUrlAbsolute = merchantUrlAbsolute;
     }
 }
