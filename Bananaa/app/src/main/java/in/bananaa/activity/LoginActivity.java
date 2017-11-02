@@ -37,6 +37,7 @@ import in.bananaa.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
     Context mContext;
+    TextView tvLogin;
     ProgressBar progress;
     Button fbLoginBtn;
     Button googleLoginBtn;
@@ -60,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         facebookManager = new FacebookManager(this);
         googleManager = new GoogleManager(this);
 
+        tvLogin = (TextView) findViewById(R.id.tvLogin);
         tvNoInternet = (TextView) findViewById(R.id.tvNoInternet);
         progress = (ProgressBar) findViewById(R.id.loginLoader);
         fbLoginBtn = (Button) findViewById(R.id.fbLogin);
@@ -182,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setFont() {
+        tvLogin.setTypeface(Utils.getBold(this));
         tvNoInternet.setTypeface(Utils.getRegularFont(this));
         fbLoginBtn.setTypeface(Utils.getRegularFont(this));
         googleLoginBtn.setTypeface(Utils.getRegularFont(this));

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -32,6 +34,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BuildConfig;
 
 import org.json.JSONObject;
 
@@ -56,6 +59,9 @@ import in.bananaa.utils.Utils;
 import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Constant.HOME_TO_LOCATION;
 import static in.bananaa.utils.Constant.HOME_TO_PREF_REQ_CODE;
+import static in.bananaa.utils.Constant.INSTAGRAM_PACKAGE;
+import static in.bananaa.utils.Constant.INSTAGRAM_SCHEME;
+import static in.bananaa.utils.Constant.INSTAGRAM_URL;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -84,6 +90,11 @@ public class HomeActivity extends AppCompatActivity
     TextView tvEditPrefs;
     TextView tvEditLocation;
 
+    ImageButton ivFacebook;
+    ImageButton ivTwitter;
+    ImageButton ivInstagram;
+    TextView tvVersion;
+
     private Integer page = 1;
     private boolean moreResultsAvailable = true;
     private boolean canLoadFoodSuggestions = true;
@@ -98,14 +109,17 @@ public class HomeActivity extends AppCompatActivity
             Intent i = new Intent(HomeActivity.this, WelcomeActivity.class);
             startActivity(i);
             finish();
+            return;
         } else if (!PreferenceManager.isUserLoggedIn()) {
             Intent i = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
+            return;
         } else if (!PreferenceManager.getIsPreferencesSaved()) {
             Intent i = new Intent(HomeActivity.this, MyPreferencesActivity.class);
             startActivity(i);
             finish();
+            return;
         }
 
         facebookManager = new FacebookManager(this);
@@ -127,8 +141,9 @@ public class HomeActivity extends AppCompatActivity
         homeSearch.setHint("Search for Restaurant, Cuisine or Dish");
         homeSearch.setOnClickListener(onHomeSearchClickListener);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        setNavigationFooter(navigationView);
         Menu menu = navigationView.getMenu();
-        Utils.setMenuItemsFont(menu, Utils.getBold(this), this);
+        Utils.setMenuItemsFont(menu, Utils.getRegularFont(this), this);
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tvHi = (TextView) findViewById(R.id.tvHi);
         tvYourSuggestions = (TextView) findViewById(R.id.tvYourSuggestions);
@@ -280,6 +295,7 @@ public class HomeActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         int id = item.getItemId();
         if (id == R.id.myPreferences) {
             Intent intent = new Intent(HomeActivity.this, MyPreferencesActivity.class);
@@ -291,10 +307,10 @@ public class HomeActivity extends AppCompatActivity
             facebookManager.logout();
             googleManager.logout();
             PreferenceManager.resetLoginDetails();
+            drawer.closeDrawer(GravityCompat.START);
             redirectToLogin();
+            return true;
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -390,6 +406,44 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    private void setNavigationFooter(NavigationView nv) {
+        ivFacebook = (ImageButton) nv.findViewById(R.id.ivFacebook);
+        ivTwitter = (ImageButton) nv.findViewById(R.id.ivTwitter);
+        ivInstagram = (ImageButton) nv.findViewById(R.id.ivInstagram);
+        tvVersion = (TextView) nv.findViewById(R.id.tvVersion);
+        tvVersion.setText("Version " + BuildConfig.VERSION_CODE + "." + BuildConfig.VERSION_NAME);
+        ivFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = Utils.getFacebookPageURL(mContext);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+            }
+        });
+
+        ivTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent twitterIntent = Utils.getTwitterIntent(mContext);
+                startActivity(twitterIntent);
+            }
+        });
+
+        ivInstagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mContext.getPackageManager().getPackageInfo(INSTAGRAM_PACKAGE, 0);
+                    Intent instagramIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_SCHEME));
+                    startActivity(instagramIntent);
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_URL)));
+                }
+            }
+        });
+    }
+
     private void setFont() {
         title.setTypeface(Utils.getRegularFont(this));
         homeBnaText.setTypeface(Utils.getSimpsonFont(this));
@@ -400,5 +454,6 @@ public class HomeActivity extends AppCompatActivity
         tvThatsAll.setTypeface(Utils.getRegularFont(this));
         tvEditPrefs.setTypeface(Utils.getRegularFont(this));
         tvEditLocation.setTypeface(Utils.getRegularFont(this));
+        tvVersion.setTypeface(Utils.getRegularFont(this));
     }
 }

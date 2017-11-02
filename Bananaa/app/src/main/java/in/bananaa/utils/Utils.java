@@ -2,9 +2,11 @@ package in.bananaa.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Menu;
@@ -17,6 +19,11 @@ import in.bananaa.R;
 import in.bananaa.object.Tag;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
+
+import static in.bananaa.utils.Constant.FACEBOOK_PAGE_ID;
+import static in.bananaa.utils.Constant.FACEBOOK_URL;
+import static in.bananaa.utils.Constant.TWITTER_URL;
+import static in.bananaa.utils.Constant.TWITTER_USERNAME;
 
 public class Utils {
     public static int[] chipsBackgrounds = new int[]{
@@ -146,5 +153,30 @@ public class Utils {
         }
         sendIntent.setType("text/plain");
         mContext.startActivity(sendIntent);
+    }
+
+    public static String getFacebookPageURL(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
+        }
+    }
+
+    public static Intent getTwitterIntent(Context context) {
+
+        try {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=".concat(TWITTER_USERNAME)));
+
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(TWITTER_URL));
+        }
+
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,13 +134,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
-                btnNext.setText(getString(R.string.start));
-                btnSkip.setVisibility(View.GONE);
+                btnNext.setVisibility(View.GONE);
             } else {
-                // still pages are left
-                btnNext.setText(getString(R.string.next));
-                btnSkip.setVisibility(View.VISIBLE);
+                btnNext.setVisibility(View.VISIBLE);
             }
         }
 
@@ -203,28 +200,43 @@ public class WelcomeActivity extends AppCompatActivity {
 
         private void customizePage1(View view) {
             TextView tvWelcome1Heading = (TextView) view.findViewById(R.id.tvWelcome1Heading);
-            TextView tvWelcome1Desc = (TextView) view.findViewById(R.id.tvWelcome1Desc);
+            TextView tvWelcome1Desc1 = (TextView) view.findViewById(R.id.tvWelcome1Desc1);
+            TextView tvWelcome1Desc2 = (TextView) view.findViewById(R.id.tvWelcome1Desc2);
             tvWelcome1Heading.setTypeface(Utils.getBold(mContext));
-            tvWelcome1Desc.setTypeface(Utils.getRegularFont(mContext));
+            tvWelcome1Desc1.setTypeface(Utils.getBold(mContext));
+            tvWelcome1Desc2.setTypeface(Utils.getBold(mContext));
         }
 
         private void customizePage2(View view) {
             TextView tvWelcome2Heading = (TextView) view.findViewById(R.id.tvWelcome2Heading);
             TextView tvWelcome2Desc = (TextView) view.findViewById(R.id.tvWelcome2Desc);
             tvWelcome2Heading.setTypeface(Utils.getBold(mContext));
-            tvWelcome2Desc.setTypeface(Utils.getRegularFont(mContext));
+            tvWelcome2Desc.setTypeface(Utils.getBold(mContext));
         }
 
         private void customizePage3(View view) {
             TextView tvWelcome3Heading = (TextView) view.findViewById(R.id.tvWelcome3Heading);
-            TextView tvWelcome3Desc = (TextView) view.findViewById(R.id.tvWelcome3Desc);
+            TextView tvWelcome3Desc1 = (TextView) view.findViewById(R.id.tvWelcome3Desc1);
             tvWelcome3Heading.setTypeface(Utils.getBold(mContext));
-            tvWelcome3Desc.setTypeface(Utils.getRegularFont(mContext));
+            tvWelcome3Desc1.setTypeface(Utils.getBold(mContext));
         }
 
         private void customizePage4(View view) {
-            TextView tvWelcome4Desc = (TextView) view.findViewById(R.id.tvWelcome4Desc);
-            tvWelcome4Desc.setTypeface(Utils.getRegularFont(mContext));
+            TextView tvWelcome4Desc1 = (TextView) view.findViewById(R.id.tvWelcome4Desc1);
+            TextView tvWelcome4Desc2 = (TextView) view.findViewById(R.id.tvWelcome4Desc2);
+            TextView tvWelcome4Desc3 = (TextView) view.findViewById(R.id.tvWelcome4Desc3);
+            AppCompatButton btnStart = (AppCompatButton) view.findViewById(R.id.btnStart);
+            tvWelcome4Desc1.setTypeface(Utils.getBold(mContext));
+            tvWelcome4Desc2.setTypeface(Utils.getBold(mContext));
+            tvWelcome4Desc3.setTypeface(Utils.getBold(mContext));
+            btnStart.setTypeface(Utils.getRegularFont(mContext));
+
+            btnStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finishActivity();
+                }
+            });
         }
 
         @Override

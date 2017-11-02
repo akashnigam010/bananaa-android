@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/preference_bg">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -27,15 +27,27 @@
             android:textSize="@dimen/slide_title" />
 
         <TextView
-            android:id="@+id/tvWelcome1Desc"
+            android:id="@+id/tvWelcome1Desc1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:paddingLeft="@dimen/desc_padding"
             android:paddingRight="@dimen/desc_padding"
-            android:text="@string/slide_1_desc"
+            android:text="@string/slide_1_desc1"
             android:textAlignment="center"
-            android:textColor="@color/bnaColor"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/slide_desc" />
+
+        <TextView
+            android:id="@+id/tvWelcome1Desc2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="@dimen/desc_padding"
+            android:paddingRight="@dimen/desc_padding"
+            android:text="@string/slide_1_desc2"
+            android:textAlignment="center"
+            android:textColor="@color/darkGrey"
             android:textSize="@dimen/slide_desc" />
 
     </LinearLayout>

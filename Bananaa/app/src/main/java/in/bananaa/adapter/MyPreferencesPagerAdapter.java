@@ -47,7 +47,7 @@ import in.bananaa.utils.TagChipView;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
-import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
+import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT_PREFEERENCES;
 import static in.bananaa.utils.Utils.chipsBackgrounds;
 
 public class MyPreferencesPagerAdapter extends PagerAdapter {
@@ -57,7 +57,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private RadioGroup rgVegNonVeg;
     private RadioButton rbVeg;
     private RadioButton rbNonVeg;
-    private RadioButton rbAnything;
+    //private RadioButton rbAnything;
 
     private TextView tvPref2Title;
     private EditText etPrefCuisine;
@@ -118,7 +118,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         rgVegNonVeg = (RadioGroup) view.findViewById(R.id.rgVegNonVeg);
         rbVeg = (RadioButton) view.findViewById(R.id.rbVeg);
         rbNonVeg = (RadioButton) view.findViewById(R.id.rbNonVeg);
-        rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
+        //rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
         getVegnonvegPreferences();
         rgVegNonVeg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                @Override
@@ -130,9 +130,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                        case R.id.rbNonVeg:
                            updateTagPreference(2, null, false, true);
                            break;
-                       case R.id.rbAnything:
-                           updateTagPreference(3, null, false, true);
-                           break;
+//                       case R.id.rbAnything:
+//                           updateTagPreference(3, null, false, true);
+//                           break;
                    }
                }
            }
@@ -170,6 +170,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             }
         });
 
+        pageCuisines = 1;
         initAutoCuisinesLoad();
 
         ivCuisineSearchCancel.setOnTouchListener(new View.OnTouchListener() {
@@ -243,7 +244,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                 }
             }
         });
-
+        pageSuggestions = 1;
+        canSearchSuggestions = true;
         initAutoSuggestionsLoad();
 
         ivSuggestionSearchCancel.setOnTouchListener(new View.OnTouchListener() {
@@ -314,9 +316,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                         case 2 :
                             rgVegNonVeg.check(R.id.rbNonVeg);
                             break;
-                        case 3 :
-                            rgVegNonVeg.check(R.id.rbAnything);
-                            break;
+//                        case 3 :
+//                            rgVegNonVeg.check(R.id.rbAnything);
+//                            break;
                         default : break;
                     }
                 }
@@ -338,7 +340,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             @Override
             public void onScrollChanged() {
                 if (svSearchCuisines != null) {
-                    if (svSearchCuisines.getChildAt(0).getBottom() <= (svSearchCuisines.getHeight() + ADD_SCROLL_HEIGHT + svSearchCuisines.getScrollY())) {
+                    if (svSearchCuisines.getChildAt(0).getBottom() <= (svSearchCuisines.getHeight() + ADD_SCROLL_HEIGHT_PREFEERENCES + svSearchCuisines.getScrollY())) {
                         if (canSearchCuisines && !noMoreCuisines) {
                             searchCuisines(++ pageCuisines, null, false);
                         }
@@ -354,7 +356,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             @Override
             public void onScrollChanged() {
                 if (svSearchSuggestions != null) {
-                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + ADD_SCROLL_HEIGHT + svSearchSuggestions.getScrollY())) {
+                    if (svSearchSuggestions.getChildAt(0).getBottom() <= (svSearchSuggestions.getHeight() + ADD_SCROLL_HEIGHT_PREFEERENCES + svSearchSuggestions.getScrollY())) {
                         if (canSearchSuggestions && !noMoreSuggestions) {
                             searchSuggestions(++ pageSuggestions, null, false);
                         }
@@ -457,6 +459,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     }
                     chipList.addAll(chips);
                     cvSuggestions.setChipList(chipList);
+                    noMoreSuggestions = false;
                 } else {
                     noMoreSuggestions = true;
                 }
@@ -520,7 +523,6 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                 }
             }
             client.post(mContext, url, entity, "application/json", new UpdateTagPreferenceHandler());
-            canSearchSuggestions = false;
         } catch (UnsupportedEncodingException e) {
             AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
@@ -544,7 +546,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         tvPref1Title.setTypeface(Utils.getBold(mContext));
         rbVeg.setTypeface(Utils.getRegularFont(mContext));
         rbNonVeg.setTypeface(Utils.getRegularFont(mContext));
-        rbAnything.setTypeface(Utils.getRegularFont(mContext));
+        //rbAnything.setTypeface(Utils.getRegularFont(mContext));
     }
 
     private void setFontPage2() {

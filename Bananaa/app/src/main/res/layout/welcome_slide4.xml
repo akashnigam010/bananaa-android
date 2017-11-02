@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/preference_bg">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -12,16 +12,71 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvWelcome4Desc"
+            android:id="@+id/tvWelcome4Desc1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/desc_padding"
             android:paddingRight="@dimen/desc_padding"
-            android:text="@string/slide_4_desc"
+            android:text="@string/slide_4_desc1"
             android:textAlignment="center"
-            android:textColor="@color/bnaColor"
+            android:textColor="@color/darkGrey"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="20dp">
+
+            <ImageView
+                android:id="@+id/ivQuote"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_quote2" />
+
+            <TextView
+                android:id="@+id/tvWelcome4Desc2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/bnaColor"
+                android:textSize="@dimen/slide_title"
+                android:text="@string/slide_4_desc2"
+                android:layout_alignLeft="@id/ivQuote"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvWelcome4Desc3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="@dimen/desc_padding"
+            android:paddingRight="@dimen/desc_padding"
+            android:text="@string/slide_4_desc3"
+            android:textAlignment="center"
+            android:textColor="@color/darkGrey"
             android:textSize="@dimen/slide_desc" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="130dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_victory"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:padding="20dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/bnaColor"
+            android:textColor="@color/white"
+            android:text="@string/btnStart"
+            android:textSize="16sp"/>
 
 
     </LinearLayout>

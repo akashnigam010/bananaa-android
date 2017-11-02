@@ -31,17 +31,20 @@
     <string name="nonveg">Non Veg</string>
     <string name="anything">Duh! Really Anything</string>
 
-    <string name="slide_1_title">Hi There!</string>
-    <string name="slide_1_desc">Explore the most recommended dishes at restaurants. Photos, foodviews \&amp; ratings. Eat all the good food and never settle for less</string>
+    <string name="slide_1_title">Discover the best</string>
+    <string name="slide_1_desc1">Explore the most recommended dishes at restaurants</string>
+    <string name="slide_1_desc2">Eat the best and never settle for less!</string>
 
-    <string name="slide_2_title">Your Preferences</string>
-    <string name="slide_2_desc">Tell us your food preferences \&amp; we suggest you the best dishes around you that match your taste buds</string>
+    <string name="slide_2_title">Just the way you like</string>
+    <string name="slide_2_desc1">Save your food preferences and we suggest you some irresistible dishes around that you can try</string>
 
     <string name="slide_3_title">Ratings and Foodviews</string>
-    <string name="slide_3_desc">Add your ratings and foodviews of dishes at restaurants and the community gets the best of Bananaa</string>
+    <string name="slide_3_desc1">Look through the rated dishes, their photos and foodviews at a restaurant and then decide what you\'d like to eat</string>
 
-    <string name="slide_4_title">Game of Food</string>
-    <string name="slide_4_desc">Its like that great food-fighter who once said, \"Tum mujhe preference do, main tumhe suggestions dunga\". Give me your preferences and I will give you good food suggestions</string>
+    <string name="slide_4_desc1">Bananaa follows the great food-fighter who once said,</string>
+    <string name="slide_4_desc2">Tum mujhe preferences do, main tumhe suggestions dunga</string>
+    <string name="slide_4_desc3">Give me your food preferences and I shall give you suggestions</string>
+    <string name="btnStart">Let\'s get started</string>
 
     <!--Across App-->
     <string name="name">Bananaa</string>
