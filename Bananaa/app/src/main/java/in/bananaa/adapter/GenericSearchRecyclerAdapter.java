@@ -104,7 +104,7 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
         } catch (Exception e) {
             Debug.e(TAG, e.getMessage());
         }
-        notifyDataSetChanged();
+        notifyItemInserted(getItemCount());
     }
 
     @Override

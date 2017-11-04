@@ -295,7 +295,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         public void onClick(View view) {
             ItemFoodViewDetails itemFoodViewDetails =
                     new ItemFoodViewDetails(null, merchantId, merchantDetails.getName(),
-                            merchantDetails.getShortAddress(), null, true);
+                            merchantDetails.getShortAddress(), null, false);
             Intent i = new Intent(MerchantDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
             startActivityForResult(i, MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE);
@@ -457,6 +457,9 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                     moreResultsAvailable = true;
                 } else {
                     moreResultsAvailable = false;
+                    if (replaceResults) {
+                        myFoodviewsListAdapter.addAll(response.getRecommendations());
+                    }
                 }
             } else {
                 AlertMessages.showError(mContext, mContext.getString(R.string.genericError));

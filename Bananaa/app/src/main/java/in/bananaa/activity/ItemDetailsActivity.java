@@ -52,35 +52,36 @@ import static in.bananaa.utils.Constant.ITEM_DETAILS_TO_FOODVIEW_REQ_CODE;
 public class ItemDetailsActivity extends AppCompatActivity {
     public static final String ITEM_ID = "itemId";
 
-    Integer itemId;
-    AppCompatActivity mContext;
-    ScrollView itemDetailsView;
-    ProgressBar activityLoader;
-    ItemDetailsResponse itemDetails;
+    private Integer itemId;
+    private AppCompatActivity mContext;
+    private ScrollView itemDetailsView;
+    private ProgressBar activityLoader;
+    private ItemDetailsResponse itemDetails;
 
-    ImageView ivBack;
-    ImageView ivShare;
-    ImageView ivImage;
-    ProgressBar pbImageLoader;
-    TextView tvName;
-    TextView tvRestName;
-    TextView tvShortAddress;
-    TextView tvRating;
-    TextView tvTotalRatings;
+    private ImageView ivBack;
+    private ImageView ivShare;
+    private ImageView ivImage;
+    private ProgressBar pbImageLoader;
+    private TextView tvName;
+    private TextView tvRestName;
+    private TextView tvShortAddress;
+    private TextView tvRating;
+    private TextView tvTotalRatings;
 
-    TextView tvMyFoodViewsTxt;
-    ProgressBar pbFoodviewLoader;
-    LinearLayout llMyFoodview;
-    RatingBar rbMyRatings;
-    TextView tvMyFoodview;
-    TextView tvMyFoodviewTimeDiff;
-    Button btnAddFoodview;
-    TextView tvFoodviewsTxt;
+    private TextView tvMyFoodViewsTxt;
+    private ProgressBar pbFoodviewLoader;
+    private LinearLayout llMyFoodview;
+    private RatingBar rbMyRatings;
+    private TextView tvMyFoodview;
+    private TextView tvMyFoodviewTimeDiff;
+    private Button btnAddFoodview;
+    private TextView tvFoodviewsTxt;
 
-    TextView tvNoFoodviews;
-    ListView lvFoodviews;
+    private TextView tvNoFoodviews;
+    private ListView lvFoodviews;
 
-    UserFoodviewsListAdapter userFoodviewsListAdapter;
+    private UserFoodviewsListAdapter userFoodviewsListAdapter;
+    private MyItemFoodviewResponse response;
 
     int pageFoodviews = 1;
     private boolean moreResultsAvailable = true;
@@ -276,7 +277,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            MyItemFoodviewResponse response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
+            response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
             if (response.isResult()) {
                 pbFoodviewLoader.setVisibility(View.GONE);
                 llMyFoodview.setVisibility(View.VISIBLE);
@@ -435,8 +436,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
     View.OnClickListener onAddFoodviewClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(itemDetails.getId(), itemDetails.getMerchantId(), itemDetails.getMerchantName(),
-                    itemDetails.getShortAddress(), itemDetails.getName(), false);
+            ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(itemDetails.getId(),
+                    itemDetails.getMerchantId(), itemDetails.getMerchantName(),
+                    itemDetails.getShortAddress(), itemDetails.getName(), true);
             Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
             i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
             startActivityForResult(i, ITEM_DETAILS_TO_FOODVIEW_REQ_CODE);

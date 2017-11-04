@@ -1,10 +1,12 @@
 package in.bananaa.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -27,6 +31,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -50,6 +55,7 @@ public class FoodviewActivity extends AppCompatActivity {
     public final static String FOODVIEW_DETAILS = "foodviewDetails";
     public static final String RELOAD_FOODVIEWS = "reloadFoodviews";
     private ItemFoodViewDetails itemFoodViewDetails;
+    private MyItemFoodviewResponse response;
     private Integer currentItemId;
     private AppCompatActivity mContext;
 
@@ -68,8 +74,10 @@ public class FoodviewActivity extends AppCompatActivity {
 
     private Float rating;
     private String foodview;
-    private boolean itemNotSelected = true;
+    private boolean canPerformSearch = true;
     private boolean isRatingOrFoodviewChanged = false;
+
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,18 +117,48 @@ public class FoodviewActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.foodview_modal_menu, menu);
-        Utils.setMenuItemsFont(menu, Utils.getBold(this), this);
-        return super.onCreateOptionsMenu(menu);
+    public boolean onCreateOptionsMenu(Menu menuItems) {
+        getMenuInflater().inflate(R.menu.foodview_modal_menu, menuItems);
+        menu = menuItems;
+        Utils.setMenuItemsFont(menuItems, Utils.getBold(this), this);
+        return super.onCreateOptionsMenu(menuItems);
+    }
+
+    private void addDeleteMenu() {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem mi = menu.getItem(i);
+            if (mi.getItemId() == R.id.action_delete) {
+                mi.setVisible(true);
+            }
+        }
+
+    }
+
+    private void removeDeleteMenu() {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem mi = menu.getItem(i);
+            if (mi.getItemId() == R.id.action_delete) {
+                mi.setVisible(false);
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishActivity();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            finishActivity();
         }
+
+        if (id == R.id.action_delete) {
+            alertForDelete(mContext.getString(R.string.sureToDelete));
+        }
+
         if (id == R.id.action_save) {
             if (Utils.isEmpty(etDishSearch.getText().toString())) {
                 Toast.makeText(mContext, "Please search for a dish", Toast.LENGTH_SHORT).show();
@@ -130,11 +168,11 @@ public class FoodviewActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "Please provide a rating.", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (etFoodView.getText().length() < 50) {
+            if (etFoodView.getText().length() > 0 && etFoodView.getText().length() < 50) {
                 Toast.makeText(mContext, "Foodview must be minimum 50 characters long.", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (etFoodView.getText().toString().equals(foodview)) {
+            if (dishRatingBar.getRating() == rating && etFoodView.getText().toString().equals(foodview)) {
                 finishActivity();
                 return false;
             }
@@ -146,6 +184,7 @@ public class FoodviewActivity extends AppCompatActivity {
                     asyncStart();
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("id", currentItemId);
+                    jsonObject.put("rating", dishRatingBar.getRating());
                     jsonObject.put("description", etFoodView.getText());
                     StringEntity entity = new StringEntity(jsonObject.toString());
                     AsyncHttpClient client = new AsyncHttpClient();
@@ -154,14 +193,81 @@ public class FoodviewActivity extends AppCompatActivity {
                     client.post(mContext, URLs.SAVE_FOODVIEW, entity, "application/json", new SaveFoodviewResponseHandler());
                 } catch (UnsupportedEncodingException e) {
                     AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-                    e.printStackTrace();
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-                    e.printStackTrace();
                 }
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void alertForDelete(String message) {
+        final Dialog confirmDialog = new Dialog(mContext);
+        confirmDialog.setCancelable(true);
+        confirmDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        confirmDialog.setContentView(R.layout.dialog_confirm);
+        confirmDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        TextView tvMessage = (TextView) confirmDialog.findViewById(R.id.tvMessage);
+        AppCompatButton btnYes = (AppCompatButton) confirmDialog.findViewById(R.id.btnYes);
+        AppCompatButton btnNo = (AppCompatButton) confirmDialog.findViewById(R.id.btnNo);
+
+        tvMessage.setText(message);
+
+        tvMessage.setTypeface(Utils.getRegularFont(mContext));
+        btnYes.setTypeface(Utils.getRegularFont(mContext));
+        btnNo.setTypeface(Utils.getRegularFont(mContext));
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Utils.isInternetConnected(mContext)) {
+                    AlertMessages.noInternet(mContext);
+                    return;
+                } else {
+                    try {
+                        asyncStart();
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("id", response.getRecommendation().getId());
+                        StringEntity entity = new StringEntity(jsonObject.toString());
+                        AsyncHttpClient client = new AsyncHttpClient();
+                        client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
+                        client.setTimeout(Constant.TIMEOUT);
+                        client.post(mContext, URLs.DELETE_FOODVIEW, entity, "application/json", new DeleteFoodviewResponseHandler());
+                    } catch (UnsupportedEncodingException e) {
+                        AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                    } catch (JSONException e) {
+                        AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                    }
+                }
+            }
+        });
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog.cancel();
+            }
+        });
+        confirmDialog.show();
+    }
+
+    private class DeleteFoodviewResponseHandler extends AsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            StatusResponse response = new Gson().fromJson(new String(responseBody), StatusResponse.class);
+            if (response.isResult()) {
+                Toast.makeText(mContext, "Your foodview has been deleted.", Toast.LENGTH_SHORT).show();
+                isRatingOrFoodviewChanged = true;
+                finishActivity();
+            } else {
+                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        }
     }
 
     private class SaveFoodviewResponseHandler extends AsyncHttpResponseHandler {
@@ -196,11 +302,15 @@ public class FoodviewActivity extends AppCompatActivity {
     }
 
     private void setItemDetails() {
-        if (!itemFoodViewDetails.isNewFoodview()) {
-            itemNotSelected = false;
+        if (itemFoodViewDetails.isSetDishDetails()) {
+            canPerformSearch = false;
             etDishSearch.setText(itemFoodViewDetails.getItemName());
-            //etDishSearch.setSelection(etDishSearch.getText().length());
+            lvDishSearchResults.setVisibility(View.GONE);
+            rateAndReviewLayout.setVisibility(View.VISIBLE);
             getMyFoodviewDetails();
+        } else {
+            lvDishSearchResults.setVisibility(View.VISIBLE);
+            rateAndReviewLayout.setVisibility(View.GONE);
         }
     }
 
@@ -233,12 +343,12 @@ public class FoodviewActivity extends AppCompatActivity {
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (s.toString().length() >= 2 && itemNotSelected) {
+                        if (s.toString().length() >= 2 && canPerformSearch) {
                             lvDishSearchResults.setVisibility(View.VISIBLE);
                             rateAndReviewLayout.setVisibility(View.GONE);
                             doSearch(s.toString());
                         } else {
-                            itemNotSelected = true;
+                            canPerformSearch = true;
                         }
                     }
                 };
@@ -251,7 +361,7 @@ public class FoodviewActivity extends AppCompatActivity {
         @Override
         public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
             if (v == 0.0f) {
-                return;
+                //return;
             }
             if (!Utils.isInternetConnected(mContext)) {
                 AlertMessages.noInternet(mContext);
@@ -382,7 +492,7 @@ public class FoodviewActivity extends AppCompatActivity {
         lvDishSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                itemNotSelected = false;
+                canPerformSearch = false;
                 DishSearchItem dish = dishSearchAdapter.getItem(position);
                 currentItemId = dish.getId();
                 etDishSearch.setText(dish.getName());
@@ -416,10 +526,10 @@ public class FoodviewActivity extends AppCompatActivity {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             asyncEnd();
-            MyItemFoodviewResponse response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
+            response = new Gson().fromJson(new String(responseBody), MyItemFoodviewResponse.class);
             if (response.isResult()) {
-                dishRatingBar.setOnRatingBarChangeListener(null);
                 if (response.isRecommended()) {
+                    dishRatingBar.setOnRatingBarChangeListener(null);
                     rating = Float.parseFloat(response.getRecommendation().getRating());
                     dishRatingBar.setRating(rating);
                     if (!Utils.isEmpty(response.getRecommendation().getDescription())) {
@@ -429,13 +539,15 @@ public class FoodviewActivity extends AppCompatActivity {
                         foodview = "";
                         etFoodView.setText("");
                     }
+                    addDeleteMenu();
                 } else {
                     rating = 0.0f;
                     dishRatingBar.setRating(0.0f);
                     foodview = "";
                     etFoodView.setText("");
+                    dishRatingBar.setOnRatingBarChangeListener(onRatingBarChangeListener);
+                    removeDeleteMenu();
                 }
-                dishRatingBar.setOnRatingBarChangeListener(onRatingBarChangeListener);
                 rateAndReviewLayout.requestFocus();
                 lvDishSearchResults.setVisibility(View.GONE);
                 rateAndReviewLayout.setVisibility(View.VISIBLE);

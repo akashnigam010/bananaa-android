@@ -3,7 +3,6 @@ package in.bananaa.object;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class GenericResponse implements Serializable {
 
@@ -11,7 +10,7 @@ public class GenericResponse implements Serializable {
     private boolean result;
 
     @SerializedName("statusCodes")
-    private List<StatusCode> statusCodes;
+    private ArrayOfStatusCode statusCodes;
 
     public boolean isResult() {
         return result;
@@ -21,11 +20,11 @@ public class GenericResponse implements Serializable {
         this.result = result;
     }
 
-    public List<StatusCode> getStatusCodes() {
+    public ArrayOfStatusCode getStatusCodes() {
         return statusCodes;
     }
 
-    public void setStatusCodes(List<StatusCode> statusCodes) {
+    public void setStatusCodes(ArrayOfStatusCode statusCodes) {
         this.statusCodes = statusCodes;
     }
 }

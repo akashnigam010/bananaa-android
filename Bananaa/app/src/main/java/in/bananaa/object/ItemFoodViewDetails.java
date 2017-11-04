@@ -8,16 +8,16 @@ public class ItemFoodViewDetails implements Serializable {
     private String restName;
     private String locality;
     private String itemName;
-    private boolean isNewFoodview;
+    private boolean isSetDishDetails;
 
     public ItemFoodViewDetails(Integer itemId, Integer merchantId, String restName, String locality,
-                               String itemName, boolean isNewFoodview) {
+                               String itemName, boolean isSetDishDetails) {
         this.itemId = itemId;
         this.merchantId = merchantId;
         this.restName = restName;
         this.itemName = itemName;
         this.locality = locality;
-        this.isNewFoodview = isNewFoodview;
+        this.isSetDishDetails = isSetDishDetails;
     }
 
     public Integer getItemId() {
@@ -60,11 +60,11 @@ public class ItemFoodViewDetails implements Serializable {
         this.merchantId = merchantId;
     }
 
-    public boolean isNewFoodview() {
-        return isNewFoodview;
+    public boolean isSetDishDetails() {
+        return isSetDishDetails;
     }
 
-    public void setNewFoodview(boolean newFoodview) {
-        isNewFoodview = newFoodview;
+    public void setSetDishDetails(boolean setDishDetails) {
+        isSetDishDetails = setDishDetails;
     }
 }

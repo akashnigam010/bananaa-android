@@ -172,8 +172,7 @@ public class MyFoodviewsListAdapter extends BaseAdapter {
     private void openRecommendationModal(Foodview foodview) {
         ItemFoodViewDetails itemFoodViewDetails =
                 new ItemFoodViewDetails(foodview.getItemId(),
-                        merchantId, merchantName, locality, foodview.getName(),
-                        false);
+                        merchantId, merchantName, locality, foodview.getName(), true);
         Intent i = new Intent(mContext, FoodviewActivity.class);
         i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
         mContext.startActivityForResult(i, MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE);

@@ -60,15 +60,15 @@ public class AlertMessages {
 
     public void setBothButton(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(message).setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setMessage(message).setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
 
         builder.setMessage(message).setCancelable(false)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -76,7 +76,6 @@ public class AlertMessages {
 
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 
     public void showCustomMessage(String message) {

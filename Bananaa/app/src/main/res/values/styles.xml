@@ -44,7 +44,13 @@
         <item name="android:progressDrawable">@drawable/dish_ratingbar</item>
         <item name="android:minHeight">23dp</item>
         <item name="android:maxHeight">70dp</item>
+    </style>
 
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert"> <!-- Used for the buttons -->
+        <item name="android:textStyle">bold</item>
+        <item name="colorAccent">@android:color/holo_blue_bright</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
 </resources>

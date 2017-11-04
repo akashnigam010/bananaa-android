@@ -101,15 +101,6 @@ public class Utils {
         return finalStr;
     }
 
-    public static String getVegnonvegString(Integer id) {
-        switch(id) {
-            case 1 : return "Vegan by heart";
-            case 2 : return "Non Vegan - cus I love plants way too much";
-            case 3 : return "Veg or non veg? Duh, give me anything";
-            default : return "";
-        }
-    }
-
     public static String getUserLevel(Float level) {
         if (level <= 2.5) {
             return "Beginner";

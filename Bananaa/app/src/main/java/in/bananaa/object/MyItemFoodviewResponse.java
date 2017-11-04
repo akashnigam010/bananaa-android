@@ -1,7 +1,7 @@
 package in.bananaa.object;
 
 public class MyItemFoodviewResponse extends GenericResponse {
-    Foodview recommendation;
+    private Foodview recommendation;
     private boolean recommended;
 
     public Foodview getRecommendation() {
