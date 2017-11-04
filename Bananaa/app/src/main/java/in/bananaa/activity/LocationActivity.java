@@ -1,6 +1,5 @@
 package in.bananaa.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,6 @@ import cz.msebera.android.httpclient.Header;
 import in.bananaa.R;
 import in.bananaa.adapter.CityAdapter;
 import in.bananaa.object.location.LocalitiesResponse;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.CustomListView;
 import in.bananaa.utils.URLs;
@@ -32,7 +30,7 @@ public class LocationActivity extends AppCompatActivity {
     TextView disclaimer2;
     CustomListView lvCities;
     CityAdapter cityAdapter;
-    Context mContext;
+    AppCompatActivity mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +62,14 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     private void getCities() {
+        Utils.checkInternetConnectionRollBack(this);
         try {
             asyncStart();
             AsyncHttpClient client = new AsyncHttpClient();
             client.setTimeout(Constant.TIMEOUT);
             client.get(mContext, URLs.GET_LOCATIONS, null, "application/json", new GetLocationsResponseHandler());
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(this, e);
         }
     }
 
@@ -83,14 +82,14 @@ public class LocationActivity extends AppCompatActivity {
             if (response.isResult()) {
                 cityAdapter.addAll(response.getCities());
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 

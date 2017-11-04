@@ -28,7 +28,6 @@ import com.plumillonforge.android.chipview.ChipViewAdapter;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,6 @@ import in.bananaa.object.SearchResultType;
 import in.bananaa.object.TagsPreference;
 import in.bananaa.object.TagsPreferencesResponse;
 import in.bananaa.object.VegnonvegPreferenceResponse;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.OnTagChipClickListener;
 import in.bananaa.utils.PreferenceManager;
@@ -289,6 +287,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         });
     }
     private void getVegnonvegPreferences() {
+        Utils.checkInternetConnectionRollBack(mContext);
         try {
             JSONObject jsonObject = new JSONObject();
             StringEntity entity = new StringEntity(jsonObject.toString());
@@ -296,10 +295,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(mContext, URLs.GET_VEGNONVEG_PREFERENCE, entity, "application/json", new GetPreferenceHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -323,13 +320,13 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     }
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -367,6 +364,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void searchCuisines(Integer page, String searchString, boolean replaceExistingData) {
+        if (!Utils.checkIfInternetConnectedAndToast(mContext)) {
+            return;
+        }
         try {
             asyncStart(SearchResultType.CUISINE);
             JSONObject jsonObject = new JSONObject();
@@ -378,14 +378,15 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             client.setTimeout(Constant.TIMEOUT);
             client.post(mContext, URLs.SEARCH_CUISINES, entity, "application/json", new GetCuisinesHandler(replaceExistingData));
             canSearchCuisines = false;
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
     private void searchSuggestions(Integer page, String searchString, boolean replaceExistingData) {
+        if (!Utils.checkIfInternetConnectedAndToast(mContext)) {
+            return;
+        }
         try {
             asyncStart(SearchResultType.SUGGESTION);
             JSONObject jsonObject = new JSONObject();
@@ -397,10 +398,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
             client.setTimeout(Constant.TIMEOUT);
             client.post(mContext, URLs.SEARCH_SUGGESTIONS, entity, "application/json", new GetSuggestionsHandler(replaceExistingData));
             canSearchSuggestions = false;
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -427,7 +426,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     noMoreCuisines = true;
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
             asyncEnd(SearchResultType.CUISINE);
             canSearchCuisines = true;
@@ -436,7 +435,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd(SearchResultType.CUISINE);
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -464,7 +463,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                     noMoreSuggestions = true;
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
             asyncEnd(SearchResultType.SUGGESTION);
             canSearchSuggestions = true;
@@ -473,7 +472,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd(SearchResultType.SUGGESTION);
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -495,6 +494,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     }
 
     private void updateTagPreference(Integer id, SearchResultType type, boolean isRemove, boolean isSaveVegnonvegPref) {
+        if (!Utils.checkIfInternetConnectedAndToast(mContext)) {
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", id);
@@ -523,10 +525,8 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                 }
             }
             client.post(mContext, url, entity, "application/json", new UpdateTagPreferenceHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
     public class UpdateTagPreferenceHandler extends AsyncHttpResponseHandler {
@@ -538,7 +538,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+            Utils.responseFailure(mContext);
         }
     }
 

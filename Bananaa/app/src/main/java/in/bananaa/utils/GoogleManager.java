@@ -40,7 +40,7 @@ public class GoogleManager implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        AlertMessages.showError(activity, activity.getString(R.string.genericError));
+        Utils.genericErrorToast(activity, activity.getString(R.string.genericError));
     }
 
     public GoogleSignInResult onActivityResult(int requestCode, int resultCode, Intent data) {

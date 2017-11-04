@@ -1,6 +1,5 @@
 package in.bananaa.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +25,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
@@ -35,13 +32,12 @@ import in.bananaa.adapter.GlobalSearchAdapter;
 import in.bananaa.object.SearchItem;
 import in.bananaa.object.SearchResponse;
 import in.bananaa.object.SearchResultType;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 public class SearchActivity extends AppCompatActivity {
-    Context mContext;
+    AppCompatActivity mContext;
     TextView tvTitle;
     EditText etSearch;
     ListView lvSearchResults;
@@ -166,8 +162,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void doSearch(String searchString) {
-        if (!Utils.isInternetConnected(SearchActivity.this)) {
-            AlertMessages.noInternet(mContext);
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
             return;
         } else {
             try {
@@ -178,10 +173,8 @@ public class SearchActivity extends AppCompatActivity {
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.setTimeout(Constant.TIMEOUT);
                 client.post(SearchActivity.this, URLs.GLOBAL_SEARCH, entity, "application/json", new GlobalSearchResponseHandler());
-            } catch (UnsupportedEncodingException e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             } catch (Exception e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.exceptionOccurred(this, e);
             }
         }
     }
@@ -202,14 +195,14 @@ public class SearchActivity extends AppCompatActivity {
                     llSearchIntro.setVisibility(View.VISIBLE);
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 

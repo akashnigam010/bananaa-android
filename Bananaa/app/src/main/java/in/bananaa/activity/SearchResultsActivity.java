@@ -1,7 +1,6 @@
 package in.bananaa.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
@@ -24,8 +23,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
@@ -34,7 +31,6 @@ import in.bananaa.object.SearchResultType;
 import in.bananaa.object.genericSearch.GenericSearchResponse;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.URLs;
@@ -51,7 +47,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     public static final String SEARCH_STRING = "searchString";
     public static final String ALL_PLACES = "All places nearby";
 
-    private Context mContext;
+    private AppCompatActivity mContext;
     private TextView tvLocation;
     private TextView tvTitle;
     private NestedScrollView svSearchResults;
@@ -87,7 +83,8 @@ public class SearchResultsActivity extends AppCompatActivity {
         searchString = (String) getIntent().getSerializableExtra(SEARCH_STRING);
 
         if (isTagSearch == null || tagName == null) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.genericErrorToast(this, this.getString(R.string.genericError));
+            finish();
             return;
         }
 
@@ -203,32 +200,26 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void loadResults(Integer page) {
-        if (!Utils.isInternetConnected(SearchResultsActivity.this)) {
-            AlertMessages.noInternet(mContext);
-            return;
-        } else {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                LocationStore locationStore = PreferenceManager.getStoredLocation();
-                jsonObject.put("isCity", locationStore.getLocationType() == LocationType.CITY ? true : false);
-                if (type != null) {
-                    jsonObject.put("type", type.toString());
-                }
-                jsonObject.put("page", page);
-                jsonObject.put("tagId", tagId);
-                jsonObject.put("searchString", searchString);
-                jsonObject.put("locationId", locationStore.getId());
-                jsonObject.put("isTagSearch", isTagSearch);
-                StringEntity entity = new StringEntity(jsonObject.toString());
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.setTimeout(Constant.TIMEOUT);
-                client.post(SearchResultsActivity.this, URLs.GENERIC_SEARCH, entity, "application/json", new GenericSearchResponseHandler(page));
-                canLoadMoreResults = false;
-            } catch (UnsupportedEncodingException e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-            } catch (Exception e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+        Utils.checkInternetConnectionRollBack(this);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            LocationStore locationStore = PreferenceManager.getStoredLocation();
+            jsonObject.put("isCity", locationStore.getLocationType() == LocationType.CITY ? true : false);
+            if (type != null) {
+                jsonObject.put("type", type.toString());
             }
+            jsonObject.put("page", page);
+            jsonObject.put("tagId", tagId);
+            jsonObject.put("searchString", searchString);
+            jsonObject.put("locationId", locationStore.getId());
+            jsonObject.put("isTagSearch", isTagSearch);
+            StringEntity entity = new StringEntity(jsonObject.toString());
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.setTimeout(Constant.TIMEOUT);
+            client.post(SearchResultsActivity.this, URLs.GENERIC_SEARCH, entity, "application/json", new GenericSearchResponseHandler(page));
+            canLoadMoreResults = false;
+        } catch (Exception e) {
+            Utils.exceptionOccurred(this, e);
         }
     }
 
@@ -253,13 +244,13 @@ public class SearchResultsActivity extends AppCompatActivity {
                     llNoMoreResults.setVisibility(View.VISIBLE);
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 

@@ -1,6 +1,5 @@
 package in.bananaa.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,14 +19,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
 import in.bananaa.object.login.ClientType;
 import in.bananaa.object.login.LoginResponse;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
@@ -36,7 +32,7 @@ import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
-    Context mContext;
+    AppCompatActivity mContext;
     TextView tvLogin;
     ProgressBar progress;
     Button fbLoginBtn;
@@ -91,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(FacebookException error) {
-                    AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                    Utils.exceptionOccurred(mContext, error);
                 }
             });
         }
@@ -129,6 +125,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin(String authCode, ClientType clientType) {
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();
@@ -138,10 +137,8 @@ public class LoginActivity extends AppCompatActivity {
             AsyncHttpClient client = new AsyncHttpClient();
             client.setTimeout(Constant.TIMEOUT);
             client.post(LoginActivity.this, URLs.LOGIN, entity, "application/json", new LoginActivity.LoginResponseHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(this, e);
         }
     }
 
@@ -155,14 +152,14 @@ public class LoginActivity extends AppCompatActivity {
                 saveLoginDetails(response);
                 startActivity();
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 

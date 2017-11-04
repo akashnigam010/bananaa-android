@@ -48,6 +48,16 @@ public class PreferenceManager extends Application implements Application.Activi
         prefEditor.commit();
     }
 
+    public static void setFirstName(String firstName) {
+        prefEditor.putString(FIRST_NAME, firstName);
+        prefEditor.commit();
+    }
+
+    public static void setLastName(String lastName) {
+        prefEditor.putString(LAST_NAME, lastName);
+        prefEditor.commit();
+    }
+
     public static Boolean isUserLoggedIn() {
         return preferences.getBoolean(IS_LOGGED_IN, false);
     }

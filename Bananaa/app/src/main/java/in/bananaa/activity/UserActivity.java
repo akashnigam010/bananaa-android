@@ -1,9 +1,9 @@
 package in.bananaa.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -26,8 +26,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
@@ -35,13 +33,14 @@ import in.bananaa.adapter.RatingsAndFoodviewsListAdapter;
 import in.bananaa.object.FoodviewsResponse;
 import in.bananaa.object.Profile;
 import in.bananaa.object.ProfileResponse;
-import in.bananaa.utils.AlertMessages;
+import in.bananaa.object.login.LoginUserDto;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
 import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
+import static in.bananaa.utils.Constant.USER_TO_EDIT_PROFILE;
 import static in.bananaa.utils.Constant.USER_TO_PREF_REQ_CODE;
 
 public class UserActivity extends AppCompatActivity {
@@ -52,6 +51,7 @@ public class UserActivity extends AppCompatActivity {
     private TextView tvFoodbookTxt;
     private ImageView ivImage;
     private TextView tvName;
+    private ImageView ivEdit;
     private TextView tvLevel;
     private TextView tvRatingCount;
     private TextView tvFoodviewCount;
@@ -65,7 +65,7 @@ public class UserActivity extends AppCompatActivity {
     private TextView tvRatingsAndFoodviewsTxt;
     private ListView lvFoodviews;
 
-    private Context mContext;
+    private AppCompatActivity mContext;
     private Integer userId;
     private Profile userProfile;
 
@@ -82,7 +82,8 @@ public class UserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user);
         userId = (Integer) getIntent().getSerializableExtra(USER_ID);
         if (userId == null) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.genericErrorToast(this, this.getString(R.string.genericError));
+            finish();
             return;
         }
         pbUserProfile = (ProgressBar) findViewById(R.id.pbUserProfile);
@@ -91,6 +92,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void getUserProfile() {
+        Utils.checkInternetConnectionRollBack(this);
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();
@@ -100,10 +102,8 @@ public class UserActivity extends AppCompatActivity {
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(UserActivity.this, URLs.GET_PROFILE, entity, "application/json", new ProfileResponseHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(this, e);
         }
     }
 
@@ -116,15 +116,16 @@ public class UserActivity extends AppCompatActivity {
             if (response.isResult()) {
                 userProfile = response.getProfile();
                 initiateView();
+                new updateUserDetailsInDevice().execute();
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -133,6 +134,7 @@ public class UserActivity extends AppCompatActivity {
         tvFoodbookTxt = (TextView) findViewById(R.id.tvFoodbookTxt);
         ivImage = (ImageView) findViewById(R.id.ivImage);
         tvName = (TextView) findViewById(R.id.tvName);
+        ivEdit = (ImageView) findViewById(R.id.ivEdit);
         tvLevel = (TextView) findViewById(R.id.tvLevel);
         tvRatingCount = (TextView) findViewById(R.id.tvRatingCount);
         tvFoodviewCount = (TextView) findViewById(R.id.tvFoodviewCount);
@@ -173,6 +175,17 @@ public class UserActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        ivEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(UserActivity.this, EditUserDetailsActivity.class);
+                i.putExtra(EditUserDetailsActivity.NAME, userProfile.getFullName());
+                i.putExtra(EditUserDetailsActivity.STATUS, userProfile.getStatus());
+                startActivityForResult(i, USER_TO_EDIT_PROFILE);
+            }
+        });
+
         setUserDetails();
         setFont();
         getRatingsAndFoodviews(1);
@@ -181,7 +194,7 @@ public class UserActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-        if (requestCode == USER_TO_PREF_REQ_CODE && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == USER_TO_PREF_REQ_CODE || requestCode == USER_TO_EDIT_PROFILE) && resultCode == Activity.RESULT_OK) {
             recreate();
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -212,7 +225,8 @@ public class UserActivity extends AppCompatActivity {
                 ivImage.setImageDrawable(circularBitmapDrawable);
             }
         });
-        tvName.setText(userProfile.getName());
+
+        tvName.setText(userProfile.getFullName());
         tvRatingCount.setText(userProfile.getRatingCount() + " Ratings");
         tvFoodviewCount.setText(userProfile.getFoodviewCount() + " Foodviews");
         tvLevel.setText(Utils.getUserLevel(userProfile.getLevel()));
@@ -245,6 +259,9 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void getRatingsAndFoodviews(Integer page) {
+        if (!Utils.isInternetConnected(this)) {
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", userProfile.getId());
@@ -255,10 +272,8 @@ public class UserActivity extends AppCompatActivity {
             client.setTimeout(Constant.TIMEOUT);
             client.post(UserActivity.this, URLs.GET_ALL_RECOMMENDATIONS, entity, "application/json", new FoodviewResponseHandler());
             canLoadFoodviews = false;
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(this, e);
         }
     }
 
@@ -276,13 +291,13 @@ public class UserActivity extends AppCompatActivity {
                     moreResultsAvailable = false;
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -309,5 +324,20 @@ public class UserActivity extends AppCompatActivity {
     private void asyncEnd() {
         svUserProfile.setVisibility(View.VISIBLE);
         pbUserProfile.setVisibility(View.GONE);
+    }
+
+    private class updateUserDetailsInDevice extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            LoginUserDto user = PreferenceManager.getLoginDetails();
+            if (!user.getFirstName().equals(userProfile.getFirstName())) {
+                PreferenceManager.setFirstName(userProfile.getFirstName());
+            }
+            if (!user.getLastName().equals(userProfile.getLastName())) {
+                PreferenceManager.setLastName(userProfile.getLastName());
+            }
+            return null;
+        }
     }
 }

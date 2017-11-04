@@ -1,5 +1,6 @@
 package in.bananaa.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,10 +13,12 @@ import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.widget.Toast;
 
 import java.util.List;
 
 import in.bananaa.R;
+import in.bananaa.object.GenericResponse;
 import in.bananaa.object.Tag;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
@@ -78,15 +81,46 @@ public class Utils {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    public static void checkInternetConnectionRollBack(Activity activity) {
+        if (!isInternetConnected(activity)) {
+            Toast.makeText(activity, activity.getString(R.string.noInternet), Toast.LENGTH_SHORT).show();
+            activity.finish();
+        }
+    }
+
+    public static boolean checkIfInternetConnectedAndToast(Activity activity) {
+        if (!isInternetConnected(activity)) {
+            Toast.makeText(activity, activity.getString(R.string.noInternet), Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static void genericErrorToast(Activity activity, String message) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void exceptionOccurred(Activity activity, Exception e) {
+        Toast.makeText(activity, activity.getString(R.string.genericError), Toast.LENGTH_SHORT).show();
+    }
+
+    public static void responseError(Activity activity, GenericResponse response) {
+        Toast.makeText(activity, activity.getString(R.string.genericError), Toast.LENGTH_SHORT).show();
+    }
+
+    public static void responseFailure(Activity activity) {
+        Toast.makeText(activity, activity.getString(R.string.genericError), Toast.LENGTH_SHORT).show();
+    }
+
     public static boolean isNotEmpty(String str) {
         return !isEmpty(str);
     }
 
     public static boolean isEmpty(String str) {
-        if (str == null)
+        if (str == null || str.toString().trim().length() == 0) {
             return true;
-        else if (str.toString().trim().length() == 0)
-            return true;
+        }
         return false;
     }
 
@@ -105,7 +139,7 @@ public class Utils {
         if (level <= 2.5) {
             return "Beginner";
         } else if (level > 2.5 && level <= 3.0) {
-            return "Advance User";
+            return "Advance Foodviewer";
         } else if (level > 3.0 && level <= 4.0) {
             return "Super Foodviewer";
         } else {

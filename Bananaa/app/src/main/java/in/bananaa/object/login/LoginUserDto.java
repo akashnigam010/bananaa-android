@@ -35,6 +35,9 @@ public class LoginUserDto {
     }
 
     public String getLastName() {
+        if (this.lastName == null) {
+            this.lastName = "";
+        }
         return lastName;
     }
 

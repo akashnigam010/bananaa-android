@@ -12,8 +12,11 @@ public class Profile implements Serializable {
     @SerializedName("imageUrl")
     private String imageUrl;
 
-    @SerializedName("name")
-    private String name;
+    @SerializedName("firstName")
+    private String firstName;
+
+    @SerializedName("lastName")
+    private String lastName;
 
     @SerializedName("level")
     private Float level;
@@ -50,14 +53,6 @@ public class Profile implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Float getLevel() {
@@ -114,5 +109,28 @@ public class Profile implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        if (this.lastName == null) {
+            this.lastName = "";
+        }
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
     }
 }

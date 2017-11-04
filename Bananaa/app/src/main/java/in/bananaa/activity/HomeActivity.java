@@ -1,7 +1,6 @@
 package in.bananaa.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -38,8 +37,6 @@ import com.loopj.android.http.BuildConfig;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
@@ -48,7 +45,6 @@ import in.bananaa.object.foodSuggestions.FoodSuggestionsResponse;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
 import in.bananaa.object.login.LoginUserDto;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.FacebookManager;
 import in.bananaa.utils.GoogleManager;
@@ -65,7 +61,7 @@ import static in.bananaa.utils.Constant.INSTAGRAM_URL;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    Context mContext;
+    AppCompatActivity mContext;
     FacebookManager facebookManager;
     GoogleManager googleManager;
     NestedScrollView svHome;
@@ -352,6 +348,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void loadFoodSuggestions(Integer page) {
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            return;
+        }
         try {
             LocationStore location = PreferenceManager.getStoredLocation();
             JSONObject jsonObject = new JSONObject();
@@ -364,10 +363,8 @@ public class HomeActivity extends AppCompatActivity
             client.setTimeout(Constant.TIMEOUT);
             client.post(HomeActivity.this, URLs.GET_FOOD_SUGGESTIONS, entity, "application/json", new FoodSuggestionsHandler(page));
             canLoadFoodSuggestions = false;
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(this, e);
         }
     }
 
@@ -396,13 +393,13 @@ public class HomeActivity extends AppCompatActivity
                     llNoMoreResults.setVisibility(View.VISIBLE);
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 

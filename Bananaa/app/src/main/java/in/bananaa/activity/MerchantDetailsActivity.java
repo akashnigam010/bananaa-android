@@ -26,8 +26,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
@@ -38,7 +36,6 @@ import in.bananaa.object.FoodviewsResponse;
 import in.bananaa.object.ItemFoodViewDetails;
 import in.bananaa.object.MerchantDetailsResponse;
 import in.bananaa.object.PopularItemsResponse;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.CustomListView;
 import in.bananaa.utils.PreferenceManager;
@@ -104,7 +101,8 @@ public class MerchantDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_merchant_details);
         merchantId = (Integer) getIntent().getSerializableExtra(MERCHANT_ID);
         if (merchantId == null) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.genericErrorToast(this, this.getString(R.string.genericError));
+            finish();
             return;
         }
         merchantDetailsView = (ScrollView) findViewById(R.id.merchantDetailsView);
@@ -113,6 +111,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     }
 
     private void getMerchantDetails() {
+        Utils.checkInternetConnectionRollBack(this);
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();
@@ -122,10 +121,8 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(MerchantDetailsActivity.this, URLs.MERCHANT_DETAILS, entity, "application/json", new DetailsResponseHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -137,14 +134,14 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             if (merchantDetails.isResult()) {
                 initializeView();
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, merchantDetails);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -246,6 +243,9 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     View.OnClickListener onClickSeeMoreListner = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (!Utils.checkIfInternetConnectedAndToast(mContext)) {
+                return;
+            }
             try {
                 pbSeeMore.setVisibility(View.VISIBLE);
                 JSONObject jsonObject = new JSONObject();
@@ -256,10 +256,8 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                 client.setTimeout(Constant.TIMEOUT);
                 client.post(MerchantDetailsActivity.this, URLs.GET_POPULAR_ITEMS, entity, "application/json", new PopularItemsResponseHandler());
                 canLoadFoodviews = false;
-            } catch (UnsupportedEncodingException e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
             } catch (Exception e) {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.exceptionOccurred(mContext, e);
             }
         }
     };
@@ -273,13 +271,13 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                 itemListAdapter.addAll(response.getItems());
                 seeMoreSection.setVisibility(View.GONE);
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -418,6 +416,9 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     }
 
     private void getMyFoodviews(Integer page, boolean replaceResults) {
+        if (!Utils.isInternetConnected(mContext)) {
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("merchantId", merchantId);
@@ -428,10 +429,8 @@ public class MerchantDetailsActivity extends AppCompatActivity {
             client.setTimeout(Constant.TIMEOUT);
             client.post(MerchantDetailsActivity.this, URLs.GET_MY_FOODVIEWS, entity, "application/json", new FoodviewResponseHandler(replaceResults));
             canLoadFoodviews = false;
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -461,13 +460,13 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 }

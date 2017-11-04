@@ -11,6 +11,7 @@ public class Constant {
     public static final Integer USER_TO_PREF_REQ_CODE = 1004;
     public static final Integer HOME_TO_LOCATION = 1005;
     public static final Integer SEARCH_TO_LOCATION = 1006;
+    public static final Integer USER_TO_EDIT_PROFILE = 1007;
 
     public static String FACEBOOK_URL = "https://www.facebook.com/gobananaa";
     public static String FACEBOOK_PAGE_ID = "1822649354613468";

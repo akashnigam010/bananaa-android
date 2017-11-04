@@ -27,8 +27,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import in.bananaa.R;
@@ -39,7 +37,6 @@ import in.bananaa.object.MyItemFoodviewResponse;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.object.StatusResponse;
 import in.bananaa.object.UserFoodviewsResponse;
-import in.bananaa.utils.AlertMessages;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.PreferenceManager;
 import in.bananaa.utils.URLs;
@@ -94,7 +91,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_details);
         itemId = (Integer) getIntent().getSerializableExtra(ITEM_ID);
         if (itemId == null) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.genericErrorToast(this, this.getString(R.string.genericError));
+            finish();
             return;
         }
         itemDetailsView = (ScrollView) findViewById(R.id.itemDetailsView);
@@ -103,6 +101,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     }
 
     private void getItemDetails() {
+        Utils.checkInternetConnectionRollBack(mContext);
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();
@@ -112,10 +111,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(ItemDetailsActivity.this, URLs.ITEM_DETAILS, entity, "application/json", new DetailsResponseHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -128,14 +125,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
             if (itemDetails.isResult()) {
                 initializeView();
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             asyncEnd();
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -258,6 +255,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
     }
 
     private void setMyFoodview() {
+        if(!Utils.checkIfInternetConnectedAndToast(mContext)) {
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("itemId", itemId);
@@ -266,10 +266,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
             client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
             client.setTimeout(Constant.TIMEOUT);
             client.post(ItemDetailsActivity.this, URLs.GET_MY_ITEM_FOODVIEW, entity, "application/json", new MyItemFoodviewResponseHandler());
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -302,13 +300,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 }
                 rbMyRatings.setOnRatingBarChangeListener(onRatingBarChangeListener);
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
@@ -318,8 +316,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             if (v == 0.0f) {
                 return;
             }
-            if (!Utils.isInternetConnected(mContext)) {
-                AlertMessages.noInternet(mContext);
+            if (!Utils.checkIfInternetConnectedAndToast(mContext)) {
                 return;
             } else {
                 try {
@@ -331,12 +328,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
                     client.setTimeout(Constant.TIMEOUT);
                     client.post(mContext, URLs.SAVE_RATING, entity, "application/json", new SaveRatingResponseHandler());
-                } catch (UnsupportedEncodingException e) {
-                    AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-                    e.printStackTrace();
                 } catch (Exception e) {
-                    AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
-                    e.printStackTrace();
+                    Utils.exceptionOccurred(mContext, e);
                 }
             }
         }
@@ -351,17 +344,20 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "Your rating has been saved. Thank you!", Toast.LENGTH_SHORT).show();
                 tvMyFoodviewTimeDiff.setText(mContext.getString(R.string.justNow));
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
     private void setUserFoodviews(Integer page) {
+        if (!Utils.isInternetConnected(mContext)) {
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("itemId", itemId);
@@ -372,10 +368,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
             client.setTimeout(Constant.TIMEOUT);
             client.post(ItemDetailsActivity.this, URLs.GET_OTHER_USER_FOODVIEWS, entity, "application/json", new UserFoodviewsResponseHandler());
             canLoadFoodviews = false;
-        } catch (UnsupportedEncodingException e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
         } catch (Exception e) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.exceptionOccurred(mContext, e);
         }
     }
 
@@ -399,13 +393,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     moreResultsAvailable = true;
                 }
             } else {
-                AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+                Utils.responseError(mContext, response);
             }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            AlertMessages.showError(mContext, mContext.getString(R.string.genericError));
+            Utils.responseFailure(mContext);
         }
     }
 
