@@ -168,7 +168,7 @@ public class FoodviewActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "Foodview must be minimum 50 characters long.", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (dishRatingBar.getRating() == rating && etFoodView.getText().toString().equals(foodview)) {
+            if (rating != null && dishRatingBar.getRating() == rating && etFoodView.getText().toString().equals(foodview)) {
                 finishActivity();
                 return false;
             }

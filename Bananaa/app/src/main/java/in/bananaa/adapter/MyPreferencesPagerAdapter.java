@@ -287,7 +287,10 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         });
     }
     private void getVegnonvegPreferences() {
-        Utils.checkInternetConnectionRollBack(mContext);
+        if (!Utils.checkIfInternetConnectedAndToast(mContext)) {
+            mContext.finish();
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             StringEntity entity = new StringEntity(jsonObject.toString());

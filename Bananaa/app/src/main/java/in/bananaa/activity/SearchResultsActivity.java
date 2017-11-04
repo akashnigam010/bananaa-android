@@ -200,7 +200,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void loadResults(Integer page) {
-        Utils.checkInternetConnectionRollBack(this);
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            finish();
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             LocationStore locationStore = PreferenceManager.getStoredLocation();

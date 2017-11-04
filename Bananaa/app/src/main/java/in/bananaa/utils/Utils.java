@@ -81,13 +81,6 @@ public class Utils {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static void checkInternetConnectionRollBack(Activity activity) {
-        if (!isInternetConnected(activity)) {
-            Toast.makeText(activity, activity.getString(R.string.noInternet), Toast.LENGTH_SHORT).show();
-            activity.finish();
-        }
-    }
-
     public static boolean checkIfInternetConnectedAndToast(Activity activity) {
         if (!isInternetConnected(activity)) {
             Toast.makeText(activity, activity.getString(R.string.noInternet), Toast.LENGTH_SHORT).show();

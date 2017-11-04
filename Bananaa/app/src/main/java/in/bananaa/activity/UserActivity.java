@@ -92,7 +92,10 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void getUserProfile() {
-        Utils.checkInternetConnectionRollBack(this);
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            finish();
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();

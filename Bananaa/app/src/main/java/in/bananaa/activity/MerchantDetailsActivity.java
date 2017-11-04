@@ -111,7 +111,10 @@ public class MerchantDetailsActivity extends AppCompatActivity {
     }
 
     private void getMerchantDetails() {
-        Utils.checkInternetConnectionRollBack(this);
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            finish();
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();

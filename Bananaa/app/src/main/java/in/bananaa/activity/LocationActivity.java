@@ -62,7 +62,10 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     private void getCities() {
-        Utils.checkInternetConnectionRollBack(this);
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            finish();
+            return;
+        }
         try {
             asyncStart();
             AsyncHttpClient client = new AsyncHttpClient();

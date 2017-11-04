@@ -101,7 +101,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
     }
 
     private void getItemDetails() {
-        Utils.checkInternetConnectionRollBack(mContext);
+        if (!Utils.checkIfInternetConnectedAndToast(this)) {
+            finish();
+            return;
+        }
         try {
             JSONObject jsonObject = new JSONObject();
             asyncStart();
