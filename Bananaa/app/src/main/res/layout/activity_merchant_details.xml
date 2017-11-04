@@ -67,17 +67,20 @@
                                 android:id="@+id/ivBack"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_margin="20dp"
-                                android:background="@drawable/ic_arrow_back_white" />
+                                android:layout_alignParentStart="true"
+                                android:layout_margin="5dp"
+                                android:src="@drawable/ic_arrow_back_white"
+                                android:backgroundTint="@android:color/transparent" />
 
                             <ImageButton
                                 android:id="@+id/ivShare"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_margin="20dp"
-                                android:background="@drawable/ic_share" />
+                                android:layout_alignParentEnd="true"
+                                android:layout_margin="5dp"
+                                android:src="@drawable/ic_share"
+                                android:backgroundTint="@android:color/transparent" />
+
                         </RelativeLayout>
 
                         <TextView

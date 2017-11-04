@@ -343,8 +343,7 @@ public class MerchantDetailsActivity extends AppCompatActivity {
                     pbImageLoader.setVisibility(View.GONE);
                     return false;
                 }
-            })
-                    .into(ivImage);
+            }).into(ivImage);
         } else {
             ivImage.setImageResource(R.color.lightColor);
         }

@@ -1,5 +1,6 @@
 package in.bananaa.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -176,6 +177,14 @@ public class UserActivity extends AppCompatActivity {
         setFont();
         getRatingsAndFoodviews(1);
         initAutoFoodviewsLoad();
+    }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        if (requestCode == USER_TO_PREF_REQ_CODE && resultCode == Activity.RESULT_OK) {
+            recreate();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initAutoFoodviewsLoad() {
