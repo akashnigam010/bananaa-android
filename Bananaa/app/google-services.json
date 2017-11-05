@@ -1,0 +1,102 @@
+{
+  "project_info": {
+    "project_number": "462561363632",
+    "firebase_url": "https://bananaa-6c841.firebaseio.com",
+    "project_id": "bananaa-6c841",
+    "storage_bucket": "bananaa-6c841.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462561363632:android:69244f86712968d5",
+        "android_client_info": {
+          "package_name": "com.bananaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "462561363632-36pavn9c2ll256k99h87e3s6cg7su3b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa3uCVjhJgB8gO-kgZIr5tjDA53sEG_CQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462561363632:android:80021fb92ea07e91",
+        "android_client_info": {
+          "package_name": "in.bananaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "462561363632-36pavn9c2ll256k99h87e3s6cg7su3b3.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "462561363632-mvf6kmt9b94a3datcaqe4ln4apepqj23.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.bananaa",
+            "certificate_hash": "b16b528af996730a72ba78613f8f22a40282f23a"
+          }
+        },
+        {
+          "client_id": "462561363632-91e019p284gkgq0do0e8ef5repk2k7e4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.bananaa",
+            "certificate_hash": "8f0705743b631542ffde6e4119c85334b548944a"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa3uCVjhJgB8gO-kgZIr5tjDA53sEG_CQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
