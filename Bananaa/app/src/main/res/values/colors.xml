@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bnaColor">#8d4be3</color>
+    <color name="bnaColorLight">#e4b5fc</color>
+    <color name="lightColor">#F3F3F3</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#A9A9A9</color>
+    <color name="lightGrey">#E0E1E2</color>
+    <color name="darkGrey">#595959</color>
+    <color name="background">#f8fbfd</color>
+    <color name="dishColor">#3F7E00</color>
+
+    <!--Rating Colors-->
+    <color name="r10">#CD1C26</color>
+    <color name="r15">#DE1D05</color>
+    <color name="r20">#FF7800</color>
+    <color name="r25">#FFBA00</color>
+    <color name="r30">#CDD614</color>
+    <color name="r35">#9ACD32</color>
+    <color name="r40">#5BA829</color>
+    <color name="r45">#3F7E00</color>
+    <color name="r50">#305D02</color>
+
+    <!-- Screens background color-->
+    <color name="bg_screen1">#f64c73</color>
+    <color name="bg_screen2">#20d2bb</color>
+    <color name="bg_screen3">#3395ff</color>
+    <color name="bg_screen4">#c873f4</color>
+
+    <!-- dot colors -->
+    <color name="dot_dark">#8d4be3</color>
+    <color name="dot_light">#e4b5fc</color>
+
+    <color name="chip1">#d32f2f</color>
+    <color name="chip2">#E91E63</color>
+    <color name="chip3">#9C27B0</color>
+    <color name="chip4">#673AB7</color>
+    <color name="chip5">#3F51B5</color>
+
+    <color name="chip6">#4CAF50</color>
+    <color name="chip7">#FF5722</color>
+    <color name="chip8">#607D8B</color>
+    <color name="chip9">#006064</color>
+    <color name="chip10">#4E342E</color>
+
+</resources>
