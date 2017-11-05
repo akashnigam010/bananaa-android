@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/myPreferences"
             android:icon="@drawable/ic_my_prefs"
@@ -10,6 +12,19 @@
             android:id="@+id/howItWorks"
             android:icon="@drawable/ic_bubble_chart"
             android:title="How it works ?" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/contactUs"
+            android:icon="@drawable/ic_mail"
+            android:title="Contact Us" />
+        <item
+            android:id="@+id/rateUs"
+            android:icon="@drawable/ic_playstore"
+            android:title="Rate us on Play Store" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout"

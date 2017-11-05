@@ -33,12 +33,12 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BuildConfig;
 
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import in.bananaa.BuildConfig;
 import in.bananaa.R;
 import in.bananaa.adapter.FoodSuggestionsRecyclerAdapter;
 import in.bananaa.object.foodSuggestions.FoodSuggestionsResponse;
@@ -299,6 +299,10 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.howItWorks) {
             Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
             startActivity(intent);
+        } else if (id == R.id.contactUs) {
+            Utils.openContactUsApplication(mContext);
+        } else if (id == R.id.rateUs) {
+            Utils.openPlayStoreForRating(mContext);
         } else if (id == R.id.logout) {
             facebookManager.logout();
             googleManager.logout();

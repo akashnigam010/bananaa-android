@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemTextColor="@color/darkGrey"
         app:menu="@menu/activity_main_drawer">
 
 
@@ -35,7 +36,7 @@
                 android:orientation="horizontal"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
-                android:layout_marginBottom="60dp">
+                android:layout_marginBottom="40dp">
 
                 <ImageButton
                     android:id="@+id/ivFacebook"
