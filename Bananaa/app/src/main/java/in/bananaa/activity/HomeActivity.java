@@ -172,7 +172,6 @@ public class HomeActivity extends AppCompatActivity
         tvUserName.setText(user.getFirstName() + " " + user.getLastName());
         llFoodbookLink.setOnClickListener(onFoodbookLinkListener);
         initiateFoodSuggestionsLoad();
-        initAutoFoodSuggestionsLoad();
 
         homeSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -356,6 +355,9 @@ public class HomeActivity extends AppCompatActivity
             return;
         }
         try {
+            if (PreferenceManager.getStoredLocation() == null) {
+                Utils.loadDefaultLocation();
+            }
             LocationStore location = PreferenceManager.getStoredLocation();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("locationId", location.getId());
@@ -396,6 +398,7 @@ public class HomeActivity extends AppCompatActivity
                     pbMoreResults.setVisibility(View.GONE);
                     llNoMoreResults.setVisibility(View.VISIBLE);
                 }
+                initAutoFoodSuggestionsLoad();
             } else {
                 Utils.responseError(mContext, response);
             }
