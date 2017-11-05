@@ -3,7 +3,7 @@ package in.bananaa.utils;
 public class Constant {
 
     public static int TIMEOUT = 60 * 1000;
-    public static int ADD_SCROLL_HEIGHT = 100;
+    public static int ADD_SCROLL_HEIGHT = 200;
     public static int ADD_SCROLL_HEIGHT_PREFEERENCES = 300;
     public static final Integer MERCHANT_DETAILS_TO_FOODVIEW_REQ_CODE = 1000;
     public static final Integer ITEM_DETAILS_TO_FOODVIEW_REQ_CODE = 1001;

@@ -35,13 +35,30 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/tvTitle"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="14dp"
-        android:text="Places serving 'fajitas'"/>
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:textSize="14dp"
+            android:text="Places serving 'fajitas'"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:thumbTint="@color/bnaColor"
+            app:trackTint="@color/bnaColorLight"/>
+
+    </RelativeLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/svSearchResults"

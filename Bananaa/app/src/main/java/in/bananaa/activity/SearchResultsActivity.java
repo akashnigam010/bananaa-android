@@ -7,11 +7,13 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -50,6 +52,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private AppCompatActivity mContext;
     private TextView tvLocation;
     private TextView tvTitle;
+    private SwitchCompat switchResults;
     private NestedScrollView svSearchResults;
     private RecyclerView rvSearchResults;
 
@@ -62,6 +65,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private SearchResultType type;
     private Integer tagId;
     private Boolean isTagSearch;
+    private Boolean isMerchantSearch = false;
     private String searchString;
 
     private GenericSearchRecyclerAdapter searchResultsAdapter;
@@ -75,6 +79,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        switchResults = (SwitchCompat) findViewById(R.id.switchResults);
 
         type = (SearchResultType) getIntent().getSerializableExtra(TYPE);
         tagId = (Integer) getIntent().getSerializableExtra(TAG_ID);
@@ -82,17 +87,24 @@ public class SearchResultsActivity extends AppCompatActivity {
         isTagSearch = (Boolean) getIntent().getSerializableExtra(IS_TAG_SEARCH);
         searchString = (String) getIntent().getSerializableExtra(SEARCH_STRING);
 
-        if (isTagSearch == null || tagName == null) {
+        if (isTagSearch == null) {
             Utils.genericErrorToast(this, this.getString(R.string.genericError));
             finish();
             return;
         }
 
         svSearchResults = (NestedScrollView) findViewById(R.id.svSearchResults);
-        if (Utils.isEmpty(tagName) || tagName.equals("''")) {
-            tvTitle.setText(ALL_PLACES);
+        if (isTagSearch) {
+            tvTitle.setText("Places where you'd find " + tagName);
+            switchResults.setVisibility(View.GONE);
         } else {
-            tvTitle.setText("Places serving " + tagName);
+            if (Utils.isEmpty(searchString)) {
+                tvTitle.setText(ALL_PLACES);
+                switchResults.setVisibility(View.GONE);
+            } else {
+                tvTitle.setText("Places where you'd find '" + searchString + "'");
+                switchResults.setVisibility(View.VISIBLE);
+            }
         }
 
         searchResultsAdapter = new GenericSearchRecyclerAdapter(this);
@@ -110,6 +122,20 @@ public class SearchResultsActivity extends AppCompatActivity {
         initiateSearch();
         initAutoFoodSuggestionsLoad();
         setFonts();
+
+        switchResults.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    tvTitle.setText("All places named '" + searchString + "'");
+                    isMerchantSearch = true;
+                } else {
+                    tvTitle.setText("Places where you'd find '" + searchString + "'");
+                    isMerchantSearch = false;
+                }
+                initiateSearch();
+            }
+        });
     }
 
     private Toolbar customizeToolbar() {
@@ -216,6 +242,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             jsonObject.put("searchString", searchString);
             jsonObject.put("locationId", locationStore.getId());
             jsonObject.put("isTagSearch", isTagSearch);
+            jsonObject.put("isMerchantSearch", isMerchantSearch);
             StringEntity entity = new StringEntity(jsonObject.toString());
             AsyncHttpClient client = new AsyncHttpClient();
             client.setTimeout(Constant.TIMEOUT);

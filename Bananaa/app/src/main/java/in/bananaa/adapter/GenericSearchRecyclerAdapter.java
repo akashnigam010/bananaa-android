@@ -153,6 +153,7 @@ public class GenericSearchRecyclerAdapter extends RecyclerView.Adapter<GenericSe
                     }
                     holder.llFoodDetails.setVisibility(View.GONE);
                 } else {
+                    holder.tvFoodRating.setVisibility(View.VISIBLE);
                     holder.tvFoodRating.setText(merchantDetailsDto.getSearchTag().getRating());
                     background = (GradientDrawable) holder.tvFoodRating.getBackground();
                     RatingColorType colorType = RatingColorType.getCodeByCssClass(merchantDetailsDto.getSearchTag().getRatingClass());

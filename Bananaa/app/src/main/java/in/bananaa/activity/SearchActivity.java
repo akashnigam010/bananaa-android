@@ -126,7 +126,6 @@ public class SearchActivity extends AppCompatActivity {
                     String searchString = etSearch.getText().toString();
                     Intent i = new Intent(SearchActivity.this, SearchResultsActivity.class);
                     i.putExtra(SearchResultsActivity.IS_TAG_SEARCH, false);
-                    i.putExtra(SearchResultsActivity.TAG_NAME, "'" + searchString + "'");
                     i.putExtra(SearchResultsActivity.SEARCH_STRING, searchString);
                     startActivity(i);
                     finish();
