@@ -415,7 +415,7 @@ public class HomeActivity extends AppCompatActivity
         ivTwitter = (ImageButton) nv.findViewById(R.id.ivTwitter);
         ivInstagram = (ImageButton) nv.findViewById(R.id.ivInstagram);
         tvVersion = (TextView) nv.findViewById(R.id.tvVersion);
-        tvVersion.setText("Version " + BuildConfig.VERSION_CODE + "." + BuildConfig.VERSION_NAME);
+        tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
         ivFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

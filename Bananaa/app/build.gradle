@@ -7,8 +7,8 @@ android {
         applicationId "in.bananaa"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 4
-        versionName "3.0"
+        versionCode 7
+        versionName "3.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

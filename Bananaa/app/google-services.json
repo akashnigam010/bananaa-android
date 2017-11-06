@@ -8,41 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:462561363632:android:69244f86712968d5",
-        "android_client_info": {
-          "package_name": "com.bananaa"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "462561363632-36pavn9c2ll256k99h87e3s6cg7su3b3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDa3uCVjhJgB8gO-kgZIr5tjDA53sEG_CQ"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:462561363632:android:80021fb92ea07e91",
         "android_client_info": {
           "package_name": "in.bananaa"
@@ -50,36 +15,16 @@
       },
       "oauth_client": [
         {
-          "client_id": "462561363632-gmculrsqojn8quc0tcgplnv9oibmdf5p.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "in.bananaa",
-            "certificate_hash": "0febedff25dffc4500115abac979893a798b5ea4"
-          }
+          "client_id": "462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
-          "client_id": "462561363632-91e019p284gkgq0do0e8ef5repk2k7e4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "in.bananaa",
-            "certificate_hash": "8f0705743b631542ffde6e4119c85334b548944a"
-          }
-        },
-        {
-          "client_id": "462561363632-mvf6kmt9b94a3datcaqe4ln4apepqj23.apps.googleusercontent.com",
+          "client_id": "462561363632-c27bbtvmau105iic3rflhs19td65usrt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "in.bananaa",
             "certificate_hash": "b16b528af996730a72ba78613f8f22a40282f23a"
           }
-        },
-        {
-          "client_id": "462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "462561363632-36pavn9c2ll256k99h87e3s6cg7su3b3.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
