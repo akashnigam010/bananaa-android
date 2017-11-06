@@ -316,9 +316,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                         case 2 :
                             rgVegNonVeg.check(R.id.rbNonVeg);
                             break;
-//                        case 3 :
-//                            rgVegNonVeg.check(R.id.rbAnything);
-//                            break;
+                        case 3 :
+                            rgVegNonVeg.check(R.id.rbAnything);
+                            break;
                         default : break;
                     }
                 }
