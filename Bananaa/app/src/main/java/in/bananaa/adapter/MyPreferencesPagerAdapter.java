@@ -55,7 +55,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
     private RadioGroup rgVegNonVeg;
     private RadioButton rbVeg;
     private RadioButton rbNonVeg;
-    //private RadioButton rbAnything;
+    private RadioButton rbAnything;
 
     private TextView tvPref2Title;
     private EditText etPrefCuisine;
@@ -116,7 +116,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         rgVegNonVeg = (RadioGroup) view.findViewById(R.id.rgVegNonVeg);
         rbVeg = (RadioButton) view.findViewById(R.id.rbVeg);
         rbNonVeg = (RadioButton) view.findViewById(R.id.rbNonVeg);
-        //rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
+        rbAnything = (RadioButton) view.findViewById(R.id.rbAnything);
         getVegnonvegPreferences();
         rgVegNonVeg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                @Override
@@ -128,9 +128,9 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
                        case R.id.rbNonVeg:
                            updateTagPreference(2, null, false, true);
                            break;
-//                       case R.id.rbAnything:
-//                           updateTagPreference(3, null, false, true);
-//                           break;
+                       case R.id.rbAnything:
+                           updateTagPreference(3, null, false, true);
+                           break;
                    }
                }
            }
@@ -549,7 +549,7 @@ public class MyPreferencesPagerAdapter extends PagerAdapter {
         tvPref1Title.setTypeface(Utils.getBold(mContext));
         rbVeg.setTypeface(Utils.getRegularFont(mContext));
         rbNonVeg.setTypeface(Utils.getRegularFont(mContext));
-        //rbAnything.setTypeface(Utils.getRegularFont(mContext));
+        rbAnything.setTypeface(Utils.getRegularFont(mContext));
     }
 
     private void setFontPage2() {
