@@ -119,7 +119,9 @@ public class UserActivity extends AppCompatActivity {
             if (response.isResult()) {
                 userProfile = response.getProfile();
                 initiateView();
-                new updateUserDetailsInDevice().execute();
+                if (userProfile.getId().equals(PreferenceManager.getLoginDetails().getId())) {
+                    new updateUserDetailsInDevice().execute();
+                }
             } else {
                 Utils.responseError(mContext, response);
             }
@@ -166,8 +168,18 @@ public class UserActivity extends AppCompatActivity {
                     startActivityForResult(intent, USER_TO_PREF_REQ_CODE);
                 }
             });
+            ivEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(UserActivity.this, EditUserDetailsActivity.class);
+                    i.putExtra(EditUserDetailsActivity.NAME, userProfile.getFullName());
+                    i.putExtra(EditUserDetailsActivity.STATUS, userProfile.getStatus());
+                    startActivityForResult(i, USER_TO_EDIT_PROFILE);
+                }
+            });
         } else {
             editPreferences.setVisibility(View.GONE);
+            ivEdit.setVisibility(View.GONE);
         }
 
         ivImage.setOnClickListener(new View.OnClickListener() {
@@ -176,16 +188,6 @@ public class UserActivity extends AppCompatActivity {
                 Intent i = new Intent(UserActivity.this, ImageViewActivity.class);
                 i.putExtra(ImageViewActivity.IMAGE_URL, userProfile.getImageUrl());
                 startActivity(i);
-            }
-        });
-
-        ivEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(UserActivity.this, EditUserDetailsActivity.class);
-                i.putExtra(EditUserDetailsActivity.NAME, userProfile.getFullName());
-                i.putExtra(EditUserDetailsActivity.STATUS, userProfile.getStatus());
-                startActivityForResult(i, USER_TO_EDIT_PROFILE);
             }
         });
 
