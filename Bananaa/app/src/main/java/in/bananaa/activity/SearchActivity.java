@@ -152,6 +152,7 @@ public class SearchActivity extends AppCompatActivity {
                     i.putExtra(SearchResultsActivity.IS_TAG_SEARCH, true);
                     i.putExtra(SearchResultsActivity.TAG_ID, merchantOrTag.getId());
                     i.putExtra(SearchResultsActivity.TAG_NAME, merchantOrTag.getName());
+                    i.putExtra(SearchResultsActivity.SEARCH_STRING, merchantOrTag.getName());
                     i.putExtra(SearchResultsActivity.TYPE, merchantOrTag.getType());
                 }
                 startActivity(i);

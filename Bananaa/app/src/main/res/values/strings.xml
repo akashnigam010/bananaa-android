@@ -64,7 +64,7 @@
     <!--Search Screen-->
     <string name="search">Search</string>
     <string name="searchForAwesome">Search for the awesome</string>
-    <string name="noResults">NO RESULTS FOUND :(</string>
+    <string name="noResults">Hit Enter and search Bananaa</string>
 
     <!--Login Screen-->
     <string name="login_fb">Continue with Facebook</string>

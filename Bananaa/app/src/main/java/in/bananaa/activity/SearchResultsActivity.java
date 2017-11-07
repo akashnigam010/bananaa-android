@@ -96,7 +96,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         svSearchResults = (NestedScrollView) findViewById(R.id.svSearchResults);
         if (isTagSearch) {
             tvTitle.setText("Places where you'd find " + tagName);
-            switchResults.setVisibility(View.GONE);
+            //switchResults.setVisibility(View.GONE);
         } else {
             if (Utils.isEmpty(searchString)) {
                 tvTitle.setText(ALL_PLACES);
@@ -128,9 +128,13 @@ public class SearchResultsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     tvTitle.setText("All places named '" + searchString + "'");
+                    isTagSearch = false;
                     isMerchantSearch = true;
                 } else {
                     tvTitle.setText("Places where you'd find '" + searchString + "'");
+                    if (tagId != null) {
+                        isTagSearch = true;
+                    }
                     isMerchantSearch = false;
                 }
                 initiateSearch();
