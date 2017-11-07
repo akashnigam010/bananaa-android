@@ -9,10 +9,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import in.bananaa.R;
 import in.bananaa.activity.ItemDetailsActivity;
@@ -32,7 +36,7 @@ public class CustomImageClickListener implements View.OnClickListener {
     private Integer merchantId;
     private String merchantName;
     private String locality;
-    private boolean isImageLoaded = false;
+    private ProgressBar pbImageLoader;
 
     public CustomImageClickListener(Context mContext, Integer id, String name,
                                     Integer recommendationCount, String rating,
@@ -63,6 +67,7 @@ public class CustomImageClickListener implements View.OnClickListener {
         imageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         imageDialog.setContentView(R.layout.image_viewer);
         ImageView image = (ImageView) imageDialog.findViewById(R.id.dialog_imageView);
+        pbImageLoader = (ProgressBar) imageDialog.findViewById(R.id.pbImageLoader);
         LinearLayout rlItemView = (LinearLayout) imageDialog.findViewById(R.id.llItemView);
         RelativeLayout rlMerchantView = (RelativeLayout) imageDialog.findViewById(R.id.rlMerchantView);
         TextView tvName = (TextView) imageDialog.findViewById(R.id.tvName);
@@ -111,7 +116,18 @@ public class CustomImageClickListener implements View.OnClickListener {
     }
 
     private void loadImage(String imageUrl, ImageView image) {
-        Glide.with(mContext).load(imageUrl).into(image);
+        Glide.with(mContext).load(imageUrl).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                pbImageLoader.setVisibility(View.GONE);
+                return false;
+            }
+        }).into(image);
     }
 
     private class OnClickShowDetailsListener implements View.OnClickListener {
