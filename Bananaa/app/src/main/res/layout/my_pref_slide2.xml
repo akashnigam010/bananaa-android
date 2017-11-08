@@ -38,7 +38,7 @@
                 android:maxLines="1"
                 android:textSize="14sp"
                 android:padding="12dp"
-                android:hint="Biryani, Chinese, Tex Mex, Parsi..."
+                android:hint="Search cuisines ..."
                 android:textColor="@color/darkGrey"
                 android:inputType="textNoSuggestions"/>
 

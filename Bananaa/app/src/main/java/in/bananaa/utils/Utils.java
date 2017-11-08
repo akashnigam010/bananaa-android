@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -26,6 +25,7 @@ import in.bananaa.object.location.LocationType;
 
 import static in.bananaa.utils.Constant.FACEBOOK_PAGE_ID;
 import static in.bananaa.utils.Constant.FACEBOOK_URL;
+import static in.bananaa.utils.Constant.INSTAGRAM_URL;
 import static in.bananaa.utils.Constant.TWITTER_URL;
 import static in.bananaa.utils.Constant.TWITTER_USERNAME;
 
@@ -174,29 +174,24 @@ public class Utils {
         mContext.startActivity(sendIntent);
     }
 
-    public static String getFacebookPageURL(Context context) {
-        PackageManager packageManager = context.getPackageManager();
+    public static Intent getFacebookPageURL() {
         try {
-            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
-            if (versionCode >= 3002850) { //newer versions of fb app
-                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
-            } else { //older versions of fb app
-                return "fb://page/" + FACEBOOK_PAGE_ID;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            return FACEBOOK_URL; //normal web url
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + FACEBOOK_PAGE_ID));
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL));
         }
     }
 
-    public static Intent getTwitterIntent(Context context) {
-
+    public static Intent getTwitterIntent() {
         try {
             return new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=".concat(TWITTER_USERNAME)));
-
         } catch (Exception e) {
             return new Intent(Intent.ACTION_VIEW, Uri.parse(TWITTER_URL));
         }
+    }
 
+    public static Intent getInstagramIntent() {
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_URL));
     }
 
     public static void openContactUsApplication(Context context) {

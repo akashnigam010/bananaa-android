@@ -120,6 +120,7 @@ public class FoodSuggestionsRecyclerAdapter extends RecyclerView.Adapter<FoodSug
                 intent.putExtra(SearchResultsActivity.IS_TAG_SEARCH, true);
                 intent.putExtra(SearchResultsActivity.TAG_ID, hashtag.getId());
                 intent.putExtra(SearchResultsActivity.TAG_NAME, hashtag.getName());
+                intent.putExtra(SearchResultsActivity.SEARCH_STRING, hashtag.getName());
                 if (hashtag instanceof CuisineTag) {
                     intent.putExtra(SearchResultsActivity.TYPE, SearchResultType.CUISINE);
                 } else if (hashtag instanceof SuggestionTag) {

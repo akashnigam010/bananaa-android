@@ -115,7 +115,7 @@ public class MyPreferencesActivity extends AppCompatActivity {
                 btnNext.setText(getString(R.string.next));
                 btnBack.setVisibility(View.GONE);
             } else if (position == layouts.length - 1) {
-                btnNext.setText(getString(R.string.submit));
+                btnNext.setText(getString(R.string.go));
                 btnBack.setVisibility(View.VISIBLE);
             } else {
                 btnNext.setText(getString(R.string.next));

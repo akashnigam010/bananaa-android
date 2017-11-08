@@ -23,7 +23,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="280dp">
+                    android:layout_height="200dp">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -35,9 +35,8 @@
                         android:id="@+id/homeBnaText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="64dp"
+                        android:layout_marginTop="40dp"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/name"
                         android:textColor="@color/white"
@@ -45,26 +44,28 @@
 
                     <TextView
                         android:id="@+id/homeSearch"
-                        android:layout_width="280dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/homeBnaText"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="55dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginEnd="50dp"
                         android:background="@drawable/search_bar_home"
-                        android:drawablePadding="10dp"
+                        android:drawablePadding="15dp"
                         android:drawableStart="@drawable/ic_search"
                         android:gravity="center_vertical"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:hint="@string/search_rest_cuisine_dish"
                         android:textColor="@color/grey"
-                        android:textSize="13sp"/>
+                        android:textSize="12sp"/>
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingBottom="20dp"
                     android:paddingEnd="10dp"
                     android:paddingStart="10dp"

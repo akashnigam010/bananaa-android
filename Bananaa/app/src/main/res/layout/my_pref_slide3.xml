@@ -38,7 +38,7 @@
                 android:maxLines="1"
                 android:textSize="14sp"
                 android:padding="12dp"
-                android:hint="Chicken, Paneer, Dosa, Nachos..."
+                android:hint="Search dishes ..."
                 android:textColor="@color/darkGrey"
                 android:inputType="textNoSuggestions"/>
 

@@ -3,7 +3,6 @@ package in.bananaa.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -55,9 +54,6 @@ import in.bananaa.utils.Utils;
 import static in.bananaa.utils.Constant.ADD_SCROLL_HEIGHT;
 import static in.bananaa.utils.Constant.HOME_TO_LOCATION;
 import static in.bananaa.utils.Constant.HOME_TO_PREF_REQ_CODE;
-import static in.bananaa.utils.Constant.INSTAGRAM_PACKAGE;
-import static in.bananaa.utils.Constant.INSTAGRAM_SCHEME;
-import static in.bananaa.utils.Constant.INSTAGRAM_URL;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -419,31 +415,21 @@ public class HomeActivity extends AppCompatActivity
         ivFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
-                String facebookUrl = Utils.getFacebookPageURL(mContext);
-                facebookIntent.setData(Uri.parse(facebookUrl));
-                startActivity(facebookIntent);
+                startActivity(Utils.getFacebookPageURL());
             }
         });
 
         ivTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent twitterIntent = Utils.getTwitterIntent(mContext);
-                startActivity(twitterIntent);
+                startActivity(Utils.getTwitterIntent());
             }
         });
 
         ivInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    mContext.getPackageManager().getPackageInfo(INSTAGRAM_PACKAGE, 0);
-                    Intent instagramIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_SCHEME));
-                    startActivity(instagramIntent);
-                } catch (Exception e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_URL)));
-                }
+                startActivity(Utils.getInstagramIntent());
             }
         });
     }

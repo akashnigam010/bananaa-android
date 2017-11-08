@@ -17,7 +17,5 @@ public class Constant {
     public static String FACEBOOK_PAGE_ID = "1822649354613468";
     public static String TWITTER_URL = "https://twitter.com/bananaa_in";
     public static String TWITTER_USERNAME = "bananaa_in";
-    public static String INSTAGRAM_URL = "https://www.instagram.com/bananaa.in";
-    public static String INSTAGRAM_SCHEME = "http://instagram.com/_u/bananaa.in";
-    public static String INSTAGRAM_PACKAGE ="com.instagram.android";
+    public static String INSTAGRAM_URL = "https://instagram.com/_u/bananaa.in";
 }
