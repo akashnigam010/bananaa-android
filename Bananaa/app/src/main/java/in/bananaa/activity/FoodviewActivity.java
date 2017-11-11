@@ -181,7 +181,7 @@ public class FoodviewActivity extends AppCompatActivity {
                     jsonObject.put("id", currentItemId);
                     jsonObject.put("rating", dishRatingBar.getRating());
                     jsonObject.put("description", etFoodView.getText());
-                    StringEntity entity = new StringEntity(jsonObject.toString());
+                    StringEntity entity = new StringEntity(jsonObject.toString(), "UTF-8");
                     AsyncHttpClient client = new AsyncHttpClient();
                     client.addHeader("Authorization", "Bearer " + PreferenceManager.getAccessToken());
                     client.setTimeout(Constant.TIMEOUT);
