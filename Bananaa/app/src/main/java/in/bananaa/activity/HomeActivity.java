@@ -79,13 +79,17 @@ public class HomeActivity extends AppCompatActivity
     ProgressBar pbMoreResults;
     LinearLayout llNoMoreResults;
     TextView tvThatsAll;
+    TextView tvNewDishes;
+    TextView tvFeedback;
     TextView tvEditPrefs;
     TextView tvEditLocation;
 
     ImageButton ivFacebook;
     ImageButton ivTwitter;
     ImageButton ivInstagram;
+    TextView tvTnc;
     TextView tvVersion;
+    TextView tvPrivacy;
 
     private Integer page = 1;
     private boolean moreResultsAvailable = true;
@@ -150,6 +154,8 @@ public class HomeActivity extends AppCompatActivity
         pbMoreResults = (ProgressBar) findViewById(R.id.pbMoreResults);
         llNoMoreResults = (LinearLayout) findViewById(R.id.llNoMoreResults);
         tvThatsAll = (TextView) findViewById(R.id.tvThatsAll);
+        tvNewDishes = (TextView) findViewById(R.id.tvNewDishes);
+        tvFeedback = (TextView) findViewById(R.id.tvFeedback);
         tvEditPrefs = (TextView) findViewById(R.id.tvEditPrefs);
         tvEditLocation = (TextView) findViewById(R.id.tvEditLocation);
 
@@ -177,7 +183,7 @@ public class HomeActivity extends AppCompatActivity
         });
 
         tvHi.setText("Hi " + PreferenceManager.getLoginDetails().getFirstName() + "!");
-        tvThatsAll.setText(mContext.getResources().getString(R.string.homeEndText1, PreferenceManager.getLoginDetails().getFirstName()));
+        tvThatsAll.setText(mContext.getResources().getString(R.string.thatsAll, PreferenceManager.getLoginDetails().getFirstName()));
         tvEditPrefs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -190,6 +196,12 @@ public class HomeActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, LocationActivity.class);
                 startActivityForResult(intent, HOME_TO_LOCATION);
+            }
+        });
+        tvFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.openContactUsApplication(mContext);
             }
         });
     }
@@ -410,7 +422,9 @@ public class HomeActivity extends AppCompatActivity
         ivFacebook = (ImageButton) nv.findViewById(R.id.ivFacebook);
         ivTwitter = (ImageButton) nv.findViewById(R.id.ivTwitter);
         ivInstagram = (ImageButton) nv.findViewById(R.id.ivInstagram);
+        tvTnc = (TextView) nv.findViewById(R.id.tvTnC);
         tvVersion = (TextView) nv.findViewById(R.id.tvVersion);
+        tvPrivacy = (TextView) nv.findViewById(R.id.tvPrivacy);
         tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
         ivFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -432,6 +446,20 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(Utils.getInstagramIntent());
             }
         });
+
+        tvTnc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(Utils.getTncIntent());
+            }
+        });
+
+        tvPrivacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(Utils.getPrivacyIntent());
+            }
+        });
     }
 
     private void setFont() {
@@ -442,8 +470,12 @@ public class HomeActivity extends AppCompatActivity
         tvHi.setTypeface(Utils.getBold(this));
         tvYourSuggestions.setTypeface(Utils.getRegularFont(this));
         tvThatsAll.setTypeface(Utils.getRegularFont(this));
+        tvNewDishes.setTypeface(Utils.getRegularFont(this));
+        tvFeedback.setTypeface(Utils.getRegularFont(this));
         tvEditPrefs.setTypeface(Utils.getRegularFont(this));
         tvEditLocation.setTypeface(Utils.getRegularFont(this));
+        tvTnc.setTypeface(Utils.getRegularFont(this));
         tvVersion.setTypeface(Utils.getRegularFont(this));
+        tvPrivacy.setTypeface(Utils.getRegularFont(this));
     }
 }

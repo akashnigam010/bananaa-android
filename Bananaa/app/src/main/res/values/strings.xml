@@ -16,9 +16,11 @@
 
     <!--Home Screen-->
     <string name="yourSuggestions">Based on your food preferences, here are some delectable dishes for you to explore around</string>
-    <string name="homeEndText1">That\'s all for now %1$s!</string>
-    <string name="homeEndText2">Tap to edit your food preferences</string>
-    <string name="homeEndText3">Or change your location</string>
+    <string name="thatsAll">That\'s all for now %1$s!</string>
+    <string name="newDishes">However, new dishes are being continuously added while you read this.</string>
+    <string name="sendFeedback">Send Feedback</string>
+    <string name="editPrefs">Edit Preferences</string>
+    <string name="changeLocation">Change Location</string>
 
     <!--Search Result Screen-->
     <string name="searchEndText1">No more results available %1$s!</string>
@@ -49,7 +51,7 @@
     <!--Across App-->
     <string name="name">Bananaa</string>
     <string name="default_location">Hyderabad</string>
-    <string name="search_rest_cuisine_dish">Search for Restaurant, Cuisine or Dish</string>
+    <string name="search_rest_cuisine_dish">Search for a Restaurant, Cuisine or Dish</string>
 
     <!--Location Screen-->
     <string name="select_location">Tap and select your location</string>
@@ -69,7 +71,7 @@
     <!--Login Screen-->
     <string name="login_fb">Continue with Facebook</string>
     <string name="login_google">Continue with Google</string>
-    <string name="skip_for_now">SKIP FOR NOW</string>
+    <string name="disclaimer">We never post automatically to your social media</string>
     <string name="noInternetLogin">No internet connection :(</string>
 
     <!-- Merchant Details Screen -->

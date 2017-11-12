@@ -64,14 +64,41 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tvVersion"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:textColor="@color/grey"
-                android:textSize="9sp"
-                android:gravity="center" />
+                android:orientation="horizontal"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="40dp">
+
+                <TextView
+                    android:id="@+id/tvTnC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    android:textSize="9sp"
+                    android:text="TnCs"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/tvVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    android:textSize="9sp"
+                    android:layout_centerInParent="true" />
+
+                <TextView
+                    android:id="@+id/tvPrivacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    android:textSize="9sp"
+                    android:text="Privacy"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 

@@ -15,17 +15,23 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.List;
 
 import in.bananaa.R;
 import in.bananaa.object.GenericResponse;
 import in.bananaa.object.Tag;
+import in.bananaa.object.exception.ResponseFailureException;
+import in.bananaa.object.exception.StatusFalseException;
 import in.bananaa.object.location.LocationStore;
 import in.bananaa.object.location.LocationType;
 
 import static in.bananaa.utils.Constant.FACEBOOK_PAGE_ID;
 import static in.bananaa.utils.Constant.FACEBOOK_URL;
 import static in.bananaa.utils.Constant.INSTAGRAM_URL;
+import static in.bananaa.utils.Constant.PRIVACY_URL;
+import static in.bananaa.utils.Constant.TNC_URL;
 import static in.bananaa.utils.Constant.TWITTER_URL;
 import static in.bananaa.utils.Constant.TWITTER_USERNAME;
 
@@ -93,18 +99,29 @@ public class Utils {
 
     public static void genericErrorToast(Activity activity, String message) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+        Crashlytics.setUserIdentifier(PreferenceManager.getLoginDetails().getId().toString());
+        Crashlytics.log(1, activity.getClass().getSimpleName(), message);
     }
 
     public static void exceptionOccurred(Activity activity, Exception e) {
         Toast.makeText(activity, activity.getString(R.string.genericError), Toast.LENGTH_SHORT).show();
+        Crashlytics.setUserIdentifier(PreferenceManager.getLoginDetails().getId().toString());
+        Crashlytics.log(1, activity.getClass().getSimpleName(), e.getMessage());
+        Crashlytics.logException(e);
     }
 
     public static void responseError(Activity activity, GenericResponse response) {
         Toast.makeText(activity, activity.getString(R.string.genericError), Toast.LENGTH_SHORT).show();
+        Crashlytics.setUserIdentifier(PreferenceManager.getLoginDetails().getId().toString());
+        Crashlytics.log(2, activity.getClass().getSimpleName(), "Response status false : " + response.getClass().getSimpleName());
+        Crashlytics.logException(new StatusFalseException("Response status false"));
     }
 
     public static void responseFailure(Activity activity) {
         Toast.makeText(activity, activity.getString(R.string.genericError), Toast.LENGTH_SHORT).show();
+        Crashlytics.setUserIdentifier(PreferenceManager.getLoginDetails().getId().toString());
+        Crashlytics.log(3, activity.getClass().getSimpleName(), "Response failed : " + activity.getClass().getSimpleName());
+        Crashlytics.logException(new ResponseFailureException("Response failed"));
     }
 
     public static boolean isNotEmpty(String str) {
@@ -194,9 +211,17 @@ public class Utils {
         return new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_URL));
     }
 
+    public static Intent getTncIntent() {
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(TNC_URL));
+    }
+
+    public static Intent getPrivacyIntent() {
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_URL));
+    }
+
     public static void openContactUsApplication(Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = Uri.parse("mailto:contact@bananaa.in?subject=" + "Contact Bananaa" + "&body=");
+        Uri data = Uri.parse("mailto:contact@bananaa.in?subject=" + "Send Feedback to Bananaa" + "&body=");
         intent.setData(data);
         context.startActivity(intent);
     }

@@ -451,7 +451,7 @@ public class FoodviewActivity extends AppCompatActivity {
                 if (response.getItems().size() > 0) {
                     dishSearchAdapter.addAll(response.getItems());
                 } else {
-                    Utils.genericErrorToast(mContext, mContext.getString(R.string.noResultsFound));
+                    Toast.makeText(mContext, mContext.getString(R.string.noResultsFound), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Utils.responseError(mContext, response);

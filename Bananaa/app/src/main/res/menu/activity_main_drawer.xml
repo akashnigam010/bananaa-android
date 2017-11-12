@@ -20,7 +20,7 @@
         <item
             android:id="@+id/contactUs"
             android:icon="@drawable/ic_mail"
-            android:title="Contact Us" />
+            android:title="Send Feedback" />
         <item
             android:id="@+id/rateUs"
             android:icon="@drawable/ic_playstore"

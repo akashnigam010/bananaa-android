@@ -10,9 +10,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
-
 import in.bananaa.R;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageViewActivity extends AppCompatActivity {
     public static final String IMAGE_URL = "imageUrl";

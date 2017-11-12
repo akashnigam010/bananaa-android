@@ -18,4 +18,6 @@ public class Constant {
     public static String TWITTER_URL = "https://twitter.com/bananaa_in";
     public static String TWITTER_USERNAME = "bananaa_in";
     public static String INSTAGRAM_URL = "https://instagram.com/_u/bananaa.in";
+    public static String TNC_URL = "https://www.bananaa.in/terms";
+    public static String PRIVACY_URL = "https://www.bananaa.in/privacy";
 }

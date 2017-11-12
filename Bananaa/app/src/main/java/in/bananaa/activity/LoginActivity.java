@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     Button fbLoginBtn;
     Button googleLoginBtn;
     TextView tvNoInternet;
+    TextView tvDisclaimer;
 
     FacebookManager facebookManager;
     GoogleManager googleManager;
@@ -62,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         progress = (ProgressBar) findViewById(R.id.loginLoader);
         fbLoginBtn = (Button) findViewById(R.id.fbLogin);
         googleLoginBtn = (Button) findViewById(R.id.googleLogin);
+        tvDisclaimer = (TextView) findViewById(R.id.tvDisclaimer);
         setFont();
         fbLoginBtn.setOnClickListener(onFbSignIn);
         googleLoginBtn.setOnClickListener(onGoogleSignIn);
@@ -185,6 +187,7 @@ public class LoginActivity extends AppCompatActivity {
         tvNoInternet.setTypeface(Utils.getRegularFont(this));
         fbLoginBtn.setTypeface(Utils.getRegularFont(this));
         googleLoginBtn.setTypeface(Utils.getRegularFont(this));
+        tvDisclaimer.setTypeface(Utils.getRegularFont(this));
     }
 
     public void asyncStart() {
