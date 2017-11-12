@@ -154,13 +154,39 @@
                                     android:orientation="vertical">
 
                                     <TextView
-                                    android:id="@+id/tvTotalRatings"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="end"
-                                    android:textColor="@color/grey" />
+                                        android:id="@+id/tvTotalRatings"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="end"
+                                        android:text="14 ratings"
+                                        android:textColor="@color/grey" />
 
                                 </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/rlCost"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvCost"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/darkGrey" />
+
+                                <TextView
+                                    android:id="@+id/tvCostDisclaimer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:text="@string/costDisclaimer"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/grey" />
 
                             </LinearLayout>
 

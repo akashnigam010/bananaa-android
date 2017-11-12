@@ -142,7 +142,7 @@ public class FoodSuggestionsRecyclerAdapter extends RecyclerView.Adapter<FoodSug
 
     private void setCustomImageViewerData(View view, FoodSuggestion i) {
         view.setOnClickListener(new CustomImageClickListener(mContext, i.getId(),
-                i.getName(), i.getRecommendationCount(), i.getRating().toString(), i.getRatingClass(),
+                i.getName(), i.getCost(), i.getRecommendationCount(), i.getRating().toString(), i.getRatingClass(),
                 i.getImageUrl(), true, i.getMerchant().getId(), i.getMerchant().getName(),
                 i.getMerchant().getAddress().getLocality().getName()));
     }

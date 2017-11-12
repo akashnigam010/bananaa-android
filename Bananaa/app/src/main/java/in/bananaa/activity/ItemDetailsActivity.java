@@ -64,6 +64,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private TextView tvShortAddress;
     private TextView tvRating;
     private TextView tvTotalRatings;
+    private TextView tvCost;
+    private TextView tvCostDisclaimer;
 
     private TextView tvMyFoodViewsTxt;
     private ProgressBar pbFoodviewLoader;
@@ -173,6 +175,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvShortAddress = (TextView) findViewById(R.id.tvShortAddress);
         tvRating = (TextView) findViewById(R.id.tvRating);
         tvTotalRatings = (TextView) findViewById(R.id.tvTotalRatings);
+        tvCost = (TextView) findViewById(R.id.tvCost);
+        tvCostDisclaimer = (TextView) findViewById(R.id.tvCostDisclaimer);
         tvMyFoodViewsTxt = (TextView) findViewById(R.id.tvMyFoodViewsTxt);
         pbFoodviewLoader = (ProgressBar) findViewById(R.id.pbFoodviewLoader);
         llMyFoodview = (LinearLayout) findViewById(R.id.llMyFoodview);
@@ -225,6 +229,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvShortAddress.setText(itemDetails.getShortAddress());
         tvRating.setText(itemDetails.getRating());
         tvTotalRatings.setText(itemDetails.getTotalRatings() + " Ratings");
+        if (Utils.isNotEmpty(itemDetails.getCost())) {
+            tvCost.setText(getResources().getString(R.string.rupees)+ " " + itemDetails.getCost());
+            tvCost.setVisibility(View.VISIBLE);
+            tvCostDisclaimer.setVisibility(View.VISIBLE);
+        } else {
+            tvCost.setVisibility(View.GONE);
+            tvCostDisclaimer.setVisibility(View.GONE);
+        }
         GradientDrawable background = (GradientDrawable) tvRating.getBackground();
         RatingColorType colorType = RatingColorType.getCodeByCssClass(itemDetails.getRatingClass());
         if (colorType == null) {
@@ -412,6 +424,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvShortAddress.setTypeface(Utils.getRegularFont(this));
         tvRating.setTypeface(Utils.getRegularFont(this));
         tvTotalRatings.setTypeface(Utils.getRegularFont(this));
+        tvCost.setTypeface(Utils.getRegularFont(this));
+        tvCostDisclaimer.setTypeface(Utils.getRegularFont(this));
         tvMyFoodViewsTxt.setTypeface(Utils.getBold(this));
         tvMyFoodview.setTypeface(Utils.getBold(this));
         tvMyFoodviewTimeDiff.setTypeface(Utils.getRegularFont(this));

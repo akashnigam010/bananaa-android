@@ -14,6 +14,9 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
     @SerializedName("name")
     private String name;
 
+    @SerializedName("cost")
+    private String cost;
+
     @SerializedName("merchantName")
     private String merchantName;
 
@@ -57,6 +60,14 @@ public class ItemDetailsResponse extends GenericResponse implements Serializable
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
     }
 
     public String getMerchantName() {

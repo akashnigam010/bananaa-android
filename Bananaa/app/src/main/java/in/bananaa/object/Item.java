@@ -11,6 +11,9 @@ public class Item implements Serializable {
     @SerializedName("name")
     private String name;
 
+    @SerializedName("cost")
+    private String cost;
+
     @SerializedName("thumbnail")
     private String thumbnail;
 
@@ -40,6 +43,14 @@ public class Item implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
     }
 
     public String getThumbnail() {

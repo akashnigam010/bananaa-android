@@ -86,7 +86,7 @@ public class ItemListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.ivThumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
-            holder.tvSubString = (TextView) convertView.findViewById(R.id.tvSubString);
+            holder.tvSubString = (TextView) convertView.findViewById(R.id.tvRatingCount);
             holder.tvRating = (TextView) convertView.findViewById(R.id.tvRating);
             convertView.setTag(holder);
         } else {
@@ -123,7 +123,7 @@ public class ItemListAdapter extends BaseAdapter {
 
     private void setCustomImageViewerData(View convertView, Item i) {
         convertView.setOnClickListener(new CustomImageClickListener(mContext, i.getId(),
-                i.getName(), i.getRecommendations(), i.getRating(), i.getRatingClass(), i.getImageUrl(),
+                i.getName(), i.getCost(), i.getRecommendations(), i.getRating(), i.getRatingClass(), i.getImageUrl(),
                 false, null, merchantDetails.getName(), null));
     }
 

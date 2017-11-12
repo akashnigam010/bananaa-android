@@ -85,7 +85,7 @@ public class UserFoodviewsListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.ivThumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
-            holder.tvSubString = (TextView) convertView.findViewById(R.id.tvSubString);
+            holder.tvSubString = (TextView) convertView.findViewById(R.id.tvRatingCount);
             holder.tvRating = (TextView) convertView.findViewById(R.id.tvRating);
             holder.tvYouRated = (TextView) convertView.findViewById(R.id.tvYouRated);
             holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);

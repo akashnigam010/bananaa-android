@@ -28,6 +28,7 @@ public class CustomImageClickListener implements View.OnClickListener {
     private Context mContext;
     private Integer id;
     private String name;
+    private String cost;
     private Integer recommendationCount;
     private String rating;
     private String ratingClass;
@@ -38,13 +39,14 @@ public class CustomImageClickListener implements View.OnClickListener {
     private String locality;
     private ProgressBar pbImageLoader;
 
-    public CustomImageClickListener(Context mContext, Integer id, String name,
+    public CustomImageClickListener(Context mContext, Integer id, String name, String cost,
                                     Integer recommendationCount, String rating,
                                     String ratingClass, String imageUrl, boolean navigateToMerchantDetails, Integer merchantId,
                                     String merchantName, String locality){
         this.mContext = mContext;
         this.id = id;
         this.name = name;
+        this.cost = cost;
         this.recommendationCount = recommendationCount;
         this.rating = rating;
         this.ratingClass = ratingClass;
@@ -72,7 +74,9 @@ public class CustomImageClickListener implements View.OnClickListener {
         RelativeLayout rlMerchantView = (RelativeLayout) imageDialog.findViewById(R.id.rlMerchantView);
         TextView tvName = (TextView) imageDialog.findViewById(R.id.tvName);
         TextView tvRating = (TextView) imageDialog.findViewById(R.id.tvRating);
-        TextView tvSubString = (TextView) imageDialog.findViewById(R.id.tvSubString);
+        TextView tvRatingCount = (TextView) imageDialog.findViewById(R.id.tvRatingCount);
+        TextView tvSeparator = (TextView) imageDialog.findViewById(R.id.tvSeparator);
+        TextView tvCost = (TextView) imageDialog.findViewById(R.id.tvCost);
         TextView tvRestName = (TextView) imageDialog.findViewById(R.id.tvRestName);
 
         GradientDrawable background = (GradientDrawable) tvRating.getBackground();
@@ -96,17 +100,26 @@ public class CustomImageClickListener implements View.OnClickListener {
 
         tvName.setText(name);
         tvRating.setText(rating);
-        tvSubString.setText(mContext.getResources().getString(R.string.peopleRated, recommendationCount));
+        tvRatingCount.setText(mContext.getResources().getString(R.string.peopleRated, recommendationCount));
         if (locality != null) {
             tvRestName.setText("At " + merchantName + ", " + locality);
         } else {
             tvRestName.setText("At " + merchantName);
         }
+        if (Utils.isNotEmpty(cost)) {
+            tvCost.setText(mContext.getResources().getString(R.string.rupees)+ " " + cost);
+            tvSeparator.setVisibility(View.VISIBLE);
+            tvCost.setVisibility(View.VISIBLE);
+        } else {
+            tvSeparator.setVisibility(View.GONE);
+            tvCost.setVisibility(View.GONE);
+        }
 
         tvName.setTypeface(Utils.getBold(mContext));
-        tvSubString.setTypeface(Utils.getRegularFont(mContext));
+        tvRatingCount.setTypeface(Utils.getRegularFont(mContext));
         tvRating.setTypeface(Utils.getRegularFont(mContext));
         tvRestName.setTypeface(Utils.getRegularFont(mContext));
+        tvCost.setTypeface(Utils.getRegularFont(mContext));
         tvSeeMore.setTypeface(Utils.getRegularFont(mContext));
 
         loadImage(imageUrl, image);

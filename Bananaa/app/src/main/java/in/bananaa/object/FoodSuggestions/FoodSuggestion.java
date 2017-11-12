@@ -14,6 +14,9 @@ public class FoodSuggestion {
     @SerializedName("name")
     private String name;
 
+    @SerializedName("cost")
+    private String cost;
+
     @SerializedName("nameId")
     private String nameId;
 
@@ -55,6 +58,14 @@ public class FoodSuggestion {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
     }
 
     public String getNameId() {
