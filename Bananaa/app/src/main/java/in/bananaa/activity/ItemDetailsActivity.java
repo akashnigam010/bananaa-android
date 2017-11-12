@@ -64,6 +64,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private TextView tvShortAddress;
     private TextView tvRating;
     private TextView tvTotalRatings;
+    private TextView tvCostTxt;
     private TextView tvCost;
     private TextView tvCostDisclaimer;
 
@@ -175,6 +176,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvShortAddress = (TextView) findViewById(R.id.tvShortAddress);
         tvRating = (TextView) findViewById(R.id.tvRating);
         tvTotalRatings = (TextView) findViewById(R.id.tvTotalRatings);
+        tvCostTxt = (TextView) findViewById(R.id.tvCostTxt);
         tvCost = (TextView) findViewById(R.id.tvCost);
         tvCostDisclaimer = (TextView) findViewById(R.id.tvCostDisclaimer);
         tvMyFoodViewsTxt = (TextView) findViewById(R.id.tvMyFoodViewsTxt);
@@ -231,9 +233,11 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvTotalRatings.setText(itemDetails.getTotalRatings() + " Ratings");
         if (Utils.isNotEmpty(itemDetails.getCost())) {
             tvCost.setText(getResources().getString(R.string.rupees)+ " " + itemDetails.getCost());
+            tvCostTxt.setVisibility(View.VISIBLE);
             tvCost.setVisibility(View.VISIBLE);
             tvCostDisclaimer.setVisibility(View.VISIBLE);
         } else {
+            tvCostTxt.setVisibility(View.GONE);
             tvCost.setVisibility(View.GONE);
             tvCostDisclaimer.setVisibility(View.GONE);
         }
@@ -424,6 +428,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         tvShortAddress.setTypeface(Utils.getRegularFont(this));
         tvRating.setTypeface(Utils.getRegularFont(this));
         tvTotalRatings.setTypeface(Utils.getRegularFont(this));
+        tvCostTxt.setTypeface(Utils.getRegularFont(this));
         tvCost.setTypeface(Utils.getRegularFont(this));
         tvCostDisclaimer.setTypeface(Utils.getRegularFont(this));
         tvMyFoodViewsTxt.setTypeface(Utils.getBold(this));

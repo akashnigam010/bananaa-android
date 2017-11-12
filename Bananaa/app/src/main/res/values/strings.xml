@@ -101,6 +101,7 @@
     <string name="noFoodviews">No foodview yet</string>
     <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
     <string name="justNow">just now</string>
+    <string name="costTxt">COST : </string>
     <string name="costDisclaimer">(subject to change)</string>
 
     <!--User Details Screen-->
