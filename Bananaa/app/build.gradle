@@ -8,8 +8,8 @@ android {
         applicationId "in.bananaa"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 12
-        versionName "1.7"
+        versionCode 13
+        versionName "1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,6 +17,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        jumboMode true
     }
 }
 
