@@ -137,12 +137,14 @@ public class Utils {
 
     public static String parseListToCommaSeparatedString(List<String> list) {
         String finalStr = "";
-        int i;
-        for (i=0; i<list.size()-1; i++) {
-            finalStr += list.get(i) + ", ";
-        }
+        if (list.size() > 0) {
+            int i;
+            for (i=0; i<list.size()-1; i++) {
+                finalStr += list.get(i) + ", ";
+            }
 
-        finalStr += list.get(i);
+            finalStr += list.get(i);
+        }
         return finalStr;
     }
 
