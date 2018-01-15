@@ -36,4 +36,7 @@ public class URLs {
     public static String REMOVE_CUISINE_PREFERENCE = BASE_URL + "user/removeCuisinePreference";
     public static String ADD_SUGGESTION_PREFERENCE = BASE_URL + "user/addSuggestionPreference";
     public static String REMOVE_SUGGESTION_PREFERENCE = BASE_URL + "user/removeSuggestionPreference";
+
+    public static String FILE_UPLOAD_URL = BASE_URL;
+    public static String IMAGE_DIRECTORY_NAME = "Bananaa";
 }

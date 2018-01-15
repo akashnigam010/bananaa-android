@@ -47,4 +47,9 @@
     <color name="chip9">#006064</color>
     <color name="chip10">#4E342E</color>
 
+    <!--Upload Screen Colors-->
+    <color name="color_option_menu">#FF3990</color>
+    <color name="filter_label_normal">#8A8889</color>
+    <color name="filter_label_selected">#221F20</color>
+
 </resources>
