@@ -122,6 +122,8 @@
     <string name="filter_normal">Normal</string>
     <string name="action_save">Save</string>
     <string name="action_gallery">Open Gallery</string>
+    <string name="savedToGallery">Image saved to gallery</string>
+    <string name="notSavedToGallery">Unable to save image</string>
 
 
     <!--Alert Modals-->
@@ -132,6 +134,9 @@
     <string name="noResultsFound">No results found</string>
     <string name="sureToDelete">Are you sure you want to delete this foodview?</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Generic Messages-->
+    <string name="allowStoragePermission">Please allow Bananaa to access photos in your gallery.</string>
+    <string name="allowCameraPermission">Please allow Bananaa to access your phone\'s camera.</string>
+    <string name="cameraNotSupported">Camera not supported!</string>
+    <string name="failedToCaptureImage">Sorry! Failed to capture image</string>
 </resources>

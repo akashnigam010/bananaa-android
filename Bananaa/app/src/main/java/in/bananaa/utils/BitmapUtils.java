@@ -1,119 +1,150 @@
 package in.bananaa.utils;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class BitmapUtils {
 
     private static final String TAG = BitmapUtils.class.getSimpleName();
 
     /**
-     * Getting bitmap from Assets folder
-     *
-     * @return
-     */
-    public static Bitmap getBitmapFromAssets(Context context, String fileName, int width, int height) {
-        AssetManager assetManager = context.getAssets();
-
-        InputStream istr;
-        Bitmap bitmap = null;
-        try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-
-            istr = assetManager.open(fileName);
-
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, width, height);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeStream(istr, null, options);
-        } catch (IOException e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
+     * Checking device has camera hardware or not
+     * */
+    public static boolean isDeviceSupportCamera(Context context) {
+        if (context.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA)) {
+            // this device has a camera
+            return true;
+        } else {
+            // no camera on this device
+            return false;
         }
-
-        return null;
     }
 
     /**
-     * Getting bitmap from Gallery
-     *
-     * @return
+     * Creating file uri to store image/video
      */
-    public static Bitmap getBitmapFromGallery(Context context, Uri path, int width, int height) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(path, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
-        cursor.close();
-
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(picturePath, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, width, height);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(picturePath, options);
+    public static Uri getOutputMediaFileUri(int type, Context context) {
+        return Uri.fromFile(getOutputMediaFile(type, context));
     }
 
-    private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
+    /**
+     * returning image / video
+     */
+    private static File getOutputMediaFile(int type, Context context) {
 
-        if (height > reqHeight || width > reqWidth) {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                URLs.IMAGE_DIRECTORY_NAME);
 
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(context.getPackageName(), "Oops! Failed create "
+                        + URLs.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
             }
         }
 
-        return inSampleSize;
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == Constant.MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+    public static String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
 
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
+    public static Bitmap getScaledBitmap(String path, int desiredWidth, int desiredHeight) {
+        try
+        {
+            int inWidth = 0;
+            int inHeight = 0;
 
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            InputStream in = new FileInputStream(path);
 
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
+            // decode image size (decode metadata only, not the whole image)
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, options);
+            in.close();
+            in = null;
+
+            // save width and height
+            inWidth = options.outWidth;
+            inHeight = options.outHeight;
+
+            // decode full image pre-resized
+            in = new FileInputStream(path);
+            options = new BitmapFactory.Options();
+            // calc rought re-size (this is no exact resize)
+            options.inSampleSize = Math.max(inWidth/desiredWidth, inHeight/desiredHeight);
+            // decode full image
+            Bitmap roughBitmap = BitmapFactory.decodeStream(in, null, options);
+
+            // calc exact destination size
+            Matrix m = new Matrix();
+            RectF inRect = new RectF(0, 0, roughBitmap.getWidth(), roughBitmap.getHeight());
+            RectF outRect = new RectF(0, 0, desiredWidth, desiredHeight);
+            m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
+            float[] values = new float[9];
+            m.getValues(values);
+
+            // resize bitmap
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(roughBitmap, (int) (roughBitmap.getWidth() * values[0]), (int) (roughBitmap.getHeight() * values[4]), true);
+            return resizedBitmap;
+        } catch (IOException e) {
+            Log.e("Image", e.getMessage(), e);
+        }
+        return null;
     }
 
     /**
@@ -139,7 +170,7 @@ public class BitmapUtils {
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
 
         Uri url = null;
-        String stringUrl = null;    /* value to be returned */
+        String stringUrl = null;
 
         try {
             url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);

@@ -15,11 +15,10 @@ public class Constant {
     public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 1008;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int SELECT_GALLERY_IMAGE_ITEM = 1009;
-    public static final int SELECT_GALLERY_IMAGE_UPLOAD = 1010;
 
     // System Request Codes
-    public static final int REQUEST_WRITE_STORAGE = 112;
-    public static final int REQUEST_CAMERA = 100;
+    public static final int REQUEST_WRITE_STORAGE = 101;
+    public static final int REQUEST_CAMERA_AND_STORAGE = 102;
 
 
 

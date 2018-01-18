@@ -22,8 +22,8 @@ import java.util.List;
 
 import in.bananaa.R;
 import in.bananaa.adapter.ThumbnailsAdapter;
+import in.bananaa.utils.BitmapUtils;
 import in.bananaa.utils.SpacesItemDecoration;
-import in.bananaa.utils.Utils;
 
 public class FiltersListFragment extends Fragment implements ThumbnailsAdapter.ThumbnailsAdapterListener {
     private static final String BITMAP_IMAGE_PATH = "BITMAP_IMAGE_PATH";
@@ -87,10 +87,7 @@ public class FiltersListFragment extends Fragment implements ThumbnailsAdapter.T
                 options.inSampleSize = 20;
                 options.outWidth = 100;
                 options.outHeight = 100;
-                //Bitmap thumbImage = BitmapFactory.decodeFile(imagePath, options);
-                //Bitmap thumbImage = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
-                //Bitmap thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), 100, 100);
-                Bitmap thumbImage = Utils.getScaledBitmap(imagePath, 300, 300);
+                Bitmap thumbImage = BitmapUtils.getScaledBitmap(imagePath, 300, 300);
 
                if (thumbImage == null)
                     return;

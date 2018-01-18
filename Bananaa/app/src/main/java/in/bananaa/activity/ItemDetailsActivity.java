@@ -4,15 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
@@ -49,8 +45,10 @@ import in.bananaa.object.MyItemFoodviewResponse;
 import in.bananaa.object.RatingColorType;
 import in.bananaa.object.StatusResponse;
 import in.bananaa.object.UserFoodviewsResponse;
+import in.bananaa.utils.BitmapUtils;
 import in.bananaa.utils.Constant;
 import in.bananaa.utils.PreferenceManager;
+import in.bananaa.utils.RequestPermissionHandler;
 import in.bananaa.utils.URLs;
 import in.bananaa.utils.Utils;
 
@@ -102,6 +100,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private boolean canLoadFoodviews = true;
     private Uri fileUri;
     private String filePath;
+    private boolean isOpenGallery = true;
+    private RequestPermissionHandler mRequestPermissionHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +116,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         }
         itemDetailsView = (ScrollView) findViewById(R.id.itemDetailsView);
         activityLoader = (ProgressBar) findViewById(R.id.activityLoader);
+        mRequestPermissionHandler = new RequestPermissionHandler();
         getItemDetails();
     }
 
@@ -440,6 +441,27 @@ public class ItemDetailsActivity extends AppCompatActivity {
         }
     }
 
+    View.OnClickListener onAddFoodviewClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(itemDetails.getId(),
+                    itemDetails.getMerchantId(), itemDetails.getMerchantName(),
+                    itemDetails.getShortAddress(), itemDetails.getName(), true);
+            Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
+            i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
+            startActivityForResult(i, ITEM_DETAILS_TO_FOODVIEW_REQ_CODE);
+        }
+    };
+
+    View.OnClickListener onRestaurantDetailsClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent i = new Intent(ItemDetailsActivity.this, MerchantDetailsActivity.class);
+            i.putExtra(MerchantDetailsActivity.MERCHANT_ID, itemDetails.getMerchantId());
+            startActivity(i);
+        }
+    };
+
     private void setFonts() {
         tvName.setTypeface(Utils.getBold(this));
         tvRestName.setTypeface(Utils.getRegularFont(this));
@@ -485,17 +507,19 @@ public class ItemDetailsActivity extends AppCompatActivity {
             btnUpload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean hasPermission = (ContextCompat.checkSelfPermission(mContext,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-                    if (!hasPermission) {
-                        ActivityCompat.requestPermissions(mContext,
-                                new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                Constant.REQUEST_WRITE_STORAGE);
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_PICK);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, Constant.SELECT_GALLERY_IMAGE_ITEM);
-                    }
+                    mRequestPermissionHandler.requestPermission(mContext, new String[] {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, Constant.REQUEST_WRITE_STORAGE, new RequestPermissionHandler.RequestPermissionListener() {
+                        @Override
+                        public void onSuccess() {
+                            openGallery();
+                        }
+
+                        @Override
+                        public void onFailed() {
+                            Utils.genericErrorToast(mContext, mContext.getString(R.string.allowStoragePermission));
+                        }
+                    });
                     photoDialog.cancel();
                 }
             });
@@ -503,94 +527,54 @@ public class ItemDetailsActivity extends AppCompatActivity {
             btnClickPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (Utils.isDeviceSupportCamera(mContext)) {
-                        boolean hasPermission = (ContextCompat.checkSelfPermission(mContext,
-                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-                        if (!hasPermission) {
-                            ActivityCompat.requestPermissions(mContext,
-                                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    Constant.REQUEST_WRITE_STORAGE);
-                        } else {
-                            requestCamera();
-                        }
+                    if (BitmapUtils.isDeviceSupportCamera(mContext)) {
+                        mRequestPermissionHandler.requestPermission(mContext, new String[] {
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+                        }, Constant.REQUEST_CAMERA_AND_STORAGE, new RequestPermissionHandler.RequestPermissionListener() {
+                            @Override
+                            public void onSuccess() {
+                                clickPhoto();
+                            }
+
+                            @Override
+                            public void onFailed() {
+                                Utils.genericErrorToast(mContext, mContext.getString(R.string.allowCameraPermission));
+                            }
+                        });
+                        photoDialog.cancel();
                     } else {
-                        Utils.genericErrorToast(mContext, "Camera not supported!");
+                        Utils.genericErrorToast(mContext, mContext.getString(R.string.cameraNotSupported));
                     }
                     photoDialog.cancel();
+                    return;
                 }
             });
             photoDialog.show();
         }
     };
 
-    private void requestCamera() {
-        boolean hasPermission = (ContextCompat.checkSelfPermission(mContext,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
-        if (!hasPermission) {
-            ActivityCompat.requestPermissions(mContext,
-                    new String[]{Manifest.permission.CAMERA},
-                    Constant.REQUEST_CAMERA);
-        } else {
-            clickPhoto();
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode)
-        {
-            case Constant.REQUEST_WRITE_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    requestCamera();
-                } else
-                {
-                    Utils.genericErrorToast(mContext, "The app was not allowed to write to your storage. Please consider granting it this permission");
-                }
-            }
-            case Constant.REQUEST_CAMERA : {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    clickPhoto();
-                } else
-                {
-                    Utils.genericErrorToast(mContext, "The app was not allowed to use camera. Please consider granting it this permission");
-                }
-            }
-        }
+        mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, Constant.SELECT_GALLERY_IMAGE_ITEM);
     }
 
     private void clickPhoto() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = Utils.getOutputMediaFileUri(Constant.MEDIA_TYPE_IMAGE, mContext);
+        fileUri = BitmapUtils.getOutputMediaFileUri(Constant.MEDIA_TYPE_IMAGE, mContext);
         filePath = fileUri.getPath();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, Constant.CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
         }
     }
-
-    View.OnClickListener onAddFoodviewClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            ItemFoodViewDetails itemFoodViewDetails = new ItemFoodViewDetails(itemDetails.getId(),
-                    itemDetails.getMerchantId(), itemDetails.getMerchantName(),
-                    itemDetails.getShortAddress(), itemDetails.getName(), true);
-            Intent i = new Intent(ItemDetailsActivity.this, FoodviewActivity.class);
-            i.putExtra(FoodviewActivity.FOODVIEW_DETAILS, itemFoodViewDetails);
-            startActivityForResult(i, ITEM_DETAILS_TO_FOODVIEW_REQ_CODE);
-        }
-    };
-
-    View.OnClickListener onRestaurantDetailsClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent i = new Intent(ItemDetailsActivity.this, MerchantDetailsActivity.class);
-            i.putExtra(MerchantDetailsActivity.MERCHANT_ID, itemDetails.getMerchantId());
-            startActivity(i);
-        }
-    };
 
     /**
      * Here we store the file url as it will be null after returning from camera
@@ -620,45 +604,26 @@ public class ItemDetailsActivity extends AppCompatActivity {
         }
         if (requestCode == Constant.CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                launchUploadActivity();
+                launchUploadActivity(false);
             } else if (resultCode == RESULT_CANCELED) {
                 // do nothing
             } else {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
-                        .show();
+                Utils.genericErrorToast(mContext, mContext.getString(R.string.failedToCaptureImage));
             }
 
         }
         if (requestCode == SELECT_GALLERY_IMAGE_ITEM && resultCode == Activity.RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            filePath = getRealPathFromURI(selectedImage, this);
-            launchUploadActivity();
+            filePath = BitmapUtils.getRealPathFromURI(selectedImage, this);
+            launchUploadActivity(true);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void launchUploadActivity(){
+    private void launchUploadActivity(boolean isFromGallery){
         Intent i = new Intent(ItemDetailsActivity.this, Upload2Activity.class);
-        i.putExtra("filePath", filePath);
+        i.putExtra(Upload2Activity.FILE_PATH, filePath);
+        i.putExtra(Upload2Activity.IS_FROM_GALLERY, isFromGallery);
         startActivity(i);
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
     }
 }

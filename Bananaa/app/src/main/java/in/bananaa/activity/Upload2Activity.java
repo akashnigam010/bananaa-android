@@ -20,18 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.zomato.photofilters.imageprocessors.Filter;
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,36 +35,34 @@ import in.bananaa.fragment.EditImageFragment;
 import in.bananaa.fragment.FiltersListFragment;
 import in.bananaa.utils.BitmapUtils;
 import in.bananaa.utils.Constant;
+import in.bananaa.utils.RequestPermissionHandler;
 import in.bananaa.utils.Utils;
 
 public class Upload2Activity extends AppCompatActivity implements FiltersListFragment.FiltersListFragmentListener, EditImageFragment.EditImageFragmentListener {
+    public static final String FILE_PATH = "filePath";
+    public static final String IS_FROM_GALLERY = "isFromGallery";
 
-    private static final String TAG = Upload2Activity.class.getSimpleName();
-
+    private AppCompatActivity mContext;
     private ImageView imagePreview;
-
     private TabLayout tabLayout;
-
     private ViewPager viewPager;
-
     private CoordinatorLayout coordinatorLayout;
 
-    Bitmap originalImage;
+    private Bitmap originalImage;
     // to backup image with filter applied
-    Bitmap filteredImage;
-
-    // the final image after applying
-    // brightness, saturation, contrast
-    Bitmap finalImage;
-
-    FiltersListFragment filtersListFragment;
-    EditImageFragment editImageFragment;
+    private Bitmap filteredImage;
+    // the final image after applying brightness, saturation, contrast
+    private Bitmap finalImage;
+    private FiltersListFragment filtersListFragment;
+    private EditImageFragment editImageFragment;
 
     // modified image values
-    int brightnessFinal = 0;
-    float saturationFinal = 1.0f;
-    float contrastFinal = 1.0f;
+    private int brightnessFinal = 0;
+    private float saturationFinal = 1.0f;
+    private float contrastFinal = 1.0f;
     private String filePath = null;
+    private Boolean isFromGallery;
+    private RequestPermissionHandler mRequestPermissionHandler;
 
     // load native image filters library
     static {
@@ -78,61 +71,80 @@ public class Upload2Activity extends AppCompatActivity implements FiltersListFra
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload2);
+        mRequestPermissionHandler = new RequestPermissionHandler();
 
         imagePreview = findViewById(R.id.image_preview);
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.viewpager);
         coordinatorLayout = findViewById(R.id.coordinator_layout);
 
-        Intent i = getIntent();
-        filePath = i.getStringExtra("filePath");
+        filePath = getIntent().getStringExtra(FILE_PATH);
+        isFromGallery = getIntent().getBooleanExtra(IS_FROM_GALLERY, true);
 
-        if (filePath != null) {
-            loadImage();
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "Sorry, file path is missing!", Toast.LENGTH_LONG).show();
+        if (filePath == null) {
+            Utils.genericErrorToast(this, mContext.getString(R.string.genericError));
+            finish();
+            return;
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.upload));
-
+        customizeToolbar();
+        loadImage();
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    private Toolbar customizeToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.upload));
+        return toolbar;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.upload, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_open) {
+            openImageFromGallery();
+            return true;
+        }
+
+        if (id == R.id.action_save) {
+            saveImageToGallery();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        // adding filter list fragment
         filtersListFragment = FiltersListFragment.newInstance(filePath);
-
         filtersListFragment.setListener(this);
-
-        // adding edit image fragment
         editImageFragment = new EditImageFragment();
         editImageFragment.setListener(this);
-
         adapter.addFragment(filtersListFragment, getString(R.string.tab_filters));
         adapter.addFragment(editImageFragment, getString(R.string.tab_edit));
-
         viewPager.setAdapter(adapter);
     }
 
     @Override
     public void onFilterSelected(Filter filter) {
-        // reset image controls
         resetControls();
-
         // applying the selected filter
         filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
         // preview filtered image
         imagePreview.setImageBitmap(filter.processFilter(filteredImage));
-
         finalImage = filteredImage.copy(Bitmap.Config.ARGB_8888, true);
     }
 
@@ -220,20 +232,16 @@ public class Upload2Activity extends AppCompatActivity implements FiltersListFra
         }
     }
 
-    // load the default image from assets on app launch
     private void loadImage() {
         BitmapFactory.Options options = new BitmapFactory.Options();
 
-        // down sizing image as it throws OutOfMemory Exception for larger
-        // images
+        // down sizing image as it throws OutOfMemory Exception for larger images
         options.inSampleSize = 8;
         options.outWidth = 300;
         options.outHeight = 300;
 
-        //final Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
-        final Bitmap bitmap = Utils.getScaledBitmap(filePath, 1000, 1000);
+        final Bitmap bitmap = BitmapUtils.getScaledBitmap(filePath, 1000, 1000);
 
-        //originalImage = BitmapUtils.getBitmapFromAssets(this, IMAGE_NAME, 300, 300);
         originalImage = bitmap;
         filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
         finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
@@ -241,33 +249,11 @@ public class Upload2Activity extends AppCompatActivity implements FiltersListFra
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.upload, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_open) {
-            openImageFromGallery();
-            return true;
-        }
-
-        if (id == R.id.action_save) {
-            saveImageToGallery();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == Constant.SELECT_GALLERY_IMAGE_UPLOAD) {
-            //Bitmap bitmap = BitmapUtils.getBitmapFromGallery(this, data.getData(), 800, 800);
-            final Bitmap bitmap = Utils.getScaledBitmap(filePath, 1000, 1000);
+        if (resultCode == RESULT_OK && requestCode == Constant.SELECT_GALLERY_IMAGE_ITEM) {
+            filePath = BitmapUtils.getRealPathFromURI(data.getData(), mContext);
+            final Bitmap bitmap = BitmapUtils.getScaledBitmap(filePath, 1000, 1000);
+            isFromGallery = true;
 
             // clear bitmap memory
             originalImage.recycle();
@@ -281,72 +267,64 @@ public class Upload2Activity extends AppCompatActivity implements FiltersListFra
             bitmap.recycle();
 
             // render selected image thumbnails
-            filtersListFragment.prepareThumbnail(data.getData().getPath());
+            filtersListFragment.prepareThumbnail(filePath);
         }
     }
 
     private void openImageFromGallery() {
-        Dexter.withActivity(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        if (report.areAllPermissionsGranted()) {
-                            Intent intent = new Intent(Intent.ACTION_PICK);
-                            intent.setType("image/*");
-                            startActivityForResult(intent, Constant.SELECT_GALLERY_IMAGE_UPLOAD);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Permissions are not granted!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+        mRequestPermissionHandler.requestPermission(mContext, new String[] {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, Constant.REQUEST_WRITE_STORAGE, new RequestPermissionHandler.RequestPermissionListener() {
+            @Override
+            public void onSuccess() {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, Constant.SELECT_GALLERY_IMAGE_ITEM);
+            }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
+            @Override
+            public void onFailed() {
+                Utils.genericErrorToast(mContext, mContext.getString(R.string.allowStoragePermission));
+            }
+        });
     }
 
     /*
     * saves image to camera gallery
     * */
     private void saveImageToGallery() {
-        Dexter.withActivity(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        if (report.areAllPermissionsGranted()) {
-                            final String path = BitmapUtils.insertImage(getContentResolver(), finalImage, System.currentTimeMillis() + "_profile.jpg", null);
-                            if (!TextUtils.isEmpty(path)) {
-                                Snackbar snackbar = Snackbar
-                                        .make(coordinatorLayout, "Image saved to gallery!", Snackbar.LENGTH_LONG)
-                                        .setAction("OPEN", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                openImage(path);
-                                            }
-                                        });
-
-                                snackbar.show();
-                            } else {
-                                Snackbar snackbar = Snackbar
-                                        .make(coordinatorLayout, "Unable to save image!", Snackbar.LENGTH_LONG);
-
-                                snackbar.show();
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Permissions are not granted!", Toast.LENGTH_SHORT).show();
-                        }
+        mRequestPermissionHandler.requestPermission(mContext, new String[] {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, Constant.REQUEST_WRITE_STORAGE, new RequestPermissionHandler.RequestPermissionListener() {
+            @Override
+            public void onSuccess() {
+                final String path = BitmapUtils.insertImage(getContentResolver(), finalImage, System.currentTimeMillis() + "_profile.jpg", null);
+                if (!TextUtils.isEmpty(path)) {
+                    Snackbar.make(coordinatorLayout, mContext.getString(R.string.savedToGallery), Snackbar.LENGTH_LONG)
+                            .setAction("OPEN", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    openImage(path);
+                                }
+                            }).show();
+                    // delete original unedited camera file
+                    if(!isFromGallery) {
+                        File file = new File(filePath);
+                        file.delete();
+                        mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(filePath))));
                     }
+                } else {
+                    Snackbar.make(coordinatorLayout, mContext.getString(R.string.notSavedToGallery), Snackbar.LENGTH_LONG).show();
+                }
+            }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
-
+            @Override
+            public void onFailed() {
+                Utils.genericErrorToast(mContext, mContext.getString(R.string.allowStoragePermission));
+            }
+        });
     }
 
-    // opening image in default image viewer app
     private void openImage(String path) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
