@@ -1,8 +1,115 @@
 <resources>
     <string name="app_name">Bananaa</string>
-
+    <string name="facebook_app_id">1631840747117125</string>
+    <string name="google_server_client_id">462561363632-rp9iig0kisflbged8sagpkqdjnuo6n5j.apps.googleusercontent.com</string>
+    <string name="fb_login_protocol_scheme">fb1631840747117125</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="rupees">\u20B9</string>
+
+    <!--Welcome Screen-->
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <!--Home Screen-->
+    <string name="yourSuggestions">Based on your food preferences, here are some delectable dishes for you to explore around</string>
+    <string name="homeEndText1">That\'s all for now %1$s!</string>
+    <string name="homeEndText2">Tap to edit your food preferences</string>
+    <string name="homeEndText3">Or change your location</string>
+
+    <!--Search Result Screen-->
+    <string name="searchEndText1">No more results available %1$s!</string>
+    <string name="searchEndText2">Please refine your search for more results</string>
+
+    <!--My Preferences Screen-->
+    <string name="back">BACK</string>
+    <string name="submit">SUBMIT</string>
+    <string name="veg">Only Veg</string>
+    <string name="nonveg">Non Veg</string>
+    <string name="anything">Duh! Really Anything</string>
+
+    <string name="slide_1_title">Discover the best</string>
+    <string name="slide_1_desc1">Explore the most recommended dishes at restaurants</string>
+    <string name="slide_1_desc2">Eat the best and never settle for less!</string>
+
+    <string name="slide_2_title">Just the way you like</string>
+    <string name="slide_2_desc1">Save your food preferences and we suggest you some irresistible dishes around that you can try</string>
+
+    <string name="slide_3_title">Ratings and Foodviews</string>
+    <string name="slide_3_desc1">Look through the rated dishes, their photos and foodviews at a restaurant and then decide what you\'d like to eat</string>
+
+    <string name="slide_4_desc1">Bananaa follows the great food-fighter who once said,</string>
+    <string name="slide_4_desc2">Tum mujhe preferences do, main tumhe suggestions dunga</string>
+    <string name="slide_4_desc3">Give me your food preferences and I shall give you suggestions</string>
+    <string name="btnStart">Let\'s get started</string>
+
+    <!--Across App-->
+    <string name="name">Bananaa</string>
+    <string name="default_location">Hyderabad</string>
+    <string name="search_rest_cuisine_dish">Search for Restaurant, Cuisine or Dish</string>
+
+    <!--Location Screen-->
+    <string name="select_location">Tap and select your location</string>
+    <string name="disclaimer1">
+        For now, you can set your location only from the list above, but you can search for
+        listed restaurants, cuisines and dishes all over town.
+    </string>
+    <string name="disclaimer2">
+        We are continuously adding more locations :)
+    </string>
+
+    <!--Search Screen-->
+    <string name="search">Search</string>
+    <string name="searchForAwesome">Search for the awesome</string>
+    <string name="noResults">NO RESULTS FOUND :(</string>
+
+    <!--Login Screen-->
+    <string name="login_fb">Continue with Facebook</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="skip_for_now">SKIP FOR NOW</string>
+    <string name="noInternetLogin">No internet connection :(</string>
+
+    <!-- Merchant Details Screen -->
+    <string name="directions">Maps and Directions</string>
+    <string name="cuisinesAndSpread">Cuisines and Spread</string>
+    <string name="delectableDishes">Delectable Dishes</string>
+    <string name="seeMore">See More</string>
+    <string name="foodviews">My Foodviews</string>
+    <string name="addFoodview">Add Foodview</string>
+    <string name="editFoodview">Edit Foodview</string>
+    <string name="foodViewSubHeading">My ratings and foodviews at\u0020</string>
+    <string name="peopleRated">%1d people rated</string>
+    <string name="youRated">You rated</string>
+    <string name="foodviewCountStr1">You rated this</string>
+    <string name="foodviewCountStr2">You and %1d others rated this</string>
+
+    <!--Foodview Modal-->
+    <string name="foodviewModalTitle">Add Foodview</string>
+    <string name="search_dish">Search for a dish name</string>
+    <string name="foodview_hint">Share a Foodview ! A tiny review about this dish to help others know how it tastes and if they should give it a try. Just remember to keep it short, a minimum of 50 and a maximum of 200 characters only :)</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+
+    <!--Item Details Screen-->
+    <string name="myRatingAndFoodviews">My Rating and Foodview</string>
+    <string name="itemFoodviews">Foodviews</string>
+    <string name="noFoodviews">No foodview yet</string>
+    <string name="ratingAndFoodviwes">%1$d Ratings and %2$d Foodviews</string>
+    <string name="justNow">just now</string>
+
+    <!--User Details Screen-->
+    <string name="foodbook">Foodbook</string>
+    <string name="editPreferences">Edit Preferences</string>
+    <string name="ratingsAndFoodviews">Ratings and Foodviews</string>
+
+    <!--Alert Modals-->
+    <string name="defaultErrorTitle">Uh-oh!</string>
+    <string name="noInternet">No internet connection</string>
+    <string name="defaultDismissText">DISMISS</string>
+    <string name="genericError">Something seems fishy. Please try again</string>
+    <string name="noResultsFound">No results found</string>
+    <string name="sureToDelete">Are you sure you want to delete this foodview?</string>
 </resources>
